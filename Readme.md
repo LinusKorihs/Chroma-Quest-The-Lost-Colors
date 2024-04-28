@@ -12,7 +12,9 @@ Bei do while Schleifen wird das while nach der Klammer geschrieben, nicht in ein
 
 In der main.cpp stehen am besten nur Klassenfunktionen. So wenig anderer Code wie möglich.
 
+Es wird nur funktionierender Code commited.
 
+Verwendung von sinnhaften namespaces um Zusammenhänge klar sichtbar zu machen.
 
 
 
