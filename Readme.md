@@ -6,7 +6,11 @@ code so klein wie möglich halten, soviel wie möglich in funktionen ausarbeiten
 
 enums, klassen und structs werden großgeschrieben, alle anderen variablen klein
 
+Erklärungen über Klassen: Was macht die Klasse?
 
+Bei do while Schleifen wird das while nach der Klammer geschrieben, nicht in eine Extrazeile.
+
+In der main.cpp stehen am besten nur Klassenfunktionen. So wenig anderer Code wie möglich.
 
 
 
