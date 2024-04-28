@@ -72,7 +72,7 @@ int main()
   int x = 5;
   int y = 3;
 
-  // Erklärung: The sum of both numbers will be calculated and safed in the variable result
+  // Explanation: The sum of both numbers will be calculated and safed in the variable result
   int result = sum(x, y);
 }
 ```
@@ -110,7 +110,7 @@ int main()
 }
 ```
 
-enums, klassen und structs werden großgeschrieben, alle anderen variablen klein
+enums, klassen, namespaces und structs werden großgeschrieben, alle anderen variablen klein
 
 ``` c++
 #include <iostream>
