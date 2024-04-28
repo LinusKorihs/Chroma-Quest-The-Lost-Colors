@@ -1,3 +1,10 @@
+Space bei Rechnungen (5 + 7, nicht 5+7)
+
+ganz oben ist #pragma once, danach .h und .cpp und alle includes, sortiert nach alphabetischer reihenfolge
+
+code so klein wie möglich halten, soviel wie möglich in funktionen ausarbeiten/automatisieren
+
+enums, klassen und structs werden großgeschrieben, alle anderen variablen klein
 
 
 
