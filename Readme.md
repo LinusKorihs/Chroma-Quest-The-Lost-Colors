@@ -16,8 +16,15 @@ Es wird nur funktionierender Code commited.
 
 Verwendung von sinnhaften namespaces um Zusammenhänge klar sichtbar zu machen.
 
+Es muss in einer Klasse einen Konstruktor und einen Destruktor geben.
 
+Bei 2 Konstruktoren muss sich der erste schließen bevor der 2. anfängt.
 
+Der Konstruktor wird als erstes in einer Klasse geschrieben.
+
+Nach einer if Schleife muss ein else folgen.
+
+Pointer Benennung: x_p, y_p
 
 
 
