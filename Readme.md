@@ -205,23 +205,73 @@ namespace Physics
 ```
 
 Nach einer if Schleife muss ein else folgen.
+```
+if(xy)
+{
+  xy;
+}
+else
+{
+  yx;
+}
+```
 
 Pointer Benennung: x_p, y_p
+```
+std::shared_ptr<TileMap> tile_p;
+
+oder z.B.
+
+shape* shape_p;
+```
 
 
 Includes:
 Am Anfang des Codes immer #Pragma once, danach .h und .cpp und alle includes, sortiert nach alphabetischer reihenfolge
+```
+#pragma once
+
+#include "xy.h"
+
+#include "algorithm"
+#include "barrier"
+#include "cstdio"
+```
+Code Separierung - z.B. nicht eine Klasse für 3 komplett verschiedene Funktionen/Objekte
 
 Klassen:
 In Klassen immer Verwendung von public und protected/private
+```
+class Player {
+public:
+  xy;
+
+protected:
+  xy;
+
+};
+
+```
 
 enums o.ä. stehen über Klassendefinierung
+```
+typedef enum {
+  NONE = 0,
+  COLOR_GRAYSCALE,
+  COLOR_TINT,
+  PRINT_PIXEL_COLORS
+} ImageProcess;
 
-Alle von Klassen erstellte Objekte haben einen gleichen Namensaufbau: (bsp) Class1 myClass1, Class2 myClass2
+class TileMap {};
+```
+
+Alle von Klassen erstellte Objekte haben einen gleichen Namensaufbau
+```
+Class1 myClass1;
+Class2 myClass2;
+```
 
 Klassenfunktionen werden klein geschrieben
-
-Code Separierung - z.B. nicht eine Klasse für 3 komplett verschiedene Funktionen/Objekte
 
 Erklärungen über Klassen: Was macht die Klasse?
 
@@ -230,3 +280,19 @@ Es muss in einer Klasse einen Konstruktor und einen Destruktor geben.
 Bei 2 Konstruktoren muss sich der erste schließen bevor der 2. anfängt.
 
 Der Konstruktor wird als erstes in einer Klasse geschrieben.
+```
+/* This class is used for drawing the player...*/
+class Player {
+public:
+  Player(); //Konstruktor an 1. Stelle
+
+  void draw(); //Funktion klein geschrieben
+
+  ~Player(); //Destruktor an letzter stelle in public
+
+protected:
+  int playerX; //Variable klein geschrieben
+
+};
+```
+
