@@ -1,4 +1,4 @@
-Grundlegend:
+## Grundlegend:
 Sprache: Englisch
 
 Pro Schleife eine Einrückung
@@ -77,7 +77,7 @@ int main()
 }
 ```
 
-code so klein wie möglich halten, soviel wie möglich in funktionen ausarbeiten/automatisieren
+Code so klein wie möglich halten, soviel wie möglich in funktionen ausarbeiten/automatisieren
 
 ``` c++
 #include <iostream>
@@ -110,7 +110,7 @@ int main()
 }
 ```
 
-enums, klassen, namespaces und structs werden großgeschrieben, alle anderen variablen klein
+Enums, Klassen, Namespaces und Structs werden großgeschrieben, alle anderen variablen klein
 
 ``` c++
 #include <iostream>
@@ -178,7 +178,7 @@ int main()
 
 Es wird nur funktionierender Code commited.
 
-Verwendung von sinnhaften namespaces um Zusammenhänge klar sichtbar zu machen.
+Verwendung von sinnhaften Namespaces um Zusammenhänge klar sichtbar zu machen.
 
 ``` c++
 #include <iostream>
@@ -226,7 +226,7 @@ shape* shape_p;
 ```
 
 
-Includes:
+## Includes:
 Am Anfang des Codes immer #Pragma once, danach .h und .cpp und alle includes, sortiert nach alphabetischer reihenfolge
 ```
 #pragma once
@@ -239,7 +239,7 @@ Am Anfang des Codes immer #Pragma once, danach .h und .cpp und alle includes, so
 ```
 Code Separierung - z.B. nicht eine Klasse für 3 komplett verschiedene Funktionen/Objekte
 
-Klassen:
+## Klassen:
 In Klassen immer Verwendung von public und protected/private
 ```
 class Player {
