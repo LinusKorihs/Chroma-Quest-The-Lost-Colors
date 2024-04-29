@@ -207,7 +207,7 @@ namespace Physics
 ```
 
 Nach einer if Schleife muss ein else folgen.
-```
+``` c++
 if(xy)
 {
   xy;
@@ -219,7 +219,7 @@ else
 ```
 
 Pointer Benennung: x_p, y_p
-```
+``` c++
 std::shared_ptr<TileMap> tile_p;
 
 oder z.B.
@@ -230,7 +230,7 @@ shape* shape_p;
 
 ## Includes:
 Am Anfang des Codes immer #Pragma once, danach .h und .cpp und alle includes, sortiert nach alphabetischer reihenfolge
-```
+``` c++
 #pragma once
 
 #include "xy.h"
@@ -243,7 +243,7 @@ Code Separierung - z.B. nicht eine Klasse für 3 komplett verschiedene Funktione
 
 ## Klassen:
 In Klassen immer Verwendung von public und protected/private
-```
+``` c++
 class Player {
 public:
   xy;
@@ -256,7 +256,7 @@ protected:
 ```
 
 enums o.ä. stehen über Klassendefinierung
-```
+``` c++
 typedef enum {
   NONE = 0,
   COLOR_GRAYSCALE,
@@ -268,7 +268,7 @@ class TileMap {};
 ```
 
 Alle von Klassen erstellte Objekte haben einen gleichen Namensaufbau
-```
+``` c++
 Class1 myClass1;
 Class2 myClass2;
 ```
@@ -282,7 +282,7 @@ Es muss in einer Klasse einen Konstruktor und einen Destruktor geben.
 Bei 2 Konstruktoren muss sich der erste schließen bevor der 2. anfängt.
 
 Der Konstruktor wird als erstes in einer Klasse geschrieben.
-```
+``` c++
 /* This class is used for drawing the player...*/
 class Player {
 public:
