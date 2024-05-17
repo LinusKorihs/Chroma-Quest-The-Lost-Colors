@@ -229,7 +229,7 @@ shape* shape_p;
 
 
 ## Includes:
-Am Anfang des Codes immer #Pragma once, danach .h und .cpp und alle includes, sortiert nach alphabetischer reihenfolge
+Am Anfang des Codes immer #Pragma once, danach .h und .cpp und alle includes, sortiert nach alphabetischer Reihenfolge
 ``` c++
 #pragma once
 
