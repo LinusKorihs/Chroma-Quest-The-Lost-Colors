@@ -112,7 +112,7 @@ int main()
 }
 ```
 
-Enums, Klassen, Namespaces und Structs werden großgeschrieben, alle anderen variablen klein
+Enums, Klassen, Namespaces und Structs werden großgeschrieben, alle anderen Variablen klein
 
 ``` c++
 #include <iostream>
