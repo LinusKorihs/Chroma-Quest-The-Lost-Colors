@@ -239,9 +239,9 @@ Am Anfang des Codes immer #Pragma once, danach .h und .cpp und alle includes, so
 #include "barrier"
 #include "cstdio"
 ```
-Code Separierung - z.B. nicht eine Klasse für 3 komplett verschiedene Funktionen/Objekte
 
 ## Klassen:
+Code Separierung - z.B. nicht eine Klasse für 3 komplett verschiedene Funktionen/Objekte
 In Klassen immer Verwendung von public und protected/private
 ``` c++
 class Player {
