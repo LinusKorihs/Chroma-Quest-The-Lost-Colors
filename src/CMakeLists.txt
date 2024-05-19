@@ -8,7 +8,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp
+        Menu.cpp
+        Menu.h
+        PixelGame.cpp
+        PixelGame.h
+        Audio.cpp
+        Audio.h
+        Utils.cpp
+        Utils.h
+        InGameHud.cpp
+        InGameHud.h
+        ApplicationState.cpp
+        ApplicationState.h
+)
 
 # Add config.h.in file
 configure_file(config.h.in config.h)
