@@ -1,5 +1,5 @@
 ﻿#include "config.h"
-#include <iostream>
+#include <thread>
 #include "raylib.h"
 #include "tileson.h"
 #include "Menu.h"
