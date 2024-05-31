@@ -9,6 +9,9 @@ ApplicationState gameState;
 Texture2D PixelGame::lavaTexture;
 Texture2D PixelGame::meatTexture;
 Texture2D PixelGame::fruitTexture;
+Texture2D PixelGame::tilesetTexture;
+
+std::vector<Stone> PixelGame::stones;
 
 void PixelGame::drawTiles(tson::Map &Map, Texture2D &myTexture)
 {
@@ -72,13 +75,11 @@ void PixelGame::drawSprite(Texture2D &myTexture, float mcX, float mcY)
     DrawTexturePro(myTexture, source, dest, {0, 0}, 0.0f, WHITE);
 }
 
-void PixelGame::moveCharacter(float& mcX, float& mcY, int direction)
-{
+void PixelGame::moveCharacter(float& mcX, float& mcY, int direction) {
     float newPositionX = mcX;
     float newPositionY = mcY;
 
-    switch (direction)
-    {
+    switch (direction) {
         case KEY_RIGHT:
         case KEY_D:
             newPositionX += gameState.moveSpeed;
@@ -99,23 +100,32 @@ void PixelGame::moveCharacter(float& mcX, float& mcY, int direction)
 
     Rectangle newRec = {newPositionX, newPositionY, gameState.myMC.width * 0.15f, gameState.myMC.height * 0.15f};
 
-    for (const Rectangle& wallRec : gameState.wallRecs)
-    {
-        if (CheckCollisionRecs(newRec, wallRec))
-        {
+    for (const Rectangle& wallRec : gameState.wallRecs) {
+        if (CheckCollisionRecs(newRec, wallRec)) {
             return;
         }
     }
-    mcX = newPositionX;
-    mcY = newPositionY;
+
+    bool stoneCollision = false;
+    for (Stone& stone : stones) {
+        if (CheckCollisionRecs(newRec, stone.getRectangle())) {
+            stone.move(direction, gameState.wallRecs);
+            stoneCollision = true;
+        }
+    }
+
+    if (!stoneCollision) {
+        mcX = newPositionX;
+        mcY = newPositionY;
+    }
 }
 
-void PixelGame::gameInit()
-{
+void PixelGame::gameInit() {
     Audio::loadResourcesAndInitAudio();
     loadTexture(lavaTexture, "assets/graphics/backgrounds/Lava.png");
     loadTexture(meatTexture, "assets/graphics/Fleisch.png");
     loadTexture(fruitTexture, "assets/graphics/Frucht.png");
+    loadTexture(tilesetTexture, "assets/graphics/testimage.png");
 
     tson::Tileson tileson;
     auto MapPtr = tileson.parse("assets/data/tilemap.tmj");
@@ -126,31 +136,35 @@ void PixelGame::gameInit()
                 << gameState.getLocalizedText("Failed to parse map, error: ", "Fehler beim Parsen der Karte, Fehler: ")
                 << Map.getStatusMessage() << std::endl;
     }
+
+    // Initialize stones with the texture and source rectangle
+    Rectangle stoneSourceRect = {144, 96, 16, 16}; // Source rectangle for the stone texture
+
+    // Position the stone on the fourth tile from the left and the tenth tile from above
+    int x = 6 * 16;
+    int y = 20 * 16;
+
+    stones.push_back(Stone(x, y, 32, tilesetTexture, stoneSourceRect));
 }
 
-void PixelGame::gameLoop(tson::Map &Map)
-{
+void PixelGame::gameLoop(tson::Map &Map) {
     float mcX = 16.0f * 5;
     float mcY = 16.0f * 23;
     bool meatUnload = false;
     bool fruitUnload = false;
 
-    while (!WindowShouldClose() && gameState.gameIsRunning)
-    {
-        if (IsKeyPressed(KEY_ESCAPE))
-        {
+    while (!WindowShouldClose() && gameState.gameIsRunning) {
+        if (IsKeyPressed(KEY_ESCAPE)) {
             gameState.isPaused = true;
         }
 
-        if (gameState.isPaused)
-        {
+        if (gameState.isPaused) {
             gameState.changeState(MenuState::PauseMenu);
             gameState.currentMenu = MenuState::PauseMenu;
             Menu::drawPauseMenu(gameState);
         }
 
-        if (gameState.currentMenu == MenuState::MainMenu || !gameState.gameIsRunning)
-        {
+        if (gameState.currentMenu == MenuState::MainMenu || !gameState.gameIsRunning) {
             break;
         }
 
@@ -158,6 +172,11 @@ void PixelGame::gameLoop(tson::Map &Map)
         ClearBackground(DARKGRAY);
 
         drawTiles(Map, gameState.myTexture);
+
+        // Draw stones
+        for (const Stone& stone : stones) {
+            stone.draw();
+        }
 
         if (!meatUnload) {
             drawTexture(meatTexture, {450.0f, 275.0f, meatTexture.width / 1.5f, meatTexture.height / 1.5f});
@@ -253,17 +272,16 @@ void PixelGame::gameLoop(tson::Map &Map)
             {
                 unloadTexture(fruitTexture);
                 fruitUnload = true;
-                gameState.score += 50;
+                gameState.score += 100;
             }
         }
 
-        if (WindowShouldClose())
-        {
-            CloseWindow();
+        if (WindowShouldClose()) {
             Audio::unloadResourcesAndCloseAudio();
             unloadTexture(lavaTexture);
-            unloadTexture(fruitTexture);
             unloadTexture(meatTexture);
+            unloadTexture(fruitTexture);
+            unloadTexture(tilesetTexture); // Unload tileset texture
             exit(0);
         }
 
@@ -273,8 +291,9 @@ void PixelGame::gameLoop(tson::Map &Map)
     CloseWindow();
     Audio::unloadResourcesAndCloseAudio();
     unloadTexture(lavaTexture);
-    unloadTexture(fruitTexture);
     unloadTexture(meatTexture);
+    unloadTexture(fruitTexture);
+    unloadTexture(tilesetTexture); // Unload tileset texture
 }
 
 void PixelGame::loadTexture(Texture2D &texture, const char* path)

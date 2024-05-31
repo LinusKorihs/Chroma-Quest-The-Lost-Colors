@@ -21,6 +21,8 @@ add_executable(${PROJECT_NAME} main.cpp
         InGameHud.h
         ApplicationState.cpp
         ApplicationState.h
+        Stone.cpp
+        Stone.h
 )
 
 # Add config.h.in file

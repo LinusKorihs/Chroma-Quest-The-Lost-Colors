@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "ApplicationState.h"
 #include "tileson.h"
+#include "Stone.h"
 
 class PixelGame {
 public:
@@ -17,4 +18,6 @@ public:
     static Texture2D lavaTexture;
     static Texture2D meatTexture;
     static Texture2D fruitTexture;
+    static Texture2D tilesetTexture;
+    static std::vector<Stone> stones;
 };
