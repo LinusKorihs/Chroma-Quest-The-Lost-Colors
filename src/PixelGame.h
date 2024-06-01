@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "ApplicationState.h"
 #include "tileson.h"
+#include "stone.h"
 
 struct Projectile {
     Vector2 position;
@@ -57,6 +58,7 @@ private:
     static Texture2D fruitTexture;
     static Texture2D projectileTexture;
     static Texture2D slimeTexture;
+    static Texture2D tilesetTexture;
 
     static float mcX;
     static float mcY;
@@ -69,5 +71,7 @@ private:
 
     static Projectile projectile;
     static Enemy enemy;
+
+    static std::vector <Stone> stones;
 
 };

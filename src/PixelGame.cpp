@@ -7,11 +7,14 @@
 ApplicationState gameState;
 
 //definition of static variables
+std::vector<Stone> PixelGame::stones;
+
 Texture2D PixelGame::lavaTexture;
 Texture2D PixelGame::meatTexture;
 Texture2D PixelGame::fruitTexture;
 Texture2D PixelGame::projectileTexture;
 Texture2D PixelGame::slimeTexture;
+Texture2D PixelGame::tilesetTexture;
 
 Camera2D PixelGame::camera;
 
@@ -124,8 +127,19 @@ void PixelGame::MoveCharacter(int direction)
             return;
         }
     }
-    mcX = newPositionX;
-    mcY = newPositionY;
+    bool stoneCollision = false;
+    for(Stone& stone : stones)
+    {
+        if(CheckCollisionRecs(newRec, stone.getRectangle()))
+        {
+            stone.move(direction,gameState.wallRecs);
+            stoneCollision = true;
+        }
+    }
+    if(!stoneCollision) {
+        mcX = newPositionX;
+        mcY = newPositionY;
+    }
 
 }
 
@@ -137,6 +151,7 @@ void PixelGame::GameInit()
     LoadTextureX(fruitTexture, "assets/graphics/Frucht.png");
     LoadTextureX(projectileTexture, "assets/graphics/necrobolt1_strip.png");
     LoadTextureX(slimeTexture, "assets/graphics/slime-Sheet.png");
+    LoadTextureX(tilesetTexture, "assets/graphics/testimage.png");
 
     gameState.health = 100;
 
@@ -156,6 +171,12 @@ void PixelGame::GameInit()
     camera.offset = (Vector2){ GetScreenWidth()/2.0f, GetScreenHeight()/2.0f };
     camera.rotation = 0.0f;
     camera.zoom = 4.0f;
+
+    Rectangle stoneSourceRect = {144,96,16,16};
+    int x = 16*6;
+    int y = 20*16;
+
+    stones.push_back(Stone(x,y,32,tilesetTexture,stoneSourceRect));
 
 
 }
@@ -276,6 +297,11 @@ void PixelGame::GameLoop(tson::Map &Map)
 
         DrawTiles(Map, gameState.myTexture);
 
+        for (const Stone& stone : stones)
+        {
+            stone.draw();
+        }
+
         DrawObjects();
 
         DrawSprite(gameState.myMC);
@@ -374,6 +400,7 @@ void PixelGame::UnloadAll()
     UnloadTextureX(fruitTexture);
     UnloadTextureX(projectileTexture);
     UnloadTextureX(slimeTexture);
+    UnloadTextureX(tilesetTexture);
 }
 
 void PixelGame::DrawHud()
