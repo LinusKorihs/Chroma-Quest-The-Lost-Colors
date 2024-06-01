@@ -6,8 +6,9 @@
 #include "PixelGame.h"
 #include "ApplicationState.h"
 
-int main()
-{
+
+int main(){
+
     SetTraceLogLevel(LOG_WARNING);
     ApplicationState applicationState;
 
@@ -36,8 +37,8 @@ int main()
             case MenuState::GameRunning:
                 Menu::loadTextures();
                 applicationState.changeState(MenuState::GameRunning);
-                PixelGame::gameInit();
-                PixelGame::gameLoop(Map);
+                PixelGame::GameInit();
+                PixelGame::GameLoop(Map);
                 Menu::unloadTextures();
                 break;
             case MenuState::SettingsMenu:
@@ -99,4 +100,5 @@ int main()
     CloseWindow();
 
     return EXIT_SUCCESS;
+
 }

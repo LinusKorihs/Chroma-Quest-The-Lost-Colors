@@ -6,20 +6,37 @@
 
 ApplicationState gameState;
 
+//definition of static variables
 Texture2D PixelGame::lavaTexture;
 Texture2D PixelGame::meatTexture;
 Texture2D PixelGame::fruitTexture;
+Texture2D PixelGame::projectileTexture;
+Texture2D PixelGame::slimeTexture;
 
-void PixelGame::drawTiles(tson::Map &Map, Texture2D &myTexture)
+Camera2D PixelGame::camera;
+
+float PixelGame::mcX = 80;
+float PixelGame::mcY = 368;
+
+Rectangle PixelGame::characterRec;
+Rectangle PixelGame::lavaRec;
+Rectangle PixelGame::meatRec;
+Rectangle PixelGame::fruitRec;
+Rectangle PixelGame::projectileRec;
+
+struct Projectile PixelGame::projectile;
+struct Enemy PixelGame::enemy;
+
+void PixelGame::DrawTiles(tson::Map &Map, Texture2D &myTexture)
 {
     auto layer1 = Map.getLayer("Kachelebene 2")->getData();
-    drawLayer(layer1, Map, myTexture);
+    DrawLayer(layer1, Map, myTexture);
 
     auto layer2 = Map.getLayer("animation")->getData();
-    drawLayer(layer2, Map, myTexture);
+    DrawLayer(layer2, Map, myTexture);
 }
 
-void PixelGame::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, Texture2D &myTexture)
+void PixelGame::DrawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, Texture2D &myTexture)
 {
     const int currentFrame = int(GetTime() * 6) % 4;
 
@@ -60,11 +77,12 @@ void PixelGame::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map
             }
 
             DrawTexturePro(myTexture, source, dest, {0, 0}, 0, WHITE);
+
         }
     }
 }
 
-void PixelGame::drawSprite(Texture2D &myTexture, float mcX, float mcY)
+void PixelGame::DrawSprite(Texture2D &myTexture)
 {
     Rectangle source = {0.0f, 0.0f, (float) myTexture.width, (float) myTexture.height};
     Rectangle dest = {mcX, mcY, myTexture.width * 0.15f, myTexture.height * 0.15f};
@@ -72,7 +90,7 @@ void PixelGame::drawSprite(Texture2D &myTexture, float mcX, float mcY)
     DrawTexturePro(myTexture, source, dest, {0, 0}, 0.0f, WHITE);
 }
 
-void PixelGame::moveCharacter(float& mcX, float& mcY, int direction)
+void PixelGame::MoveCharacter(int direction)
 {
     float newPositionX = mcX;
     float newPositionY = mcY;
@@ -108,15 +126,21 @@ void PixelGame::moveCharacter(float& mcX, float& mcY, int direction)
     }
     mcX = newPositionX;
     mcY = newPositionY;
+
 }
 
-void PixelGame::gameInit()
+void PixelGame::GameInit()
 {
     Audio::loadResourcesAndInitAudio();
-    loadTexture(lavaTexture, "assets/graphics/backgrounds/Lava.png");
-    loadTexture(meatTexture, "assets/graphics/Fleisch.png");
-    loadTexture(fruitTexture, "assets/graphics/Frucht.png");
+    LoadTextureX(lavaTexture, "assets/graphics/backgrounds/Lava.png");
+    LoadTextureX(meatTexture, "assets/graphics/Fleisch.png");
+    LoadTextureX(fruitTexture, "assets/graphics/Frucht.png");
+    LoadTextureX(projectileTexture, "assets/graphics/necrobolt1_strip.png");
+    LoadTextureX(slimeTexture, "assets/graphics/slime-Sheet.png");
 
+    gameState.health = 100;
+
+    // tileson parse
     tson::Tileson tileson;
     auto MapPtr = tileson.parse("assets/data/tilemap.tmj");
     tson::Map &Map = *MapPtr;
@@ -126,17 +150,109 @@ void PixelGame::gameInit()
                 << gameState.getLocalizedText("Failed to parse map, error: ", "Fehler beim Parsen der Karte, Fehler: ")
                 << Map.getStatusMessage() << std::endl;
     }
+    //camera init
+    camera = { 0 };
+    camera.target = (Vector2){ 80,368 };
+    camera.offset = (Vector2){ GetScreenWidth()/2.0f, GetScreenHeight()/2.0f };
+    camera.rotation = 0.0f;
+    camera.zoom = 4.0f;
+
+
 }
 
-void PixelGame::gameLoop(tson::Map &Map)
+void PixelGame::InitProjectile(Projectile &proj, Vector2 startPosition, Vector2 speed) {
+    proj.position = startPosition;
+    proj.speed = speed;
+    proj.isActive = true;
+}
+
+void PixelGame::UpdateProjectile(Projectile &proj, float deltaTime) {
+    projectileRec = {proj.position.x, proj.position.y, projectileTexture.width / 4.0f, static_cast<float>(projectileTexture.height)};
+
+    if (proj.isActive) {
+        proj.position.x += proj.speed.x * deltaTime;
+        proj.position.y += proj.speed.y * deltaTime;
+        for (const Rectangle& wallRec : gameState.wallRecs)
+        {
+            if (CheckCollisionRecs(projectileRec, wallRec) or proj.position.x > mcX + 200)
+            {
+                proj.isActive = false;
+            }
+        }
+    }
+}
+
+void PixelGame::DrawProjectile(const Projectile &proj) {
+    if (proj.isActive) {
+        DrawTextureEx(projectileTexture, proj.position, 0, 1.0f, WHITE);
+    }
+}
+
+void PixelGame::Attack() {
+    if (IsKeyPressed(KEY_ENTER) && gameState.mana > 0 && !projectile.isActive) {
+        gameState.mana -= 1;
+        InitProjectile(projectile, {mcX, mcY}, {200.0f, 0.0f});
+    }
+}
+
+
+void PixelGame::DrawObjects() //unload sieht noch bisschen weird aus
 {
-    float mcX = 16.0f * 5;
-    float mcY = 16.0f * 23;
-    bool meatUnload = false;
-    bool fruitUnload = false;
+
+    characterRec = {mcX, mcY, gameState.myMC.width * 0.15f, gameState.myMC.height * 0.15f};
+    lavaRec = {300.0f, 275.0f, lavaTexture.width / 25.0f, lavaTexture.height / 25.0f};
+    meatRec = {450.0f, 275.0f, meatTexture.width / 1.5f, meatTexture.height / 1.5f};
+    fruitRec = {150.0f, 100.0f, fruitTexture.width / 1.5f, fruitTexture.height / 1.5f};
+
+    if(!gameState.meatUnload) {
+        DrawTexture(meatTexture, {450.0f, 275.0f, meatTexture.width / 1.5f, meatTexture.height / 1.5f});
+    }
+    if(!gameState.fruitUnload) {
+        DrawTexture(fruitTexture, {150.0f, 100.0f, fruitTexture.width / 1.5f, fruitTexture.height / 1.5f});
+    }
+    DrawTexture(lavaTexture, {300.0f, 275.0f, lavaTexture.width / 25.0f, lavaTexture.height / 25.0f});
+
+
+    if (CheckCollisionRecs(characterRec, fruitRec))
+    {
+        if(!gameState.fruitUnload) {
+            gameState.fruitUnload = true;
+            gameState.health += 25;
+            if (gameState.health >= 100) {
+                gameState.health = 100;
+            }
+
+            UnloadTexture(fruitTexture);
+            gameState.score += 50;
+        }
+    }
+
+    if (CheckCollisionRecs(characterRec, meatRec))
+    {
+        if(!gameState.meatUnload) {
+            gameState.meatUnload = true;
+            gameState.health += 50;
+            gameState.mana += 1;
+            if(gameState.mana >= 5) {
+                gameState.mana = 5;
+            }
+            if (gameState.health >= 100) {
+                gameState.health = 100;
+            }
+
+            UnloadTexture(meatTexture);
+            gameState.score += 100;
+        }
+    }
+}
+
+void PixelGame::GameLoop(tson::Map &Map)
+{
+    EnemyInit(enemy, {250.0f, 280.0f}, slimeTexture);
 
     while (!WindowShouldClose() && gameState.gameIsRunning)
     {
+
         if (IsKeyPressed(KEY_ESCAPE))
         {
             gameState.isPaused = true;
@@ -155,28 +271,23 @@ void PixelGame::gameLoop(tson::Map &Map)
         }
 
         BeginDrawing();
+        BeginMode2D(camera);
         ClearBackground(DARKGRAY);
 
-        drawTiles(Map, gameState.myTexture);
+        DrawTiles(Map, gameState.myTexture);
 
-        if (!meatUnload) {
-            drawTexture(meatTexture, {450.0f, 275.0f, meatTexture.width / 1.5f, meatTexture.height / 1.5f});
-        }
-        if (!fruitUnload) {
-            drawTexture(fruitTexture, {150.0f, 100.0f, fruitTexture.width / 1.5f, fruitTexture.height / 1.5f});
-        }
-        drawTexture(lavaTexture, {300.0f, 275.0f, lavaTexture.width / 25.0f, lavaTexture.height / 25.0f});
-        drawSprite(gameState.myMC, mcX, mcY);
-        InGameHud::drawHealthBarTexture();
-        InGameHud::drawRGBBarTexture();
+        DrawObjects();
+
+        DrawSprite(gameState.myMC);
         gameState.playerDeath = 0;
-        DrawText(TextFormat("%s: %i", gameState.getLocalizedText("Score", "Punkte"), gameState.score), 800, 140, 20,
-                 BLACK);
 
-        Rectangle characteRec = {mcX, mcY, gameState.myMC.width * 0.15f, gameState.myMC.height * 0.15f};
-        Rectangle lavaRec = {300.0f, 275.0f, lavaTexture.width / 25.0f, lavaTexture.height / 25.0f};
-        Rectangle meatRec = {450.0f, 275.0f, meatTexture.width / 1.5f, meatTexture.height / 1.5f};
-        Rectangle fruitRec = {150.0f, 100.0f, fruitTexture.width / 1.5f, fruitTexture.height / 1.5f};
+        EnemyUpdate(enemy, GetFrameTime(), slimeTexture);
+        DrawEnemies(enemy, slimeTexture);
+
+        Attack();
+        UpdateProjectile(projectile, GetFrameTime());
+        DrawProjectile(projectile);
+
 
         if (IsKeyPressed(KEY_ESCAPE)) {
             Audio::unloadResourcesAndCloseAudio();
@@ -184,22 +295,22 @@ void PixelGame::gameLoop(tson::Map &Map)
             return;
         }
 
-        bool isMoving = false;
+        bool isMoving = false; //movement sollte noch separiert werden
 
         if (IsKeyDown(gameState.keyBindings[UP])) {
-            moveCharacter(mcX, mcY, KEY_UP);
+            MoveCharacter(KEY_UP);
             isMoving = true;
         }
         if (IsKeyDown(gameState.keyBindings[DOWN])) {
-            moveCharacter(mcX, mcY, KEY_DOWN);
+            MoveCharacter(KEY_DOWN);
             isMoving = true;
         }
         if (IsKeyDown(gameState.keyBindings[LEFT])) {
-            moveCharacter(mcX, mcY, KEY_LEFT);
+            MoveCharacter(KEY_LEFT);
             isMoving = true;
         }
         if (IsKeyDown(gameState.keyBindings[RIGHT])) {
-            moveCharacter(mcX, mcY, KEY_RIGHT);
+            MoveCharacter(KEY_RIGHT);
             isMoving = true;
         }
         if (isMoving && !IsSoundPlaying(gameState.walkingSound)) {
@@ -208,16 +319,14 @@ void PixelGame::gameLoop(tson::Map &Map)
             StopSound(gameState.walkingSound);
         }
         UpdateMusicStream(gameState.backgroundMusic);
+        camera.target = (Vector2){ mcX,mcY };
 
-        if (CheckCollisionRecs(characteRec, lavaRec))
+        if (CheckCollisionRecs(characterRec, lavaRec)) //muss noch separiert werden
         {
             gameState.health -= gameState.damage_per_frame;
             if (gameState.health <= 0) {
                 gameState.health = 0;
-                Audio::unloadResourcesAndCloseAudio();
-                unloadTexture(lavaTexture);
-                unloadTexture(meatTexture);
-                unloadTexture(fruitTexture);
+                UnloadAll();
                 gameState.changeState(MenuState::MainMenu);
                 gameState.health = 100;
                 gameState.playerDeath = 1;
@@ -225,71 +334,125 @@ void PixelGame::gameLoop(tson::Map &Map)
             }
         }
 
-        if (CheckCollisionRecs(characteRec, meatRec))
-        {
-            gameState.health += 25;
-            if (gameState.health >= 100)
-            {
-                gameState.health = 100;
-            }
-
-            if (!meatUnload)
-            {
-                unloadTexture(meatTexture);
-                meatUnload = true;
-                gameState.score += 100;
-            }
-
-        }
-
-        if (CheckCollisionRecs(characteRec, fruitRec))
-        {
-            gameState.health += 15;
-            if (gameState.health >= 100) {
-                gameState.health = 100;
-            }
-
-            if (!fruitUnload)
-            {
-                unloadTexture(fruitTexture);
-                fruitUnload = true;
-                gameState.score += 50;
-            }
-        }
-
         if (WindowShouldClose())
         {
             CloseWindow();
-            Audio::unloadResourcesAndCloseAudio();
-            unloadTexture(lavaTexture);
-            unloadTexture(fruitTexture);
-            unloadTexture(meatTexture);
+            UnloadAll();
             exit(0);
         }
-
+        EndMode2D();
+        DrawHud();
         EndDrawing();
     }
 
     CloseWindow();
-    Audio::unloadResourcesAndCloseAudio();
-    unloadTexture(lavaTexture);
-    unloadTexture(fruitTexture);
-    unloadTexture(meatTexture);
+    UnloadAll();
 }
 
-void PixelGame::loadTexture(Texture2D &texture, const char* path)
+void PixelGame::LoadTextureX(Texture2D &texture, const char* path)
 {
     texture = LoadTexture(path);
 }
 
-void PixelGame::drawTexture(Texture2D &texture, Rectangle dest)
+void PixelGame::DrawTexture(Texture2D &texture, Rectangle dest)
 {
     Rectangle source = {0.0f, 0.0f, (float)texture.width, (float)texture.height};
     Vector2 origin = {0.0f, 0.0f};
     DrawTexturePro(texture, source, dest, origin, 0.0f, WHITE);
 }
 
-void PixelGame::unloadTexture(Texture2D &texture)
+void PixelGame::UnloadTextureX(Texture2D &texture)
 {
     UnloadTexture(texture);
+}
+
+void PixelGame::UnloadAll()
+{
+    Audio::unloadResourcesAndCloseAudio();
+    UnloadTextureX(lavaTexture);
+    UnloadTextureX(meatTexture);
+    UnloadTextureX(fruitTexture);
+    UnloadTextureX(projectileTexture);
+    UnloadTextureX(slimeTexture);
+}
+
+void PixelGame::DrawHud()
+{
+    InGameHud::drawHealthBarTexture();
+    InGameHud::drawRGBBarTexture();
+    DrawText(TextFormat("%s: %i", gameState.getLocalizedText("Score", "Punkte"), gameState.score), 1700, 140, 20,BLACK);
+}
+
+void PixelGame::PlayerDeath() //muss noch richtig implementiert werden
+{
+    if (gameState.health <= 0)
+    {
+        gameState.playerDeath = 1;
+        gameState.changeState(MenuState::MainMenu);
+    }
+}
+
+void PixelGame::ReceiveDmg() //muss noch richtig implementiert werden
+{
+    if (CheckCollisionRecs(characterRec, lavaRec))
+    {
+        gameState.health -= gameState.damage_per_frame;
+        if (gameState.health <= 0) {
+           PlayerDeath();
+        }
+    }
+}
+
+
+void PixelGame::EnemyInit(Enemy &en, Vector2 positionEnemy, Texture2D &enemyTexture) {
+    en.enemyHit = false;
+    en.unload = false;
+    en.positionEnemy = positionEnemy;
+    en.frameRec1 = { 0.0f, 0.0f, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
+    en.frameRec2 = { 0.0f, (float)enemyTexture.height / 3, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
+    en.frameRec3 = { 0.0f, ((float)enemyTexture.height / 3) * 2, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
+    en.currentFrame = 0;
+    en.framesCounter = 0;
+    en.framesSpeed = 8;
+}
+
+void PixelGame::EnemyUpdate(Enemy &en, float deltaTime, Texture2D &enemyTexture) {
+
+    en.framesCounter++;
+
+    if (en.framesCounter >= (60 / en.framesSpeed)) {
+        en.framesCounter = 0;
+        en.currentFrame++;
+
+        if (en.currentFrame > 20) {
+            en.currentFrame = 0;
+        }
+
+        en.frameRec1.x = (float)en.currentFrame * (float)enemyTexture.width / 8;
+        en.frameRec2.x = (float)en.currentFrame * (float)enemyTexture.width / 8;
+        en.frameRec3.x = (float)en.currentFrame * (float)enemyTexture.width / 8;
+    }
+
+    if(IsKeyPressed(KEY_SPACE)) {
+        en.enemyHit = true;
+    }
+}
+
+void PixelGame::DrawEnemies(Enemy &en, Texture2D &enemyTexture) {
+    if (!en.enemyHit) {
+        if(en.currentFrame < 7){
+            DrawTextureRec(enemyTexture, en.frameRec1, en.positionEnemy, WHITE);
+        } else {
+            DrawTextureRec(enemyTexture, en.frameRec2, en.positionEnemy, WHITE);
+        }
+    } else {
+        if(!en.unload) {
+            DrawTextureRec(enemyTexture, en.frameRec3, en.positionEnemy, WHITE);
+        }
+        if(en.currentFrame == 0) {
+            UnloadTexture(enemyTexture);
+            en.unload = true;
+        }
+
+    }
 }

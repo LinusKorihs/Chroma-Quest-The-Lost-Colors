@@ -15,14 +15,14 @@ InGameHud::~InGameHud()
 
 void InGameHud::drawHealthBarTexture()
 {
-    DrawRectangle(800, 110, 100, 20, RED);
-    DrawRectangle(800, 110, gameState.health, 20, GRAY);
-    DrawText(gameState.getLocalizedText("Healthbar:", "Lebensbalken"), 800, 90, 20, BLACK);
+    DrawRectangle(1700, 110, 100, 20, RED);
+    DrawRectangle(1700, 110, gameState.health, 20, GRAY);
+    DrawText(gameState.getLocalizedText("Healthbar:", "Lebensbalken"), 1700, 90, 20, BLACK);
 }
 
 void InGameHud::drawRGBBarTexture()
 {
-    int healthBarX = 800;
+    int healthBarX = 1700;
     int healthBarY = 110;
     int healthBarWidth = 100;
     int healthBarHeight = 20;

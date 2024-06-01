@@ -3,6 +3,7 @@
 
 #include <map>
 #include "raylib.h"
+#include "thread"
 #include <vector>
 #include <stack>
 
@@ -27,8 +28,8 @@ enum class MenuState {
 class ApplicationState {
 public:
     int globalVolume = 50, globalMusicVolume = 0, globalSFXVolume = 50, gameIsRunning = 1;
-    int health = 100, damage_per_frame = 2, playerDeath = 0, score = 0;
-    bool isPaused = false, isWaitingForKey = false, programIsRunning = true;
+    int health = 100, damage_per_frame = 2, playerDeath = 0, score = 0, mana = 5;
+    bool isPaused = false, isWaitingForKey = false, programIsRunning = true, meatUnload = false, fruitUnload = false;
     Sound walkingSound;
     Music backgroundMusic;
     Texture2D myTexture, myMC;
