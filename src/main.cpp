@@ -1,10 +1,12 @@
-﻿#include "config.h"
+﻿#include "ApplicationState.h"
+#include "config.h"
+#include "Menu.h"
+#include "PixelGame.h"
 #include "raylib.h"
 #include "tileson.h"
-#include "Menu.h"
 #include "Utils.h"
-#include "PixelGame.h"
-#include "ApplicationState.h"
+
+
 
 
 int main(){
@@ -30,68 +32,68 @@ int main(){
         {
             case MenuState::MainMenu:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::MainMenu);
+                applicationState.ChangeState(MenuState::MainMenu);
                 Menu::drawMainMenu(gameState);
                 Menu::unloadTextures();
                 break;
             case MenuState::GameRunning:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::GameRunning);
+                applicationState.ChangeState(MenuState::GameRunning);
                 PixelGame::GameInit();
                 PixelGame::GameLoop(Map);
                 Menu::unloadTextures();
                 break;
             case MenuState::SettingsMenu:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::SettingsMenu);
+                applicationState.ChangeState(MenuState::SettingsMenu);
                 Menu::drawSettingsMenu(gameState);
                 Menu::unloadTextures();
                 break;
             case MenuState::KeyBindingsMenu:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::KeyBindingsMenu);
+                applicationState.ChangeState(MenuState::KeyBindingsMenu);
                 Menu::drawKeyBindingsMenu(gameState);
                 Menu::unloadTextures();
                 break;
             case MenuState::PauseMenu:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::PauseMenu);
-                applicationState.togglePause();
+                applicationState.ChangeState(MenuState::PauseMenu);
+                applicationState.TogglePause();
                 Menu::drawPauseMenu(gameState);
                 Menu::unloadTextures();
                 break;
             case MenuState::ResumeGame:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::ResumeGame);
-                applicationState.togglePause();
+                applicationState.ChangeState(MenuState::ResumeGame);
+                applicationState.TogglePause();
                 Menu::unloadTextures();
                 break;
             case MenuState::VolumeSliders:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::VolumeSliders);
+                applicationState.ChangeState(MenuState::VolumeSliders);
                 Menu::drawVolumeSlidersMenu(gameState);
                 Menu::unloadTextures();
                 break;
             case MenuState::Control:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::Control);
+                applicationState.ChangeState(MenuState::Control);
                 Menu::drawControlMenu(gameState);
                 Menu::unloadTextures();
                 break;
             case MenuState::Language:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::Language);
+                applicationState.ChangeState(MenuState::Language);
                 Menu::drawLanguageMenu(gameState);
                 Menu::unloadTextures();
                 break;
             case MenuState::ControllerMenu:
                 Menu::loadTextures();
-                applicationState.changeState(MenuState::ControllerMenu);
+                applicationState.ChangeState(MenuState::ControllerMenu);
                 Menu::drawControllerMenu(gameState);
                 Menu::unloadTextures();
                 break;
             case MenuState::None:
-                applicationState.changeState(MenuState::None);
+                applicationState.ChangeState(MenuState::None);
                 Menu::unloadTextures();
                 gameState.gameIsRunning = false;
                 break;

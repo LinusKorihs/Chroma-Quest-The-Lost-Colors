@@ -16,9 +16,9 @@ class InGameHud {
 public:
     InGameHud();
     ~InGameHud();
-    static void drawHealthBarTexture();
-    static void drawRGBBarTexture();
-    static void drawImageButton(ImageButton& button);
+    static void DrawHealthBarTexture();
+    static void DrawRGBBarTexture();
+    static void DrawImageButton(ImageButton& button);
     static std::vector<ImageButton> buttons;
 };
 

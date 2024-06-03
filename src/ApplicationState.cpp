@@ -2,24 +2,24 @@
 
 ApplicationState::Language ApplicationState::currentLanguage = ApplicationState::English;
 
-void ApplicationState::resetKeyBindingState()
+void ApplicationState::ResetKeyBindingState()
 {
     isWaitingForKey = false;
     selectedKey = NONE;
 }
 
-void ApplicationState::changeState(MenuState newState)
+void ApplicationState::ChangeState(MenuState newState)
 {
     currentMenu = newState;
     menuStack.push(newState);
 }
 
-void ApplicationState::togglePause()
+void ApplicationState::TogglePause()
 {
     isPaused = !isPaused;
 }
 
-const char* ApplicationState::getLocalizedText(const char* englishText, const char* germanText)
+const char* ApplicationState::GetLocalizedText(const char* englishText, const char* germanText)
 {
     if (currentLanguage == English)
     {
@@ -31,7 +31,7 @@ const char* ApplicationState::getLocalizedText(const char* englishText, const ch
     }
 }
 
-void ApplicationState::toggleLanguage()
+void ApplicationState::ToggleLanguage()
 {
     if (currentLanguage == English)
     {

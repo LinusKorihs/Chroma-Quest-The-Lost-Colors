@@ -1,6 +1,6 @@
-#include "InGameHud.h"
 #include "ApplicationState.h"
 #include "config.h"
+#include "InGameHud.h"
 #include <iostream>
 
 InGameHud::InGameHud()
@@ -13,14 +13,14 @@ InGameHud::~InGameHud()
 
 }
 
-void InGameHud::drawHealthBarTexture()
+void InGameHud::DrawHealthBarTexture()
 {
     DrawRectangle(1700, 110, 100, 20, RED);
     DrawRectangle(1700, 110, gameState.health, 20, GRAY);
-    DrawText(gameState.getLocalizedText("Healthbar:", "Lebensbalken"), 1700, 90, 20, BLACK);
+    DrawText(gameState.GetLocalizedText("Healthbar:", "Lebensbalken"), 1700, 90, 20, BLACK);
 }
 
-void InGameHud::drawRGBBarTexture()
+void InGameHud::DrawRGBBarTexture()
 {
     int healthBarX = 1700;
     int healthBarY = 110;
@@ -39,10 +39,10 @@ void InGameHud::drawRGBBarTexture()
     DrawRectangle(rectangleX + colorWidth, rectangleY, colorWidth, rectangleHeight, GREEN);
     DrawRectangle(rectangleX + 2 * colorWidth, rectangleY, colorWidth, rectangleHeight, BLUE);
 
-    DrawText(gameState.getLocalizedText("RGB:", "RGB:"), rectangleX, rectangleY - 20, 20, BLACK);
+    DrawText(gameState.GetLocalizedText("RGB:", "RGB:"), rectangleX, rectangleY - 20, 20, BLACK);
 }
 
-void InGameHud::drawImageButton(ImageButton& button)
+void InGameHud::DrawImageButton(ImageButton& button)
 {
     float centerX = button.rec.x + button.rec.width / 2;
     float centerY = button.rec.y + button.rec.height / 2;

@@ -1,10 +1,11 @@
-#include "Menu.h"
-#include "raylib.h"
 #include "ApplicationState.h"
 #include "Audio.h"
 #include "config.h"
-#include "Utils.h"
 #include "InGameHud.h"
+#include "Menu.h"
+#include "raylib.h"
+#include "Utils.h"
+
 
 Texture2D Menu::gameStartButtonTexture;
 Texture2D Menu::settingsButtonTexture;
@@ -77,25 +78,26 @@ int Menu::drawMainMenu(ApplicationState &gameState)
 
     gameStartButton.texture = gameStartButtonTexture;
     gameStartButton.rec = {(float)screenWidth/2 - gameStartButton.texture.width / 2, (float)screenHeight/2 - 75, (float)gameStartButton.texture.width, (float)gameStartButton.texture.height};
-    gameStartButton.text = gameState.getLocalizedText("Start Game", "Spiel starten");
+    gameStartButton.text = gameState.GetLocalizedText("Start Game", "Spiel starten");
 
     settingsButton.texture = settingsButtonTexture;
     settingsButton.rec = {(float)screenWidth/2 - settingsButton.texture.width / 2, (float)screenHeight/2, (float)settingsButton.texture.width, (float)settingsButton.texture.height};
-    settingsButton.text = gameState.getLocalizedText("Settings", "Einstellungen");
+    settingsButton.text = gameState.GetLocalizedText("Settings", "Einstellungen");
 
     exitButton.texture = exitButtonTexture;
     exitButton.rec = {(float)screenWidth/2 - exitButton.texture.width / 2, (float)screenHeight/2 + 75, (float)exitButton.texture.width, (float)exitButton.texture.height};
-    exitButton.text = gameState.getLocalizedText("Quit Game", "Spiel beenden");
+    exitButton.text = gameState.GetLocalizedText("Quit Game", "Spiel beenden");
 
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
-    DrawText(gameState.getLocalizedText("Chroma Quest: The Lost Colors", "Chroma Quest: Die verlorenen Farben"),
-             PixelGameConfig::ScreenWidth/2 - MeasureText(gameState.getLocalizedText("Chroma Quest: The Lost Colors", "Chroma Quest: Die verlorenen Farben"),20)/2, 50, 20, BLACK);
+    DrawText(gameState.GetLocalizedText("Chroma Quest: The Lost Colors", "Chroma Quest: Die verlorenen Farben"),
+             PixelGameConfig::ScreenWidth/2 - MeasureText(
+                     gameState.GetLocalizedText("Chroma Quest: The Lost Colors", "Chroma Quest: Die verlorenen Farben"), 20) / 2, 50, 20, BLACK);
 
-    InGameHud::drawImageButton(gameStartButton);
-    InGameHud::drawImageButton(settingsButton);
-    InGameHud::drawImageButton(exitButton);
+    InGameHud::DrawImageButton(gameStartButton);
+    InGameHud::DrawImageButton(settingsButton);
+    InGameHud::DrawImageButton(exitButton);
 
     if (Button::CheckButtonClick(gameStartButton.rec, "Start Game", "Spiel starten"))
     {
@@ -162,10 +164,10 @@ void Menu::drawKeyBindingsMenu(ApplicationState &gameState)
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
-    InGameHud::drawImageButton(upKeyButton);
-    InGameHud::drawImageButton(downKeyButton);
-    InGameHud::drawImageButton(leftKeyButton);
-    InGameHud::drawImageButton(rightKeyButton);
+    InGameHud::DrawImageButton(upKeyButton);
+    InGameHud::DrawImageButton(downKeyButton);
+    InGameHud::DrawImageButton(leftKeyButton);
+    InGameHud::DrawImageButton(rightKeyButton);
 
     if (Button::CheckButtonClick(upKeyButton.rec, TextFormat("Up: %c", gameState.keyBindings[UP]),
                                  TextFormat("Hoch: %c", gameState.keyBindings[UP])))
@@ -194,7 +196,7 @@ void Menu::drawKeyBindingsMenu(ApplicationState &gameState)
 
     if (Button::setKeyBindText == 0)
     {
-        gameState.resetKeyBindingState();
+        gameState.ResetKeyBindingState();
         Button::setKeyBindText++;
     }
 
@@ -245,7 +247,7 @@ void Menu::drawKeyBindingsMenu(ApplicationState &gameState)
         }
         if (gameState.isWaitingForKey)
         {
-            Button::drawPromptText(englishDirection, germanDirection);
+            Button::DrawPromptText(englishDirection, germanDirection);
         }
     }
 
@@ -273,8 +275,12 @@ void Menu::drawKeyBindingsMenu(ApplicationState &gameState)
                 break;
         }
 
-        DrawText(TextFormat(gameState.getLocalizedText("You have remapped %s to %c!", "Du hast %s nach %c umgelegt!"), gameState.getLocalizedText(englishDirection, germanDirection), gameState.lastChangedKey.second),
-                 PixelGameConfig::ScreenWidth / 2 - MeasureText(TextFormat(gameState.getLocalizedText("You have remapped %s to %c!", "Du hast %s nach %c umgelegt!"), gameState.getLocalizedText(englishDirection, germanDirection), gameState.lastChangedKey.second), 20) / 2,
+        DrawText(TextFormat(gameState.GetLocalizedText("You have remapped %s to %c!", "Du hast %s nach %c umgelegt!"),
+                            gameState.GetLocalizedText(englishDirection, germanDirection), gameState.lastChangedKey.second),
+                 PixelGameConfig::ScreenWidth / 2 - MeasureText(TextFormat(
+                         gameState.GetLocalizedText("You have remapped %s to %c!", "Du hast %s nach %c umgelegt!"),
+                                                                           gameState.GetLocalizedText(englishDirection,
+                                                                                                      germanDirection), gameState.lastChangedKey.second), 20) / 2,
                  PixelGameConfig::ScreenHeight / 2 - 150, 20, BLACK);
         Button::countDrawText++;
     }
@@ -301,7 +307,8 @@ int Menu::drawControllerMenu(ApplicationState &gameState)
         BeginDrawing();
         ClearBackground(DARKGRAY);
 
-        const char* text = gameState.getLocalizedText("No Controller Implementation yet.", "Keine Kontroller Implementierung bisher.");
+        const char* text = gameState.GetLocalizedText("No Controller Implementation yet.",
+                                                      "Keine Kontroller Implementierung bisher.");
         int textWidth = MeasureText(text, 20);
 
         DrawText(text, PixelGameConfig::ScreenWidth / 2 - textWidth / 2, PixelGameConfig::ScreenHeight / 2, 20, BLACK);
@@ -322,17 +329,17 @@ bool Menu::drawControlMenu(ApplicationState &gameState)
 {
     keyBoardButton.texture = keyboardButtonTexture;
     keyBoardButton.rec = {(float)Button::buttonScreenWidth - 25, (float)PixelGameConfig::ScreenHeight / 2 - 50, Button::buttonWidth + 50, Button::buttonHeight};
-    keyBoardButton.text = gameState.getLocalizedText("Keyboard/Mouse", "Tastatur/Maus");
+    keyBoardButton.text = gameState.GetLocalizedText("Keyboard/Mouse", "Tastatur/Maus");
 
     controllerButton.texture = controllerButtonTexture;
     controllerButton.rec = {(float)Button::buttonScreenWidth - 25, (float)PixelGameConfig::ScreenHeight / 2, Button::buttonWidth + 50, Button::buttonHeight};
-    controllerButton.text = gameState.getLocalizedText("Controller", "Kontroller");
+    controllerButton.text = gameState.GetLocalizedText("Controller", "Kontroller");
 
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
-    InGameHud::drawImageButton(keyBoardButton);
-    InGameHud::drawImageButton(controllerButton);
+    InGameHud::DrawImageButton(keyBoardButton);
+    InGameHud::DrawImageButton(controllerButton);
 
     if (Button::CheckButtonClick(keyBoardButton.rec, "Keyboard/Mouse", "Tastatur/Maus"))
     {
@@ -371,26 +378,26 @@ void Menu::drawLanguageMenu(ApplicationState &gameState)
 
     languageEN.texture = languageDEButtonTexture;
     languageEN.rec = {(float)screenWidth/2 - 50, (float)screenHeight/2 - 50, 150, 30};
-    languageEN.text = gameState.getLocalizedText("English", "Englisch");
+    languageEN.text = gameState.GetLocalizedText("English", "Englisch");
 
     languageDE.texture = languageENButtonTexture;
     languageDE.rec = {(float)screenWidth/2 - 50, (float)screenHeight/2, 150, 30};
-    languageDE.text = gameState.getLocalizedText("German", "Deutsch");
+    languageDE.text = gameState.GetLocalizedText("German", "Deutsch");
 
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
-    InGameHud::drawImageButton(languageEN);
-    InGameHud::drawImageButton(languageDE);
+    InGameHud::DrawImageButton(languageEN);
+    InGameHud::DrawImageButton(languageDE);
 
     if (Button::CheckButtonClick(languageEN.rec, "English", "Englisch"))
     {
-        gameState.toggleLanguage();
+        gameState.ToggleLanguage();
     }
 
     if (Button::CheckButtonClick(languageDE.rec, "German", "Deutsch"))
     {
-        gameState.toggleLanguage();
+        gameState.ToggleLanguage();
     }
 
     if (IsKeyPressed(KEY_ESCAPE))
@@ -415,22 +422,22 @@ bool Menu::drawSettingsMenu(ApplicationState &gameState)
 
     volumeButton.texture = volumeButtonTexture;
     volumeButton.rec = {(float)screenWidth/2 - 50, (float)screenHeight/2 - 50, 150, 30};
-    volumeButton.text = gameState.getLocalizedText("Sound", "Ton");
+    volumeButton.text = gameState.GetLocalizedText("Sound", "Ton");
 
     controlButton.texture = controlButtonTexture;
     controlButton.rec = {(float)screenWidth/2 - 50, (float)screenHeight/2, 150, 30};
-    controlButton.text = gameState.getLocalizedText("Controls", "Steuerung");
+    controlButton.text = gameState.GetLocalizedText("Controls", "Steuerung");
 
     languageButton.texture = languageButtonTexture;
     languageButton.rec = {(float)screenWidth/2 - 50, (float)screenHeight/2 + 50, 150, 30};
-    languageButton.text = gameState.getLocalizedText("Language", "Sprache");
+    languageButton.text = gameState.GetLocalizedText("Language", "Sprache");
 
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
-    InGameHud::drawImageButton(volumeButton);
-    InGameHud::drawImageButton(controlButton);
-    InGameHud::drawImageButton(languageButton);
+    InGameHud::DrawImageButton(volumeButton);
+    InGameHud::DrawImageButton(controlButton);
+    InGameHud::DrawImageButton(languageButton);
 
     if (Button::CheckButtonClick(volumeButton.rec, "Sound", "Ton"))
     {
@@ -474,9 +481,12 @@ void Menu::drawVolumeSlidersMenu(ApplicationState &gameState)
     BeginDrawing();
     ClearBackground(DARKGRAY);
 
-    Audio::drawVolumeSlider(Global, &gameState.globalVolume, "Global Volume", "Globale Lautstärke", (float)screenHeight/2 - 75);
-    Audio::drawVolumeSlider(BGMusic, &gameState.globalMusicVolume, "Music Volume", "Musiklautstärke", (float)screenHeight/2);
-    Audio::drawVolumeSlider(SFX, &gameState.globalSFXVolume, "Sound Effect Volume", "Soundeffektlautstärke", (float)screenHeight/2 + 75);
+    Audio::DrawVolumeSlider(Global, &gameState.globalVolume, "Global Volume", "Globale Lautstärke",
+                            (float) screenHeight / 2 - 75);
+    Audio::DrawVolumeSlider(BGMusic, &gameState.globalMusicVolume, "Music Volume", "Musiklautstärke",
+                            (float) screenHeight / 2);
+    Audio::DrawVolumeSlider(SFX, &gameState.globalSFXVolume, "Sound Effect Volume", "Soundeffektlautstärke",
+                            (float) screenHeight / 2 + 75);
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
@@ -498,9 +508,12 @@ void Menu::drawVolumeSlidersPauseMenu(ApplicationState &gameState)
 {
     int screenHeight = PixelGameConfig::ScreenHeight;
 
-    Audio::drawVolumeSlider(Global, &gameState.globalVolume, "Global Volume", "Globale Lautstärke", (float)screenHeight/2 - 75);
-    Audio::drawVolumeSlider(BGMusic, &gameState.globalMusicVolume, "Music Volume", "Musiklautstärke", (float)screenHeight/2);
-    Audio::drawVolumeSlider(SFX, &gameState.globalSFXVolume, "Sound Effect Volume", "Soundeffektlautstärke", (float)screenHeight/2 + 75);
+    Audio::DrawVolumeSlider(Global, &gameState.globalVolume, "Global Volume", "Globale Lautstärke",
+                            (float) screenHeight / 2 - 75);
+    Audio::DrawVolumeSlider(BGMusic, &gameState.globalMusicVolume, "Music Volume", "Musiklautstärke",
+                            (float) screenHeight / 2);
+    Audio::DrawVolumeSlider(SFX, &gameState.globalSFXVolume, "Sound Effect Volume", "Soundeffektlautstärke",
+                            (float) screenHeight / 2 + 75);
 }
 
 void Menu::drawPauseMenu(ApplicationState &gameState)
@@ -510,22 +523,22 @@ void Menu::drawPauseMenu(ApplicationState &gameState)
 
     resumeButton.texture = resumeButtonTexture;
     resumeButton.rec = {(float)screenWidth/2 - 50, (float)screenHeight/2 - 175, 150, 30};
-    resumeButton.text = gameState.getLocalizedText("Resume PixelGame", "Spiel fortsetzen");
+    resumeButton.text = gameState.GetLocalizedText("Resume PixelGame", "Spiel fortsetzen");
 
     quitButton.texture = quitButtonTexture;
     quitButton.rec = {(float)screenWidth/2 - 50, (float)screenHeight/2 + 150, 150, 30};
-    quitButton.text = gameState.getLocalizedText("Back to Menu", "Zurück zum Menü");
+    quitButton.text = gameState.GetLocalizedText("Back to Menu", "Zurück zum Menü");
 
     while (!WindowShouldClose() && gameState.isPaused)
     {
         BeginDrawing();
         ClearBackground(DARKGRAY);
 
-        InGameHud::drawImageButton(resumeButton);
-        InGameHud::drawImageButton(quitButton);
+        InGameHud::DrawImageButton(resumeButton);
+        InGameHud::DrawImageButton(quitButton);
 
         drawVolumeSlidersPauseMenu(gameState);
-        Audio::updateVolumes();
+        Audio::UpdateVolumes();
 
         if (Button::CheckButtonClick(resumeButton.rec, "Resume PixelGame", "Spiel fortsetzen"))
         {
@@ -542,7 +555,7 @@ void Menu::drawPauseMenu(ApplicationState &gameState)
             break;
         }
 
-        DrawText(gameState.getLocalizedText("Pause Menu", "Pause Menü"), 10, 10, 20, BLACK);
+        DrawText(gameState.GetLocalizedText("Pause Menu", "Pause Menü"), 10, 10, 20, BLACK);
 
         EndDrawing();
     }

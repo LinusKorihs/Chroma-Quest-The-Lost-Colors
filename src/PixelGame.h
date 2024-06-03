@@ -1,7 +1,12 @@
-#include "raylib.h"
 #include "ApplicationState.h"
-#include "tileson.h"
+#include "Audio.h"
+#include "InGameHud.h"
+#include "Menu.h"
+#include "raylib.h"
 #include "stone.h"
+#include "tileson.h"
+
+
 
 struct Projectile {
     Vector2 position;
@@ -11,11 +16,13 @@ struct Projectile {
 
 struct Enemy {
     bool enemyHit;
+    int enemyHits;
     bool unload;
     Vector2 positionEnemy;
     Rectangle frameRec1;
     Rectangle frameRec2;
     Rectangle frameRec3;
+    Rectangle enemyRec;
     int currentFrame;
     int framesCounter;
     int framesSpeed;
@@ -46,6 +53,7 @@ public:
     static void DrawEnemies(Enemy &en, Texture2D &enemyTexture);
     static void EnemyInit(Enemy &en, Vector2 positionEnemy, Texture2D &enemyTexture);
     static void EnemyUpdate(Enemy &en, float deltaTime, Texture2D &enemyTexture);
+    static void ProjectileCollision(Projectile &proj);
 
 
 private:
@@ -62,6 +70,11 @@ private:
 
     static float mcX;
     static float mcY;
+
+    static bool lastDirectionLeft;
+    static bool lastDirectionUp;
+    static bool lastDirectionRight;
+    static bool lastDirectionDown;
 
     static Rectangle characterRec;
     static Rectangle lavaRec;

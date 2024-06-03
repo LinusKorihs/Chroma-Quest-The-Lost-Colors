@@ -1,8 +1,7 @@
 #include "Audio.h"
-#include "config.h"
-#include "ApplicationState.h"
 
-void Audio::updateVolumes()
+
+void Audio::UpdateVolumes()
 {
     float globalVolume = gameState.globalVolume / 100.0f;
     if (globalVolume == 0)
@@ -17,18 +16,18 @@ void Audio::updateVolumes()
     }
 }
 
-void Audio::loadResourcesAndInitAudio()
+void Audio::LoadResourcesAndInitAudio()
 {
     gameState.myTexture = LoadTexture("assets/graphics/testimage.png");
     gameState.myMC = LoadTexture("assets/graphics/MC_test_2.png");
     InitAudioDevice();
     gameState.walkingSound = LoadSound("assets/audio/sfx/FootSteps.wav");
     gameState.backgroundMusic = LoadMusicStream("assets/audio/tracks/TestSong.wav");
-    updateVolumes();
+    UpdateVolumes();
     PlayMusicStream(gameState.backgroundMusic);
 }
 
-void Audio::unloadResourcesAndCloseAudio()
+void Audio::UnloadResourcesAndCloseAudio()
 {
     UnloadTexture(gameState.myTexture);
     UnloadTexture(gameState.myMC);
@@ -37,7 +36,7 @@ void Audio::unloadResourcesAndCloseAudio()
     CloseAudioDevice();
 }
 
-void Audio::drawVolumeSlider(VolumeType type, int* volume, const char* englishVolumeName, const char* germanVolumeName, float sliderY)
+void Audio::DrawVolumeSlider(VolumeType type, int* volume, const char* englishVolumeName, const char* germanVolumeName, float sliderY)
 {
     int screenWidth = PixelGameConfig::ScreenWidth;
     Rectangle slider = {(float)screenWidth/2 - 50, sliderY, 150, 30};
@@ -50,5 +49,8 @@ void Audio::drawVolumeSlider(VolumeType type, int* volume, const char* englishVo
         if (*volume < 0) *volume = 0;
         if (*volume > 100) *volume = 100;
     }
-    DrawText(TextFormat("%s: %i", gameState.getLocalizedText(englishVolumeName, germanVolumeName), *volume), slider.x + slider.width/2 - MeasureText(TextFormat("%s: %i", gameState.getLocalizedText(englishVolumeName, germanVolumeName), *volume), 20)/2, slider.y - 40, 20, BLACK);
+    DrawText(TextFormat("%s: %i", gameState.GetLocalizedText(englishVolumeName, germanVolumeName), *volume), slider.x + slider.width / 2 - MeasureText(TextFormat("%s: %i",
+                                                                                                                                                                  gameState.GetLocalizedText(
+                                                                                                                                                                        englishVolumeName,
+                                                                                                                                                                        germanVolumeName), *volume), 20) / 2, slider.y - 40, 20, BLACK);
 }

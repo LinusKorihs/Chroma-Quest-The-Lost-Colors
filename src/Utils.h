@@ -1,9 +1,11 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "raylib.h"
-#include "config.h"
 #include "ApplicationState.h"
+#include "config.h"
+#include "raylib.h"
+
+
 
 class Button {
 public:
@@ -13,7 +15,7 @@ public:
     static int setKeyBindText;
     static int countDrawText;
     static bool CheckButtonClick(Rectangle button, const char* englishText, const char* germanText);
-    static void drawPromptText(const char* englishDirection, const char* germanDirection);
+    static void DrawPromptText(const char* englishDirection, const char* germanDirection);
 };
 
 #endif // UTILS_H

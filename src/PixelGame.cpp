@@ -1,8 +1,4 @@
 #include "PixelGame.h"
-#include "Audio.h"
-#include "Menu.h"
-#include "InGameHud.h"
-#include "ApplicationState.h"
 
 ApplicationState gameState;
 
@@ -20,6 +16,10 @@ Camera2D PixelGame::camera;
 
 float PixelGame::mcX = 80;
 float PixelGame::mcY = 368;
+bool PixelGame::lastDirectionLeft = false;
+bool PixelGame::lastDirectionUp = false;
+bool PixelGame::lastDirectionRight = false;
+bool PixelGame::lastDirectionDown = false;
 
 Rectangle PixelGame::characterRec;
 Rectangle PixelGame::lavaRec;
@@ -103,18 +103,34 @@ void PixelGame::MoveCharacter(int direction)
         case KEY_RIGHT:
         case KEY_D:
             newPositionX += gameState.moveSpeed;
+            lastDirectionLeft = false;
+            lastDirectionUp = false;
+            lastDirectionDown = false;
+            lastDirectionRight = true;
             break;
         case KEY_LEFT:
         case KEY_A:
             newPositionX -= gameState.moveSpeed;
+            lastDirectionLeft = true;
+            lastDirectionUp = false;
+            lastDirectionDown = false;
+            lastDirectionRight = false;
             break;
         case KEY_UP:
         case KEY_W:
             newPositionY -= gameState.moveSpeed;
+            lastDirectionUp = true;
+            lastDirectionDown = false;
+            lastDirectionRight = false;
+            lastDirectionLeft = false;
             break;
         case KEY_DOWN:
         case KEY_S:
             newPositionY += gameState.moveSpeed;
+            lastDirectionUp = false;
+            lastDirectionDown = true;
+            lastDirectionRight = false;
+            lastDirectionLeft = false;
             break;
     }
 
@@ -136,7 +152,8 @@ void PixelGame::MoveCharacter(int direction)
             stoneCollision = true;
         }
     }
-    if(!stoneCollision) {
+    if(!stoneCollision)
+    {
         mcX = newPositionX;
         mcY = newPositionY;
     }
@@ -145,7 +162,7 @@ void PixelGame::MoveCharacter(int direction)
 
 void PixelGame::GameInit()
 {
-    Audio::loadResourcesAndInitAudio();
+    Audio::LoadResourcesAndInitAudio();
     LoadTextureX(lavaTexture, "assets/graphics/backgrounds/Lava.png");
     LoadTextureX(meatTexture, "assets/graphics/Fleisch.png");
     LoadTextureX(fruitTexture, "assets/graphics/Frucht.png");
@@ -160,9 +177,10 @@ void PixelGame::GameInit()
     auto MapPtr = tileson.parse("assets/data/tilemap.tmj");
     tson::Map &Map = *MapPtr;
 
-    if (Map.getStatus() != tson::ParseStatus::OK) {
+    if (Map.getStatus() != tson::ParseStatus::OK)
+    {
         std::cout
-                << gameState.getLocalizedText("Failed to parse map, error: ", "Fehler beim Parsen der Karte, Fehler: ")
+                << gameState.GetLocalizedText("Failed to parse map, error: ", "Fehler beim Parsen der Karte, Fehler: ")
                 << Map.getStatusMessage() << std::endl;
     }
     //camera init
@@ -173,46 +191,79 @@ void PixelGame::GameInit()
     camera.zoom = 4.0f;
 
     Rectangle stoneSourceRect = {144,96,16,16};
-    int x = 16*6;
-    int y = 20*16;
+    int x = 16 * 6;
+    int y = 20 * 16;
 
     stones.push_back(Stone(x,y,32,tilesetTexture,stoneSourceRect));
 
 
 }
 
-void PixelGame::InitProjectile(Projectile &proj, Vector2 startPosition, Vector2 speed) {
+void PixelGame::InitProjectile(Projectile &proj, Vector2 startPosition, Vector2 speed)
+{
     proj.position = startPosition;
     proj.speed = speed;
     proj.isActive = true;
 }
 
-void PixelGame::UpdateProjectile(Projectile &proj, float deltaTime) {
-    projectileRec = {proj.position.x, proj.position.y, projectileTexture.width / 4.0f, static_cast<float>(projectileTexture.height)};
+void PixelGame::ProjectileCollision(Projectile &proj)
+{
 
-    if (proj.isActive) {
-        proj.position.x += proj.speed.x * deltaTime;
-        proj.position.y += proj.speed.y * deltaTime;
-        for (const Rectangle& wallRec : gameState.wallRecs)
+    for (const Rectangle& wallRec : gameState.wallRecs)
+    {
+        if (CheckCollisionRecs(projectileRec, wallRec) or proj.position.x > mcX + 200) //mcX darf nicht mehr geupdated werden - andere variable benutzen
         {
-            if (CheckCollisionRecs(projectileRec, wallRec) or proj.position.x > mcX + 200)
-            {
-                proj.isActive = false;
-            }
+            proj.isActive = false;
         }
     }
 }
 
-void PixelGame::DrawProjectile(const Projectile &proj) {
-    if (proj.isActive) {
+void PixelGame::UpdateProjectile(Projectile &proj, float deltaTime)
+{
+    projectileRec = {proj.position.x, proj.position.y, projectileTexture.width / 4.0f, static_cast<float>(projectileTexture.height)};
+
+    if (proj.isActive && lastDirectionRight)
+    {
+        proj.position.x += proj.speed.x * deltaTime;
+        ProjectileCollision(proj);
+    }
+    if (proj.isActive && lastDirectionLeft)
+    {
+        proj.position.x -= proj.speed.x * deltaTime;
+        ProjectileCollision(proj);
+    }
+    if (proj.isActive && lastDirectionUp)
+    {
+        proj.position.y -= proj.speed.y * deltaTime;
+        ProjectileCollision(proj);
+    }
+    if (proj.isActive && lastDirectionDown)
+    {
+        proj.position.y += proj.speed.y * deltaTime;
+        ProjectileCollision(proj);
+    }
+}
+
+void PixelGame::DrawProjectile(const Projectile &proj)
+{
+    if (proj.isActive)
+    {
         DrawTextureEx(projectileTexture, proj.position, 0, 1.0f, WHITE);
     }
 }
 
-void PixelGame::Attack() {
-    if (IsKeyPressed(KEY_ENTER) && gameState.mana > 0 && !projectile.isActive) {
+void PixelGame::Attack()
+{
+    if (IsKeyPressed(KEY_ENTER) && gameState.mana > 0 && !projectile.isActive)
+    {
         gameState.mana -= 1;
-        InitProjectile(projectile, {mcX, mcY}, {200.0f, 0.0f});
+        InitProjectile(projectile, {mcX + 20, mcY + 10}, {200.0f, 200.0f});
+    }
+    if(CheckCollisionRecs(projectileRec, enemy.enemyRec) && projectile.isActive)
+    {
+        enemy.enemyHit = true;
+        gameState.score += 10;
+        projectile.isActive = false;
     }
 }
 
@@ -225,21 +276,25 @@ void PixelGame::DrawObjects() //unload sieht noch bisschen weird aus
     meatRec = {450.0f, 275.0f, meatTexture.width / 1.5f, meatTexture.height / 1.5f};
     fruitRec = {150.0f, 100.0f, fruitTexture.width / 1.5f, fruitTexture.height / 1.5f};
 
-    if(!gameState.meatUnload) {
+    if(!gameState.meatUnload)
+    {
         DrawTexture(meatTexture, {450.0f, 275.0f, meatTexture.width / 1.5f, meatTexture.height / 1.5f});
     }
-    if(!gameState.fruitUnload) {
+    if(!gameState.fruitUnload)
+    {
         DrawTexture(fruitTexture, {150.0f, 100.0f, fruitTexture.width / 1.5f, fruitTexture.height / 1.5f});
     }
-    DrawTexture(lavaTexture, {300.0f, 275.0f, lavaTexture.width / 25.0f, lavaTexture.height / 25.0f});
 
+    DrawTexture(lavaTexture, {300.0f, 275.0f, lavaTexture.width / 25.0f, lavaTexture.height / 25.0f});
 
     if (CheckCollisionRecs(characterRec, fruitRec))
     {
-        if(!gameState.fruitUnload) {
+        if(!gameState.fruitUnload)
+        {
             gameState.fruitUnload = true;
             gameState.health += 25;
-            if (gameState.health >= 100) {
+            if (gameState.health >= 100)
+            {
                 gameState.health = 100;
             }
 
@@ -250,14 +305,17 @@ void PixelGame::DrawObjects() //unload sieht noch bisschen weird aus
 
     if (CheckCollisionRecs(characterRec, meatRec))
     {
-        if(!gameState.meatUnload) {
+        if(!gameState.meatUnload)
+        {
             gameState.meatUnload = true;
             gameState.health += 50;
             gameState.mana += 1;
-            if(gameState.mana >= 5) {
+            if(gameState.mana >= 5)
+            {
                 gameState.mana = 5;
             }
-            if (gameState.health >= 100) {
+            if (gameState.health >= 100)
+            {
                 gameState.health = 100;
             }
 
@@ -281,7 +339,7 @@ void PixelGame::GameLoop(tson::Map &Map)
 
         if (gameState.isPaused)
         {
-            gameState.changeState(MenuState::PauseMenu);
+            gameState.ChangeState(MenuState::PauseMenu);
             gameState.currentMenu = MenuState::PauseMenu;
             Menu::drawPauseMenu(gameState);
         }
@@ -315,33 +373,40 @@ void PixelGame::GameLoop(tson::Map &Map)
         DrawProjectile(projectile);
 
 
-        if (IsKeyPressed(KEY_ESCAPE)) {
-            Audio::unloadResourcesAndCloseAudio();
-            gameState.changeState(MenuState::PauseMenu);
+        if (IsKeyPressed(KEY_ESCAPE))
+        {
+            Audio::UnloadResourcesAndCloseAudio();
+            gameState.ChangeState(MenuState::PauseMenu);
             return;
         }
 
         bool isMoving = false; //movement sollte noch separiert werden
 
-        if (IsKeyDown(gameState.keyBindings[UP])) {
+        if (IsKeyDown(gameState.keyBindings[UP]))
+        {
             MoveCharacter(KEY_UP);
             isMoving = true;
         }
-        if (IsKeyDown(gameState.keyBindings[DOWN])) {
+        if (IsKeyDown(gameState.keyBindings[DOWN]))
+        {
             MoveCharacter(KEY_DOWN);
             isMoving = true;
         }
-        if (IsKeyDown(gameState.keyBindings[LEFT])) {
+        if (IsKeyDown(gameState.keyBindings[LEFT]))
+        {
             MoveCharacter(KEY_LEFT);
             isMoving = true;
         }
-        if (IsKeyDown(gameState.keyBindings[RIGHT])) {
+        if (IsKeyDown(gameState.keyBindings[RIGHT]))
+        {
             MoveCharacter(KEY_RIGHT);
             isMoving = true;
         }
-        if (isMoving && !IsSoundPlaying(gameState.walkingSound)) {
+        if (isMoving && !IsSoundPlaying(gameState.walkingSound))
+        {
             PlaySound(gameState.walkingSound);
-        } else if (!isMoving && IsSoundPlaying(gameState.walkingSound)) {
+        } else if (!isMoving && IsSoundPlaying(gameState.walkingSound))
+        {
             StopSound(gameState.walkingSound);
         }
         UpdateMusicStream(gameState.backgroundMusic);
@@ -353,7 +418,7 @@ void PixelGame::GameLoop(tson::Map &Map)
             if (gameState.health <= 0) {
                 gameState.health = 0;
                 UnloadAll();
-                gameState.changeState(MenuState::MainMenu);
+                gameState.ChangeState(MenuState::MainMenu);
                 gameState.health = 100;
                 gameState.playerDeath = 1;
                 return;
@@ -394,7 +459,7 @@ void PixelGame::UnloadTextureX(Texture2D &texture)
 
 void PixelGame::UnloadAll()
 {
-    Audio::unloadResourcesAndCloseAudio();
+    Audio::UnloadResourcesAndCloseAudio();
     UnloadTextureX(lavaTexture);
     UnloadTextureX(meatTexture);
     UnloadTextureX(fruitTexture);
@@ -405,9 +470,9 @@ void PixelGame::UnloadAll()
 
 void PixelGame::DrawHud()
 {
-    InGameHud::drawHealthBarTexture();
-    InGameHud::drawRGBBarTexture();
-    DrawText(TextFormat("%s: %i", gameState.getLocalizedText("Score", "Punkte"), gameState.score), 1700, 140, 20,BLACK);
+    InGameHud::DrawHealthBarTexture();
+    InGameHud::DrawRGBBarTexture();
+    DrawText(TextFormat("%s: %i", gameState.GetLocalizedText("Score", "Punkte"), gameState.score), 1700, 140, 20, BLACK);
 }
 
 void PixelGame::PlayerDeath() //muss noch richtig implementiert werden
@@ -415,7 +480,7 @@ void PixelGame::PlayerDeath() //muss noch richtig implementiert werden
     if (gameState.health <= 0)
     {
         gameState.playerDeath = 1;
-        gameState.changeState(MenuState::MainMenu);
+        gameState.ChangeState(MenuState::MainMenu);
     }
 }
 
@@ -431,7 +496,8 @@ void PixelGame::ReceiveDmg() //muss noch richtig implementiert werden
 }
 
 
-void PixelGame::EnemyInit(Enemy &en, Vector2 positionEnemy, Texture2D &enemyTexture) {
+void PixelGame::EnemyInit(Enemy &en, Vector2 positionEnemy, Texture2D &enemyTexture)
+{
     en.enemyHit = false;
     en.unload = false;
     en.positionEnemy = positionEnemy;
@@ -441,17 +507,21 @@ void PixelGame::EnemyInit(Enemy &en, Vector2 positionEnemy, Texture2D &enemyText
     en.currentFrame = 0;
     en.framesCounter = 0;
     en.framesSpeed = 8;
+    en.enemyHits = 0;
+    en.enemyRec = {en.positionEnemy.x, en.positionEnemy.y, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3};
 }
 
-void PixelGame::EnemyUpdate(Enemy &en, float deltaTime, Texture2D &enemyTexture) {
-
+void PixelGame::EnemyUpdate(Enemy &en, float deltaTime, Texture2D &enemyTexture)
+{
     en.framesCounter++;
 
-    if (en.framesCounter >= (60 / en.framesSpeed)) {
+    if (en.framesCounter >= (60 / en.framesSpeed))
+    {
         en.framesCounter = 0;
         en.currentFrame++;
 
-        if (en.currentFrame > 20) {
+        if (en.currentFrame > 20)
+        {
             en.currentFrame = 0;
         }
 
@@ -460,23 +530,29 @@ void PixelGame::EnemyUpdate(Enemy &en, float deltaTime, Texture2D &enemyTexture)
         en.frameRec3.x = (float)en.currentFrame * (float)enemyTexture.width / 8;
     }
 
-    if(IsKeyPressed(KEY_SPACE)) {
+    if(IsKeyPressed(KEY_SPACE))
+    {
         en.enemyHit = true;
     }
 }
 
-void PixelGame::DrawEnemies(Enemy &en, Texture2D &enemyTexture) {
-    if (!en.enemyHit) {
-        if(en.currentFrame < 7){
+void PixelGame::DrawEnemies(Enemy &en, Texture2D &enemyTexture)
+{
+    if (!en.enemyHit)
+    {
+        if(en.currentFrame < 7)
+        {
             DrawTextureRec(enemyTexture, en.frameRec1, en.positionEnemy, WHITE);
         } else {
             DrawTextureRec(enemyTexture, en.frameRec2, en.positionEnemy, WHITE);
         }
     } else {
-        if(!en.unload) {
+        if(!en.unload)
+        {
             DrawTextureRec(enemyTexture, en.frameRec3, en.positionEnemy, WHITE);
         }
-        if(en.currentFrame == 0) {
+        if(en.framesCounter == 0)
+        {
             UnloadTexture(enemyTexture);
             en.unload = true;
         }
