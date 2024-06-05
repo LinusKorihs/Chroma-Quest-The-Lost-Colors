@@ -56,6 +56,7 @@ public:
     void ToggleLanguage();
 
     static const char* GetLocalizedText(const char* englishText, const char* germanText);
+
 };
 
 extern ApplicationState gameState;

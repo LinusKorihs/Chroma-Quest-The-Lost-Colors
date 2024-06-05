@@ -25,6 +25,8 @@ add_executable(${PROJECT_NAME} main.cpp
         ApplicationState.h
         Stone.cpp
         Stone.h
+        Projectile.cpp
+        Projectile.h
 )
 
 # Add config.h.in file

@@ -2,13 +2,13 @@
 
 ApplicationState gameState;
 
-//definition of static variables
+std::shared_ptr<Pixelgame::Projectile> PixelGame::proj_p;
+
 std::vector<Stone> PixelGame::stones;
 
 Texture2D PixelGame::lavaTexture;
 Texture2D PixelGame::meatTexture;
 Texture2D PixelGame::fruitTexture;
-Texture2D PixelGame::projectileTexture;
 Texture2D PixelGame::slimeTexture;
 Texture2D PixelGame::tilesetTexture;
 
@@ -16,18 +16,19 @@ Camera2D PixelGame::camera;
 
 float PixelGame::mcX = 80;
 float PixelGame::mcY = 368;
+int PixelGame::projDest;
+
 bool PixelGame::lastDirectionLeft = false;
 bool PixelGame::lastDirectionUp = false;
 bool PixelGame::lastDirectionRight = false;
 bool PixelGame::lastDirectionDown = false;
+bool PixelGame::isKnocked = false;
 
 Rectangle PixelGame::characterRec;
 Rectangle PixelGame::lavaRec;
 Rectangle PixelGame::meatRec;
 Rectangle PixelGame::fruitRec;
-Rectangle PixelGame::projectileRec;
 
-struct Projectile PixelGame::projectile;
 struct Enemy PixelGame::enemy;
 
 void PixelGame::DrawTiles(tson::Map &Map, Texture2D &myTexture)
@@ -93,82 +94,98 @@ void PixelGame::DrawSprite(Texture2D &myTexture)
     DrawTexturePro(myTexture, source, dest, {0, 0}, 0.0f, WHITE);
 }
 
-void PixelGame::MoveCharacter(int direction)
-{
+void PixelGame::MoveCharacter(int direction) {
     float newPositionX = mcX;
     float newPositionY = mcY;
 
-    switch (direction)
-    {
-        case KEY_RIGHT:
-        case KEY_D:
-            newPositionX += gameState.moveSpeed;
-            lastDirectionLeft = false;
-            lastDirectionUp = false;
-            lastDirectionDown = false;
-            lastDirectionRight = true;
-            break;
-        case KEY_LEFT:
-        case KEY_A:
-            newPositionX -= gameState.moveSpeed;
-            lastDirectionLeft = true;
-            lastDirectionUp = false;
-            lastDirectionDown = false;
-            lastDirectionRight = false;
-            break;
-        case KEY_UP:
-        case KEY_W:
-            newPositionY -= gameState.moveSpeed;
-            lastDirectionUp = true;
-            lastDirectionDown = false;
-            lastDirectionRight = false;
-            lastDirectionLeft = false;
-            break;
-        case KEY_DOWN:
-        case KEY_S:
-            newPositionY += gameState.moveSpeed;
-            lastDirectionUp = false;
-            lastDirectionDown = true;
-            lastDirectionRight = false;
-            lastDirectionLeft = false;
-            break;
-    }
+        switch (direction) {
+            case KEY_RIGHT:
+            case KEY_D:
+                newPositionX += gameState.moveSpeed;
+                lastDirectionLeft = false;
+                lastDirectionUp = false;
+                lastDirectionDown = false;
+                lastDirectionRight = true;
+                break;
+            case KEY_LEFT:
+            case KEY_A:
+                newPositionX -= gameState.moveSpeed;
+                lastDirectionLeft = true;
+                lastDirectionUp = false;
+                lastDirectionDown = false;
+                lastDirectionRight = false;
+                break;
+            case KEY_UP:
+            case KEY_W:
+                newPositionY -= gameState.moveSpeed;
+                lastDirectionUp = true;
+                lastDirectionDown = false;
+                lastDirectionRight = false;
+                lastDirectionLeft = false;
+                break;
+            case KEY_DOWN:
+            case KEY_S:
+                newPositionY += gameState.moveSpeed;
+                lastDirectionUp = false;
+                lastDirectionDown = true;
+                lastDirectionRight = false;
+                lastDirectionLeft = false;
+                break;
+            default:
+                break;
+        }
 
-    Rectangle newRec = {newPositionX, newPositionY, gameState.myMC.width * 0.15f, gameState.myMC.height * 0.15f};
+        Rectangle newRec = {newPositionX, newPositionY, gameState.myMC.width * 0.15f, gameState.myMC.height * 0.15f};
 
-    for (const Rectangle& wallRec : gameState.wallRecs)
+        for (const Rectangle &wallRec: gameState.wallRecs) {
+            if (CheckCollisionRecs(newRec, wallRec)) {
+                return;
+            }
+        }
+        bool stoneCollision = false;
+        for (Stone &stone: stones) {
+            if (CheckCollisionRecs(newRec, stone.getRectangle())) {
+                stone.move(direction, gameState.wallRecs);
+                stoneCollision = true;
+            }
+        }
+        if (!stoneCollision) {
+            mcX = newPositionX;
+            mcY = newPositionY;
+        }
+    if(!proj_p->GetActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectile.h übergeben)
     {
-        if (CheckCollisionRecs(newRec, wallRec))
+        if (lastDirectionLeft)
         {
-            return;
+            projDest = 2;
+        }
+        if (lastDirectionRight)
+        {
+            projDest = 1;
+        }
+        if (lastDirectionUp)
+        {
+            projDest = 3;
+        }
+        if (lastDirectionDown)
+        {
+            projDest = 4;
         }
     }
-    bool stoneCollision = false;
-    for(Stone& stone : stones)
-    {
-        if(CheckCollisionRecs(newRec, stone.getRectangle()))
-        {
-            stone.move(direction,gameState.wallRecs);
-            stoneCollision = true;
-        }
-    }
-    if(!stoneCollision)
-    {
-        mcX = newPositionX;
-        mcY = newPositionY;
-    }
-
 }
+
 
 void PixelGame::GameInit()
 {
+    proj_p = std::make_shared<Pixelgame::Projectile>();
+
     Audio::LoadResourcesAndInitAudio();
     LoadTextureX(lavaTexture, "assets/graphics/backgrounds/Lava.png");
     LoadTextureX(meatTexture, "assets/graphics/Fleisch.png");
     LoadTextureX(fruitTexture, "assets/graphics/Frucht.png");
-    LoadTextureX(projectileTexture, "assets/graphics/necrobolt1_strip.png");
     LoadTextureX(slimeTexture, "assets/graphics/slime-Sheet.png");
     LoadTextureX(tilesetTexture, "assets/graphics/testimage.png");
+    proj_p->Load(); //Projectile Textur
 
     gameState.health = 100;
 
@@ -195,75 +212,39 @@ void PixelGame::GameInit()
     int y = 20 * 16;
 
     stones.push_back(Stone(x,y,32,tilesetTexture,stoneSourceRect));
-
-
-}
-
-void PixelGame::InitProjectile(Projectile &proj, Vector2 startPosition, Vector2 speed)
-{
-    proj.position = startPosition;
-    proj.speed = speed;
-    proj.isActive = true;
-}
-
-void PixelGame::ProjectileCollision(Projectile &proj)
-{
-
-    for (const Rectangle& wallRec : gameState.wallRecs)
-    {
-        if (CheckCollisionRecs(projectileRec, wallRec) or proj.position.x > mcX + 200) //mcX darf nicht mehr geupdated werden - andere variable benutzen
-        {
-            proj.isActive = false;
-        }
-    }
-}
-
-void PixelGame::UpdateProjectile(Projectile &proj, float deltaTime)
-{
-    projectileRec = {proj.position.x, proj.position.y, projectileTexture.width / 4.0f, static_cast<float>(projectileTexture.height)};
-
-    if (proj.isActive && lastDirectionRight)
-    {
-        proj.position.x += proj.speed.x * deltaTime;
-        ProjectileCollision(proj);
-    }
-    if (proj.isActive && lastDirectionLeft)
-    {
-        proj.position.x -= proj.speed.x * deltaTime;
-        ProjectileCollision(proj);
-    }
-    if (proj.isActive && lastDirectionUp)
-    {
-        proj.position.y -= proj.speed.y * deltaTime;
-        ProjectileCollision(proj);
-    }
-    if (proj.isActive && lastDirectionDown)
-    {
-        proj.position.y += proj.speed.y * deltaTime;
-        ProjectileCollision(proj);
-    }
-}
-
-void PixelGame::DrawProjectile(const Projectile &proj)
-{
-    if (proj.isActive)
-    {
-        DrawTextureEx(projectileTexture, proj.position, 0, 1.0f, WHITE);
-    }
 }
 
 void PixelGame::Attack()
 {
-    if (IsKeyPressed(KEY_ENTER) && gameState.mana > 0 && !projectile.isActive)
+    if (IsKeyPressed(KEY_ENTER) && gameState.mana > 0 && !proj_p->GetActive()) //Projectile wird aktiviert
     {
+        Vector2 startPosition;
         gameState.mana -= 1;
-        InitProjectile(projectile, {mcX + 20, mcY + 10}, {200.0f, 200.0f});
+        if(lastDirectionRight)
+        {
+            startPosition = {mcX + 20, mcY + 10};
+        }
+        if(lastDirectionLeft)
+        {
+            startPosition = {mcX - 1, mcY + 10};
+        }
+        if(lastDirectionUp)
+        {
+            startPosition = {mcX + 10, mcY - 5};
+        }
+        if(lastDirectionDown)
+        {
+            startPosition = {mcX + 10, mcY + 20};
+        }
+
+        proj_p->Init(startPosition, {300.0f, 300.0f});
+
     }
-    if(CheckCollisionRecs(projectileRec, enemy.enemyRec) && projectile.isActive)
+    if(CheckCollisionRecs(proj_p->GetRec(), enemy.enemyRec) && proj_p->GetActive()) //Projectil trifft auf enemy
     {
         enemy.enemyHit = true;
         gameState.score += 10;
-        projectile.isActive = false;
+        proj_p->SetActive(false);
     }
 }
 
@@ -369,8 +350,8 @@ void PixelGame::GameLoop(tson::Map &Map)
         DrawEnemies(enemy, slimeTexture);
 
         Attack();
-        UpdateProjectile(projectile, GetFrameTime());
-        DrawProjectile(projectile);
+        proj_p->Update(GetFrameTime(), GetProjDest());
+        proj_p->Draw();
 
 
         if (IsKeyPressed(KEY_ESCAPE))
@@ -463,7 +444,7 @@ void PixelGame::UnloadAll()
     UnloadTextureX(lavaTexture);
     UnloadTextureX(meatTexture);
     UnloadTextureX(fruitTexture);
-    UnloadTextureX(projectileTexture);
+    proj_p->Unload(); //Projectile Textur
     UnloadTextureX(slimeTexture);
     UnloadTextureX(tilesetTexture);
 }
@@ -484,7 +465,7 @@ void PixelGame::PlayerDeath() //muss noch richtig implementiert werden
     }
 }
 
-void PixelGame::ReceiveDmg() //muss noch richtig implementiert werden
+void PixelGame::ReceiveDmg(Enemy &en) //muss noch richtig implementiert werden
 {
     if (CheckCollisionRecs(characterRec, lavaRec))
     {
@@ -534,28 +515,37 @@ void PixelGame::EnemyUpdate(Enemy &en, float deltaTime, Texture2D &enemyTexture)
     {
         en.enemyHit = true;
     }
+
+    if(en.enemyHit && !en.enemyHits)
+    {
+        en.currentFrame = 16;
+        en.enemyHits = true;
+    }
 }
 
-void PixelGame::DrawEnemies(Enemy &en, Texture2D &enemyTexture)
-{
-    if (!en.enemyHit)
+void PixelGame::DrawEnemies(Enemy &en, Texture2D &enemyTexture) {
+
+    if (!en.enemyHit && !en.unload)
     {
-        if(en.currentFrame < 7)
+        if (en.currentFrame < 7)
         {
             DrawTextureRec(enemyTexture, en.frameRec1, en.positionEnemy, WHITE);
         } else {
             DrawTextureRec(enemyTexture, en.frameRec2, en.positionEnemy, WHITE);
         }
     } else {
-        if(!en.unload)
+        if (!en.unload)
         {
             DrawTextureRec(enemyTexture, en.frameRec3, en.positionEnemy, WHITE);
         }
-        if(en.framesCounter == 0)
+        if (en.currentFrame == 20)
         {
             UnloadTexture(enemyTexture);
             en.unload = true;
         }
-
     }
+}
+
+int PixelGame::GetProjDest() { //funktion um movement des players in projectile zu übergeben
+    return projDest;
 }
