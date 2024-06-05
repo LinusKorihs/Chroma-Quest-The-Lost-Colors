@@ -23,7 +23,6 @@ namespace Pixelgame {
         Vector2 position{};
         Vector2 projSpeed{};
         bool isActive;
-        //int projDest;
         Rectangle projectileRec{};
         Texture2D projectileTexture{};
     };

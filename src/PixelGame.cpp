@@ -3,6 +3,7 @@
 ApplicationState gameState;
 
 std::shared_ptr<Pixelgame::Projectile> PixelGame::proj_p;
+std::shared_ptr<Pixelgame::Enemy> PixelGame::en_p;
 
 std::vector<Stone> PixelGame::stones;
 
@@ -29,7 +30,6 @@ Rectangle PixelGame::lavaRec;
 Rectangle PixelGame::meatRec;
 Rectangle PixelGame::fruitRec;
 
-struct Enemy PixelGame::enemy;
 
 void PixelGame::DrawTiles(tson::Map &Map, Texture2D &myTexture)
 {
@@ -240,9 +240,9 @@ void PixelGame::Attack()
         proj_p->Init(startPosition, {300.0f, 300.0f});
 
     }
-    if(CheckCollisionRecs(proj_p->GetRec(), enemy.enemyRec) && proj_p->GetActive()) //Projectil trifft auf enemy
+    if(CheckCollisionRecs(proj_p->GetRec(), en_p->GetEnemyRec()) && proj_p->GetActive()) //Projectil trifft auf enemy
     {
-        enemy.enemyHit = true;
+        en_p->SetEnemyHit(true);
         gameState.score += 10;
         proj_p->SetActive(false);
     }
@@ -308,7 +308,8 @@ void PixelGame::DrawObjects() //unload sieht noch bisschen weird aus
 
 void PixelGame::GameLoop(tson::Map &Map)
 {
-    EnemyInit(enemy, {250.0f, 280.0f}, slimeTexture);
+
+    en_p = std::make_shared<Pixelgame::Enemy>(Vector2{250, 280}, slimeTexture, 2, 5.0f);
 
     while (!WindowShouldClose() && gameState.gameIsRunning)
     {
@@ -346,8 +347,8 @@ void PixelGame::GameLoop(tson::Map &Map)
         DrawSprite(gameState.myMC);
         gameState.playerDeath = 0;
 
-        EnemyUpdate(enemy, GetFrameTime(), slimeTexture);
-        DrawEnemies(enemy, slimeTexture);
+        en_p->EnemyUpdate( GetFrameTime(), slimeTexture);
+        en_p->DrawEnemies(slimeTexture);
 
         Attack();
         proj_p->Update(GetFrameTime(), GetProjDest());
@@ -465,83 +466,13 @@ void PixelGame::PlayerDeath() //muss noch richtig implementiert werden
     }
 }
 
-void PixelGame::ReceiveDmg(Enemy &en) //muss noch richtig implementiert werden
+void PixelGame::ReceiveDmg() //muss noch richtig implementiert werden
 {
     if (CheckCollisionRecs(characterRec, lavaRec))
     {
         gameState.health -= gameState.damage_per_frame;
         if (gameState.health <= 0) {
            PlayerDeath();
-        }
-    }
-}
-
-
-void PixelGame::EnemyInit(Enemy &en, Vector2 positionEnemy, Texture2D &enemyTexture)
-{
-    en.enemyHit = false;
-    en.unload = false;
-    en.positionEnemy = positionEnemy;
-    en.frameRec1 = { 0.0f, 0.0f, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
-    en.frameRec2 = { 0.0f, (float)enemyTexture.height / 3, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
-    en.frameRec3 = { 0.0f, ((float)enemyTexture.height / 3) * 2, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
-    en.currentFrame = 0;
-    en.framesCounter = 0;
-    en.framesSpeed = 8;
-    en.enemyHits = 0;
-    en.enemyRec = {en.positionEnemy.x, en.positionEnemy.y, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3};
-}
-
-void PixelGame::EnemyUpdate(Enemy &en, float deltaTime, Texture2D &enemyTexture)
-{
-    en.framesCounter++;
-
-    if (en.framesCounter >= (60 / en.framesSpeed))
-    {
-        en.framesCounter = 0;
-        en.currentFrame++;
-
-        if (en.currentFrame > 20)
-        {
-            en.currentFrame = 0;
-        }
-
-        en.frameRec1.x = (float)en.currentFrame * (float)enemyTexture.width / 8;
-        en.frameRec2.x = (float)en.currentFrame * (float)enemyTexture.width / 8;
-        en.frameRec3.x = (float)en.currentFrame * (float)enemyTexture.width / 8;
-    }
-
-    if(IsKeyPressed(KEY_SPACE))
-    {
-        en.enemyHit = true;
-    }
-
-    if(en.enemyHit && !en.enemyHits)
-    {
-        en.currentFrame = 16;
-        en.enemyHits = true;
-    }
-}
-
-void PixelGame::DrawEnemies(Enemy &en, Texture2D &enemyTexture) {
-
-    if (!en.enemyHit && !en.unload)
-    {
-        if (en.currentFrame < 7)
-        {
-            DrawTextureRec(enemyTexture, en.frameRec1, en.positionEnemy, WHITE);
-        } else {
-            DrawTextureRec(enemyTexture, en.frameRec2, en.positionEnemy, WHITE);
-        }
-    } else {
-        if (!en.unload)
-        {
-            DrawTextureRec(enemyTexture, en.frameRec3, en.positionEnemy, WHITE);
-        }
-        if (en.currentFrame == 20)
-        {
-            UnloadTexture(enemyTexture);
-            en.unload = true;
         }
     }
 }
