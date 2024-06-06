@@ -308,7 +308,7 @@ int Menu::drawControllerMenu(ApplicationState &gameState)
         ClearBackground(DARKGRAY);
 
         const char* text = gameState.GetLocalizedText("No Controller Implementation yet.",
-                                                      "Keine Kontroller Implementierung bisher.");
+                                                      "Keine Controller Implementierung bisher.");
         int textWidth = MeasureText(text, 20);
 
         DrawText(text, PixelGameConfig::ScreenWidth / 2 - textWidth / 2, PixelGameConfig::ScreenHeight / 2, 20, BLACK);

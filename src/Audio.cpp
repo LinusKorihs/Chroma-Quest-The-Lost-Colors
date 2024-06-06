@@ -19,7 +19,7 @@ void Audio::UpdateVolumes()
 void Audio::LoadResourcesAndInitAudio()
 {
     gameState.myTexture = LoadTexture("assets/graphics/testimage.png");
-    gameState.myMC = LoadTexture("assets/graphics/MC_test_2.png");
+    gameState.myMC = LoadTexture("assets/graphics/Aurora2.png");
     InitAudioDevice();
     gameState.walkingSound = LoadSound("assets/audio/sfx/FootSteps.wav");
     gameState.backgroundMusic = LoadMusicStream("assets/audio/tracks/TestSong.wav");

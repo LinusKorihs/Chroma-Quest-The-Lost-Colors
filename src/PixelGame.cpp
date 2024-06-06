@@ -3,6 +3,7 @@
 ApplicationState gameState;
 
 std::shared_ptr<Pixelgame::Projectile> PixelGame::proj_p;
+std::shared_ptr<Pixelgame::Projectile> PixelGame::proj_p_enemy;
 std::shared_ptr<Pixelgame::Enemy> PixelGame::en_p;
 
 std::vector<Stone> PixelGame::stones;
@@ -29,6 +30,7 @@ Rectangle PixelGame::characterRec;
 Rectangle PixelGame::lavaRec;
 Rectangle PixelGame::meatRec;
 Rectangle PixelGame::fruitRec;
+Rectangle PixelGame::characterHitRec;
 
 
 void PixelGame::DrawTiles(tson::Map &Map, Texture2D &myTexture)
@@ -94,7 +96,7 @@ void PixelGame::DrawSprite(Texture2D &myTexture)
     DrawTexturePro(myTexture, source, dest, {0, 0}, 0.0f, WHITE);
 }
 
-void PixelGame::MoveCharacter(int direction) {
+void PixelGame::MoveCharacter(int direction, float deltaTime) {
     float newPositionX = mcX;
     float newPositionY = mcY;
 
@@ -134,6 +136,7 @@ void PixelGame::MoveCharacter(int direction) {
             default:
                 break;
         }
+
 
         Rectangle newRec = {newPositionX, newPositionY, gameState.myMC.width * 0.15f, gameState.myMC.height * 0.15f};
 
@@ -178,6 +181,7 @@ void PixelGame::MoveCharacter(int direction) {
 void PixelGame::GameInit()
 {
     proj_p = std::make_shared<Pixelgame::Projectile>();
+    proj_p_enemy = std::make_shared<Pixelgame::Projectile>();
 
     Audio::LoadResourcesAndInitAudio();
     LoadTextureX(lavaTexture, "assets/graphics/backgrounds/Lava.png");
@@ -186,6 +190,7 @@ void PixelGame::GameInit()
     LoadTextureX(slimeTexture, "assets/graphics/slime-Sheet.png");
     LoadTextureX(tilesetTexture, "assets/graphics/testimage.png");
     proj_p->Load(); //Projectile Textur
+    proj_p_enemy->Load(); //Projectile Enemy Textur
 
     gameState.health = 100;
 
@@ -213,7 +218,22 @@ void PixelGame::GameInit()
 
     stones.push_back(Stone(x,y,32,tilesetTexture,stoneSourceRect));
 }
-
+void PixelGame::EnemyAttack()
+{
+    if (!proj_p_enemy->GetActive() && !en_p->GetEnemyDeath()){
+        Vector2 startPosition = en_p->GetPosition();
+        startPosition.y += 10;
+        proj_p_enemy->Init(startPosition, {100.0f, 100.0f});
+    }
+    if (CheckCollisionRecs(proj_p_enemy->GetRec(), characterRec) && proj_p_enemy->GetActive()) {
+        gameState.health -= 10;
+        proj_p_enemy->SetActive(false);
+    }
+    if(CheckCollisionRecs(en_p->GetEnemyRec(), characterRec))
+    {
+        gameState.health -= 10;
+    }
+}
 void PixelGame::Attack()
 {
     if (IsKeyPressed(KEY_ENTER) && gameState.mana > 0 && !proj_p->GetActive()) //Projectile wird aktiviert
@@ -240,11 +260,19 @@ void PixelGame::Attack()
         proj_p->Init(startPosition, {300.0f, 300.0f});
 
     }
-    if(CheckCollisionRecs(proj_p->GetRec(), en_p->GetEnemyRec()) && proj_p->GetActive()) //Projectil trifft auf enemy
+    if(CheckCollisionRecs(proj_p->GetRec(), en_p->GetEnemyRec()) && proj_p->GetActive() && !en_p->GetUnload())
     {
-        en_p->SetEnemyHit(true);
+        en_p->EnemyGetsHit();
         gameState.score += 10;
         proj_p->SetActive(false);
+    }
+    if(CheckCollisionRecs(characterHitRec, en_p->GetEnemyRec()) && !en_p->GetUnload())
+    {
+        if(IsKeyPressed(KEY_SPACE))
+        {
+            en_p->EnemyGetsHit();
+            gameState.score += 100;
+        }
     }
 }
 
@@ -253,6 +281,7 @@ void PixelGame::DrawObjects() //unload sieht noch bisschen weird aus
 {
 
     characterRec = {mcX, mcY, gameState.myMC.width * 0.15f, gameState.myMC.height * 0.15f};
+    characterHitRec = {mcX, mcY, gameState.myMC.width * 0.18f, gameState.myMC.height * 0.18f};
     lavaRec = {300.0f, 275.0f, lavaTexture.width / 25.0f, lavaTexture.height / 25.0f};
     meatRec = {450.0f, 275.0f, meatTexture.width / 1.5f, meatTexture.height / 1.5f};
     fruitRec = {150.0f, 100.0f, fruitTexture.width / 1.5f, fruitTexture.height / 1.5f};
@@ -309,7 +338,7 @@ void PixelGame::DrawObjects() //unload sieht noch bisschen weird aus
 void PixelGame::GameLoop(tson::Map &Map)
 {
 
-    en_p = std::make_shared<Pixelgame::Enemy>(Vector2{250, 280}, slimeTexture, 2, 5.0f);
+    en_p = std::make_shared<Pixelgame::Enemy>(Vector2{250, 280}, slimeTexture, 2, 5.0f, SLIMERED);
 
     while (!WindowShouldClose() && gameState.gameIsRunning)
     {
@@ -351,6 +380,9 @@ void PixelGame::GameLoop(tson::Map &Map)
         en_p->DrawEnemies(slimeTexture);
 
         Attack();
+        EnemyAttack();
+        proj_p_enemy->Update(GetFrameTime(), 2);
+        proj_p_enemy->Draw();
         proj_p->Update(GetFrameTime(), GetProjDest());
         proj_p->Draw();
 
@@ -366,22 +398,22 @@ void PixelGame::GameLoop(tson::Map &Map)
 
         if (IsKeyDown(gameState.keyBindings[UP]))
         {
-            MoveCharacter(KEY_UP);
+            MoveCharacter(KEY_UP, GetFrameTime());
             isMoving = true;
         }
         if (IsKeyDown(gameState.keyBindings[DOWN]))
         {
-            MoveCharacter(KEY_DOWN);
+            MoveCharacter(KEY_DOWN, GetFrameTime());
             isMoving = true;
         }
         if (IsKeyDown(gameState.keyBindings[LEFT]))
         {
-            MoveCharacter(KEY_LEFT);
+            MoveCharacter(KEY_LEFT, GetFrameTime());
             isMoving = true;
         }
         if (IsKeyDown(gameState.keyBindings[RIGHT]))
         {
-            MoveCharacter(KEY_RIGHT);
+            MoveCharacter(KEY_RIGHT, GetFrameTime());
             isMoving = true;
         }
         if (isMoving && !IsSoundPlaying(gameState.walkingSound))
@@ -446,6 +478,7 @@ void PixelGame::UnloadAll()
     UnloadTextureX(meatTexture);
     UnloadTextureX(fruitTexture);
     proj_p->Unload(); //Projectile Textur
+    proj_p_enemy->Unload(); //Projectile Enemy Textur
     UnloadTextureX(slimeTexture);
     UnloadTextureX(tilesetTexture);
 }

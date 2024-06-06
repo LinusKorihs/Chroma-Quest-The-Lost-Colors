@@ -16,7 +16,7 @@ public:
     static void DrawTiles(tson::Map &Map, Texture2D &myTexture);
     static void DrawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, Texture2D &myTexture);
     static void DrawSprite(Texture2D &myTexture);
-    static void MoveCharacter(int direction);
+    static void MoveCharacter(int direction, float deltaTime);
     static void GameInit();
     static void GameLoop(tson::Map &Map);
     static void LoadTextureX(Texture2D &texture, const char* path);
@@ -28,6 +28,7 @@ public:
     static void PlayerDeath();
     static void ReceiveDmg();
     static void Attack();
+    static void EnemyAttack();
     static int GetProjDest();
 
 
@@ -42,6 +43,7 @@ private:
     static Texture2D slimeTexture;
     static Texture2D tilesetTexture;
 
+
     static float mcX;
     static float mcY;
     static int projDest;
@@ -53,6 +55,7 @@ private:
     static bool isKnocked;
 
     static Rectangle characterRec;
+    static Rectangle characterHitRec;
     static Rectangle lavaRec;
     static Rectangle meatRec;
     static Rectangle fruitRec;
@@ -60,6 +63,7 @@ private:
     static std::vector <Stone> stones;
 
     static std::shared_ptr<Pixelgame::Projectile> proj_p;
+    static std::shared_ptr<Pixelgame::Projectile> proj_p_enemy;
     static std::shared_ptr<Pixelgame::Enemy> en_p;
 
 };
