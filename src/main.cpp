@@ -1,48 +1,113 @@
-﻿#include <cstdlib>
-
-#include "raylib.h"
-
+﻿#include "GameState.h"
 #include "config.h"
+#include "Configuration.h"
+#include "Menu.h"
+#include "PixelGame.h"
+#include "raylib.h"
+#include "tileson.h"
+#include "Utils.h"
 
-int main() {
-    // Raylib initialization
-    // Project name, screen size, fullscreen mode etc. can be specified in the config.h.in file
-    InitWindow(Game::ScreenWidth, Game::ScreenHeight, Game::PROJECT_NAME);
-    SetTargetFPS(60);
+int main()
+{
+    SetTraceLogLevel(LOG_WARNING);
+    GameState applicationState;
+
+    InitWindow(PixelGameConfig::ScreenWidth, PixelGameConfig::ScreenHeight, PixelGameConfig::PROJECT_NAME);
+    SetTargetFPS(ConfigConst::targetFPS);
 
 #ifdef GAME_START_FULLSCREEN
     ToggleFullscreen();
 #endif
 
-    // Your own initialization code here
-    // ...
-    // ...
-    Texture2D myTexture = LoadTexture("assets/graphics/testimage.png");
+    tson::Tileson tileson;
+    auto tileMapPointer = tileson.parse("assets/graphics/Old TileSet & TileMap/tilemap.tmj");
+    tson::Map& tileMap = *tileMapPointer;
 
-    // Main game loop
-    while (!WindowShouldClose()) // Detect window close button or ESC key
+    SetExitKey(KEY_F4);
+
+    while (ConfigNotConst::isGameRunning == true)
     {
-        // Updates that are made by frame are coded here
-        // ...
-        // ...
+        switch (currentGameState.currentGameMenu)
+        {
+            case MenuState::MainMenu:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::MainMenu);
+                Menu::drawMainMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
 
-        BeginDrawing();
-            // You can draw on the screen between BeginDrawing() and EndDrawing()
-            // ...
-            // ...
-            ClearBackground(WHITE);
-            DrawText("Hello, world!", 10, 10, 30, LIGHTGRAY);
-            DrawTexture(myTexture, 10, 100, WHITE);
+            case MenuState::GameRunning:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::GameRunning);
+                PixelGame::gameInit();
+                PixelGame::gameLoop(tileMap);
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
 
-        EndDrawing();
-    } // Main game loop end
+            case MenuState::SettingsMenu:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::SettingsMenu);
+                Menu::drawSettingsMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
 
-    // De-initialization here
-    // ...
-    // ...
-    UnloadTexture(myTexture);
+            case MenuState::KeyBindingsMenu:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::KeyBindingsMenu);
+                Menu::drawKeyBindingsMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
 
-    // Close window and OpenGL context
+            case MenuState::PauseMenu:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::PauseMenu);
+                ConfigFunction::toggleGamePause();
+                Menu::drawPauseMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
+
+            case MenuState::ResumeGame:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::ResumeGame);
+                ConfigFunction::toggleGamePause();
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
+
+            case MenuState::VolumeSliders:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::VolumeSliders);
+                Menu::drawVolumeSlidersMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
+
+            case MenuState::Control:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::Control);
+                Menu::drawControlMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
+
+            case MenuState::Language:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::Language);
+                Menu::drawLanguageMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
+
+            case MenuState::ControllerMenu:
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::ControllerMenu);
+                Menu::drawControllerMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
+                break;
+
+            case MenuState::None:
+                applicationState.changeGameState(MenuState::None);
+                Menu::unloadButtonAndKeyButtonTextures();
+                ConfigNotConst::isGameRunning = false;
+                break;
+        }
+    }
     CloseWindow();
 
     return EXIT_SUCCESS;

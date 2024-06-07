@@ -2,19 +2,57 @@
 
 include(../cmake/raylib.cmake)
 
+
 project(game VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(${PROJECT_NAME} main.cpp)
+
+add_executable(${PROJECT_NAME} main.cpp
+        Menu.cpp
+        Menu.h
+        PixelGame.cpp
+        PixelGame.h
+        Audio.cpp
+        Audio.h
+        Utils.cpp
+        Utils.h
+        InGameHud.cpp
+        InGameHud.h
+        GameState.cpp
+        GameState.h
+        Stone.cpp
+        Stone.h
+        Projectile.cpp
+        Projectile.h
+        Enemy.cpp
+        Enemy.h
+        Configuration.cpp
+        Configuration.h
+        LoadResources.cpp
+        LoadResources.h
+        UnloadResources.cpp
+        UnloadResources.h
+        MainCharacter.cpp
+        MainCharacter.h
+        SetKeyBindings.cpp
+        SetKeyBindings.h
+        DrawMap.cpp
+        DrawMap.h
+        Item.cpp
+        Item.h
+        Camera.cpp
+        Camera.h
+)
 
 # Add config.h.in file
 configure_file(config.h.in config.h)
 target_include_directories(${PROJECT_NAME} PUBLIC
         "${PROJECT_BINARY_DIR}"
         )
+
 
 # Link to Raylib
 # Static linking may be interesting, especially under Windows with MinGW,
@@ -27,6 +65,8 @@ if(UNIX)
 else()
     target_link_libraries(${PROJECT_NAME} raylib -static)
 endif()
+
+
 
 # Copy assets to assets path
 add_custom_target(copy_assets
