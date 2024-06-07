@@ -1,106 +1,114 @@
-﻿#include "ApplicationState.h"
+﻿#include "GameState.h"
 #include "config.h"
+#include "Configuration.h"
 #include "Menu.h"
 #include "PixelGame.h"
 #include "raylib.h"
 #include "tileson.h"
 #include "Utils.h"
 
-
-
-
-int main(){
-
+int main()
+{
     SetTraceLogLevel(LOG_WARNING);
-    ApplicationState applicationState;
+    GameState applicationState;
 
     InitWindow(PixelGameConfig::ScreenWidth, PixelGameConfig::ScreenHeight, PixelGameConfig::PROJECT_NAME);
-    SetTargetFPS(gameState.targettedFps);
+    SetTargetFPS(ConfigConst::targetFPS);
+
 #ifdef GAME_START_FULLSCREEN
     ToggleFullscreen();
 #endif
 
     tson::Tileson tileson;
-    auto MapPtr = tileson.parse("assets/data/tilemap.tmj");
-    tson::Map &Map = *MapPtr;
+    auto tileMapPointer = tileson.parse("assets/graphics/Old TileSet & TileMap/tilemap.tmj");
+    tson::Map& tileMap = *tileMapPointer;
 
     SetExitKey(KEY_F4);
 
-    while (gameState.gameIsRunning == true)
+    while (ConfigNotConst::isGameRunning == true)
     {
-        switch (gameState.currentMenu)
+        switch (currentGameState.currentGameMenu)
         {
             case MenuState::MainMenu:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::MainMenu);
-                Menu::drawMainMenu(gameState);
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::MainMenu);
+                Menu::drawMainMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::GameRunning:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::GameRunning);
-                PixelGame::GameInit();
-                PixelGame::GameLoop(Map);
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::GameRunning);
+                PixelGame::gameInit();
+                PixelGame::gameLoop(tileMap);
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::SettingsMenu:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::SettingsMenu);
-                Menu::drawSettingsMenu(gameState);
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::SettingsMenu);
+                Menu::drawSettingsMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::KeyBindingsMenu:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::KeyBindingsMenu);
-                Menu::drawKeyBindingsMenu(gameState);
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::KeyBindingsMenu);
+                Menu::drawKeyBindingsMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::PauseMenu:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::PauseMenu);
-                applicationState.TogglePause();
-                Menu::drawPauseMenu(gameState);
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::PauseMenu);
+                ConfigFunction::toggleGamePause();
+                Menu::drawPauseMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::ResumeGame:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::ResumeGame);
-                applicationState.TogglePause();
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::ResumeGame);
+                ConfigFunction::toggleGamePause();
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::VolumeSliders:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::VolumeSliders);
-                Menu::drawVolumeSlidersMenu(gameState);
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::VolumeSliders);
+                Menu::drawVolumeSlidersMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::Control:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::Control);
-                Menu::drawControlMenu(gameState);
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::Control);
+                Menu::drawControlMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::Language:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::Language);
-                Menu::drawLanguageMenu(gameState);
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::Language);
+                Menu::drawLanguageMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::ControllerMenu:
-                Menu::loadTextures();
-                applicationState.ChangeState(MenuState::ControllerMenu);
-                Menu::drawControllerMenu(gameState);
-                Menu::unloadTextures();
+                Menu::loadButtonAndKeyButtonTextures();
+                applicationState.changeGameState(MenuState::ControllerMenu);
+                Menu::drawControllerMenu(currentGameState);
+                Menu::unloadButtonAndKeyButtonTextures();
                 break;
+
             case MenuState::None:
-                applicationState.ChangeState(MenuState::None);
-                Menu::unloadTextures();
-                gameState.gameIsRunning = false;
+                applicationState.changeGameState(MenuState::None);
+                Menu::unloadButtonAndKeyButtonTextures();
+                ConfigNotConst::isGameRunning = false;
                 break;
         }
     }
     CloseWindow();
 
     return EXIT_SUCCESS;
-
 }

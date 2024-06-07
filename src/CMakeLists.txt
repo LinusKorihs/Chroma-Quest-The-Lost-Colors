@@ -21,14 +21,30 @@ add_executable(${PROJECT_NAME} main.cpp
         Utils.h
         InGameHud.cpp
         InGameHud.h
-        ApplicationState.cpp
-        ApplicationState.h
+        GameState.cpp
+        GameState.h
         Stone.cpp
         Stone.h
         Projectile.cpp
         Projectile.h
         Enemy.cpp
         Enemy.h
+        Configuration.cpp
+        Configuration.h
+        LoadResources.cpp
+        LoadResources.h
+        UnloadResources.cpp
+        UnloadResources.h
+        MainCharacter.cpp
+        MainCharacter.h
+        SetKeyBindings.cpp
+        SetKeyBindings.h
+        DrawMap.cpp
+        DrawMap.h
+        Item.cpp
+        Item.h
+        Camera.cpp
+        Camera.h
 )
 
 # Add config.h.in file

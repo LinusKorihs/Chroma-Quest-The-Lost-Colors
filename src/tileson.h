@@ -3715,15 +3715,15 @@ namespace tson
         /*!
 			 *
 			 * @param _text Text
-			 * @param _wrap If the text is marked as wrapped
+			 * @param _wrap If the buttonText is marked as wrapped
 			 */
-        //inline Text(std::string _text, bool _wrap, tson::Colori _color) : text {std::move(_text)}, wrap {_wrap}, color {_color} {};
+        //inline Text(std::string _text, bool _wrap, tson::Colori _color) : buttonText {std::move(_text)}, wrap {_wrap}, color {_color} {};
         inline explicit Text(IJson &json)
         {
             bool hasColor = json.count("color") > 0;
             tson::Color c = (hasColor) ? tson::Colori(json["color"].get<std::string>()) : tson::Colori();
             color = c;
-            text = (json.count("text") > 0) ? json["text"].get<std::string>() : "";
+            text = (json.count("buttonText") > 0) ? json["buttonText"].get<std::string>() : "";
             wrap = (json.count("wrap") > 0) ? json["wrap"].get<bool>() : false;
 
             //Previously missing properties
@@ -3842,7 +3842,7 @@ namespace tson
         tson::PropertyCollection          m_properties; 	                       /*! 'properties': A list of properties (name, value, type). */
         float                             m_rotation {};                           /*! 'rotation': Angle in degrees clockwise */
         std::string                       m_template;                              /*! 'template': Reference to a template file, in case object is a template instance */
-        tson::Text                        m_text; 	                               /*! first: 'text' second: 'wrap' */
+        tson::Text                        m_text; 	                               /*! first: 'buttonText' second: 'wrap' */
         std::string                       m_type;                                  /*! 'type': String assigned to type field in editor */
         bool                              m_visible {};                            /*! 'visible': Whether object is shown in editor. */
         tson::Vector2i                    m_position;                              /*! 'x' and 'y': coordinate in pixels */
@@ -3876,7 +3876,7 @@ namespace tson
     inline IJson* readField(const std::string& fieldName,  IJson& main, IJson* templ = nullptr);
 
     /*!
-	* Attempts to read a text field from main file or the template if not overriden
+	* Attempts to read a buttonText field from main file or the template if not overriden
 	* @param fieldName The name of the field to check
 	* @param main The main json file being parsed
 	* @param templ The template file json, if present, nullptr otherwise.
@@ -3962,7 +3962,7 @@ void tson::Object::setObjectTypeByJson(IJson &json, IJson* templ)
         m_objectType = ObjectType::Polygon;
     else if(readField("polyline", json, templ))
         m_objectType = ObjectType::Polyline;
-    else if(readField("text", json, templ))
+    else if(readField("buttonText", json, templ))
         m_objectType = ObjectType::Text;
     else if(readField("gid", json, templ))
         m_objectType = ObjectType::Object;
@@ -4747,7 +4747,7 @@ tson::LayerType tson::Layer::getType() const
 
 /*!
  * Assigns a tilemap of pointers to existing tiles.
- * @param tileMap The tilemap. key: tile id, value: pointer to Tile.
+ * @param tileMap The tilemap. key: tile id, value: pointer to Tiles.
  */
 void tson::Layer::assignTileMap(std::map<uint32_t, tson::Tile *> *tileMap)
 {
@@ -4760,9 +4760,9 @@ void tson::Layer::assignTileMap(std::map<uint32_t, tson::Tile *> *tileMap)
  *
  * Example of getting tile from the returned map:
  *
- * Tile *tile = tileData[{0, 4}];
+ * Tiles *tile = tileData[{0, 4}];
  *
- * @return A map that represents the data returned from getData() in a 2D map with Tile pointers.
+ * @return A map that represents the data returned from getData() in a 2D map with Tiles pointers.
  */
 const std::map<std::tuple<int, int>, tson::Tile *> &tson::Layer::getTileData() const
 {
@@ -4775,7 +4775,7 @@ const std::map<std::tuple<int, int>, tson::Tile *> &tson::Layer::getTileData() c
  * Map only contains tiles that are not empty. x and y position is in tile units.
  *
  * Example of getting tile:
- * Tile *tile = layer->getTileData(0, 4)
+ * Tiles *tile = layer->getTileData(0, 4)
  *
  * @param x X position in tile units
  * @param y Y position in tile units
@@ -4821,7 +4821,7 @@ void tson::Layer::createTileData(const Vector2i &mapSize, bool isInfiniteMap)
                 m_tileData[{static_cast<int>(x), static_cast<int>(y)}] = m_tileMap->at(tileId);
                 m_tileObjects[{static_cast<int>(x), static_cast<int>(y)}] = {{static_cast<int>(x), static_cast<int>(y)}, m_tileData[{static_cast<int>(x), static_cast<int>(y)}]};
             }
-            else if(tileId > 0 && m_tileMap->count(tileId) == 0) //Tile with flip flags!
+            else if(tileId > 0 && m_tileMap->count(tileId) == 0) //Tiles with flip flags!
             {
                 queueFlaggedTile(x, y, tileId);
             }
@@ -5196,10 +5196,10 @@ namespace tson
         [[nodiscard]] inline const std::vector<uint32_t> &getWangIds() const;
 
     private:
-        bool                    m_dflip{};     /*! 'dflip': Tile is flipped diagonally */
-        bool                    m_hflip{};     /*! 'hflip': Tile is flipped horizontally */
+        bool                    m_dflip{};     /*! 'dflip': Tiles is flipped diagonally */
+        bool                    m_hflip{};     /*! 'hflip': Tiles is flipped horizontally */
         uint32_t                m_tileid{};    /*! 'tileid': Local ID of tile */
-        bool                    m_vflip{};     /*! 'vflip': Tile is flipped vertically */
+        bool                    m_vflip{};     /*! 'vflip': Tiles is flipped vertically */
         std::vector<uint32_t>   m_wangId;      /*! 'wangid': Array of Wang color indexes (uchar[8])*/
     };
 }
@@ -5233,7 +5233,7 @@ bool tson::WangTile::parse(IJson &json)
 }
 
 /*!
- * 'dflip': Tile is flipped diagonally
+ * 'dflip': Tiles is flipped diagonally
  *
  * NB! This property got removed in Tiled v1.5
  * @return
@@ -5244,7 +5244,7 @@ bool tson::WangTile::hasDFlip() const
 }
 
 /*!
- * 'hflip': Tile is flipped horizontally
+ * 'hflip': Tiles is flipped horizontally
  *
  * NB! This property got removed in Tiled v1.5
  * @return
@@ -5264,7 +5264,7 @@ uint32_t tson::WangTile::getTileid() const
 }
 
 /*!
- * 'vflip': Tile is flipped vertically
+ * 'vflip': Tiles is flipped vertically
  *
  * NB! This property got removed in Tiled v1.5
  * @return
@@ -5509,7 +5509,7 @@ const std::string &tson::WangSet::getClassType() const
 /*** End of inlined file: WangSet.hpp ***/
 
 
-/*** Start of inlined file: Tile.hpp ***/
+/*** Start of inlined file: Tiles.hpp ***/
 //
 // Created by robin on 22.03.2020.
 //
@@ -5675,7 +5675,7 @@ namespace tson
     }
 
     /*!
-	 * Update animation based on the fra
+	 * update animation based on the fra
 	 * @param timedeltaMs Time in milliseconds
 	 */
     void Animation::update(float timeDeltaMs)
@@ -5805,7 +5805,7 @@ namespace tson
 
         //v1.2.0-stuff
         uint32_t                    m_gid {};                                    /*! id without flip flags */
-        tson::Tileset *             m_tileset;                                   /*! A pointer to the tileset where this Tile comes from */
+        tson::Tileset *             m_tileset;                                   /*! A pointer to the tileset where this Tiles comes from */
         tson::Map *                 m_map;                                       /*! A pointer to the map where this tile is contained */
         tson::Rect                  m_drawingRect;                               /*! A rect that shows which part of the tileset that is used for this tile */
         tson::Rect                  m_subRect;                                   /*! Tiled 1.9: Contains the newly added sub-rectangle variables: 'x', 'y', 'width' and 'height'*/
@@ -5939,7 +5939,7 @@ tson::Property *tson::Tile::getProp(const std::string &name)
 }
 
 /*!
- * Used for getting the tson::Tileset who is the parent of this Tile.
+ * Used for getting the tson::Tileset who is the parent of this Tiles.
  * @return a pointer to the tson::Tileset where this tile is contained.
  */
 tson::Tileset *tson::Tile::getTileset() const
@@ -5948,7 +5948,7 @@ tson::Tileset *tson::Tile::getTileset() const
 }
 
 /*!
- * Used for getting the tson::Map who is the parent of this Tile.
+ * Used for getting the tson::Map who is the parent of this Tiles.
  * @return a pointer to the tson::Map where this tile is contained.
  */
 tson::Map *tson::Tile::getMap() const
@@ -5957,7 +5957,7 @@ tson::Map *tson::Tile::getMap() const
 }
 
 /*!
- * Get the information needed to draw the Tile based on its current tileset
+ * Get the information needed to draw the Tiles based on its current tileset
  * @return a tson::Rect containing the information needed to draw the tile.
  */
 const tson::Rect &tson::Tile::getDrawingRect() const
@@ -6028,7 +6028,7 @@ const tson::Rect &tson::Tile::getSubRectangle() const
 
 #endif //TILESON_TILE_HPP
 
-/*** End of inlined file: Tile.hpp ***/
+/*** End of inlined file: Tiles.hpp ***/
 
 
 /*** Start of inlined file: Terrain.hpp ***/
@@ -6661,7 +6661,7 @@ const tson::Grid &tson::Tileset::getGrid() const
  * Gets a tile by ID (Tiled ID + 1)
  * @param id The ID of the tile stored in Tiled map + 1. Example: If ID was stored in Tiled map as 0, the corresponding value in Tileson is 1.
  * This is to make sure the IDs of tiles matches their references in containers.
- * @return A pointer to the Tile if found. nullptr otherwise.
+ * @return A pointer to the Tiles if found. nullptr otherwise.
  */
 tson::Tile *tson::Tileset::getTile(uint32_t id)
 {
@@ -6891,7 +6891,7 @@ namespace tson
         ParseStatus                            m_status {ParseStatus::OK};
         std::string                            m_statusMessage {"OK"};
 
-        std::map<uint32_t, tson::Tile*>        m_tileMap{};           /*! key: Tile ID. Value: Pointer to Tile*/
+        std::map<uint32_t, tson::Tile*>        m_tileMap{};           /*! key: Tiles ID. Value: Pointer to Tiles*/
 
         //v1.2.0
         int                                    m_compressionLevel {-1};  /*! 'compressionlevel': The compression level to use for tile layer
@@ -6899,7 +6899,7 @@ namespace tson
 																			  *     Introduced in Tiled 1.3*/
         tson::DecompressorContainer *          m_decompressors {nullptr};
         tson::Project *                        m_project {nullptr};
-        std::map<uint32_t, tson::Tile>         m_flaggedTileMap{};    /*! key: Tile ID. Value: Tile*/
+        std::map<uint32_t, tson::Tile>         m_flaggedTileMap{};    /*! key: Tiles ID. Value: Tiles*/
 
         std::string                            m_classType{};              /*! 'class': The class of this map (since 1.9, defaults to “”). */
         std::shared_ptr<tson::TiledClass>      m_class {};
@@ -7055,7 +7055,7 @@ tson::IJson* tson::Map::parseLinkedFile(const std::string& relativePath)
 }
 
 /*!
- * Tileset data must be created in two steps to prevent malformed tson::Tileset pointers inside tson::Tile
+ * Tileset data must be created in two steps to prevent malformed tson::Tileset pointers inside tson::Tiles
  */
 bool tson::Map::createTilesetData(IJson &json)
 {
@@ -8720,7 +8720,7 @@ bool tson::Tile::parseId(IJson &json)
 }
 
 /*!
- * Uses tson::Tileset and tson::Map data to calculate related values for tson::Tile.
+ * Uses tson::Tileset and tson::Map data to calculate related values for tson::Tiles.
  * Added in v1.2.0
  */
 void tson::Tile::performDataCalculations()
@@ -8755,7 +8755,7 @@ void tson::Tile::performDataCalculations()
     {
         tson::Vector2i imageSize = m_imageSize;
 
-        // Tile in Image Collection Tileset contains image size
+        // Tiles in Image Collection Tileset contains image size
         if (getFlipFlags() != tson::TileFlipFlags::None)
         {
             uint32_t id = getGid() - m_tileset->getFirstgid() + 1;
@@ -8993,7 +8993,7 @@ tson::IJson* tson::readField(const std::string& fieldName,  IJson& main, IJson* 
 }
 
 /*!
-* Attempts to read a text field from main file or the template if not overriden
+* Attempts to read a buttonText field from main file or the template if not overriden
 * @param fieldName The name of the field to check
 * @param main The main json file being parsed
 * @param templ The template file json, if present, nullptr otherwise.
@@ -9115,7 +9115,7 @@ bool tson::Object::parse(IJson &json, tson::Map *map)
 
     readField(m_ellipse, "ellipse", json, templateJson); //Optional
     readField(m_point, "point", json, templateJson); // Optional
-    readField(m_text, "text", json, templateJson);
+    readField(m_text, "buttonText", json, templateJson);
     readGid(m_gid, m_flipFlags, json, templateJson);
 
     allFound &= readField(m_id, "id", json, templateJson);

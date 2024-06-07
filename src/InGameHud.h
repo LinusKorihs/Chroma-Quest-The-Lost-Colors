@@ -1,25 +1,23 @@
-#ifndef INGAMEHUD_H
-#define INGAMEHUD_H
+#pragma once
 
-#include "raylib.h"
-#include "ApplicationState.h"
+#include "GameState.h"
+#include "config.h"
 #include <string>
 
-struct ImageButton {
+struct HudImageButton
+{
     Texture2D texture;
     Rectangle rec;
-    std::string text;
-
+    std::string buttonText;
 };
 
-class InGameHud {
+class InGameHud
+{
 public:
     InGameHud();
     ~InGameHud();
-    static void DrawHealthBarTexture();
-    static void DrawRGBBarTexture();
-    static void DrawImageButton(ImageButton& button);
-    static std::vector<ImageButton> buttons;
+    static void drawHealthBarTexture();
+    static void drawRGBBarTexture();
+    static void drawImageButton(HudImageButton& button);
+    static std::vector<HudImageButton> hudImagebuttons;
 };
-
-#endif // INGAMEHUD_H

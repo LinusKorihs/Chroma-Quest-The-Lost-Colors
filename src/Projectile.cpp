@@ -1,73 +1,96 @@
 #include "Projectile.h"
+#include "GameState.h"
+#include "Enemy.h"
+#include "PixelGame.h"
 
-Pixelgame::Projectile::Projectile()
+std::shared_ptr<Projectile> Projectile::projectilePointer;
+std::shared_ptr<Enemy> Projectile::enemyPointer;
+
+Projectile::Projectile()
 {
-}
-void Pixelgame::Projectile::Load(){
-    projectileTexture = LoadTexture("assets/graphics/necrobolt1_strip.png");
-}
-void Pixelgame::Projectile::Init(Vector2 startPosition, Vector2 speed)
-{
-    position = startPosition;
-    projSpeed = speed;
-    isActive = true;
+    enemyPointer = std::make_shared<Enemy>(PixelGame::enemy);
 }
 
-void Pixelgame::Projectile::Collision()
-{
+int Projectile::projectileDestination;
 
-    for (const Rectangle& wallRec : gameState.wallRecs)
+void Projectile::load()
+{
+    projectileTexture = LoadTexture("assets/graphics/Projectiles/TestProjectile.png");
+}
+
+void Projectile::init(Vector2 startPosition, Vector2 speed)
+{
+    projectilePosition = startPosition;
+    projectileSpeed = speed;
+    isProjectileActive = true;
+}
+
+void Projectile::collision()
+{
+    for (const Rectangle& wallRec : currentGameState.wallRectangles)
     {
-        if (CheckCollisionRecs(projectileRec, wallRec) or position.x > position.x + 200) //mcX darf nicht mehr geupdated werden - andere variable benutzen
+        if (CheckCollisionRecs(projectileRectangle, wallRec) || projectilePosition.x > projectilePosition.x + 200)
         {
-            isActive = false;
+            isProjectileActive = false;
         }
     }
 }
 
-void Pixelgame::Projectile::Update( float deltaTime, int projDest)
+void Projectile::update(float deltaTime)
 {
-    projectileRec = {position.x, position.y, static_cast<float>(projectileTexture.width) , static_cast<float>(projectileTexture.height)};
+    if (!isProjectileActive)
+        return;
 
-        switch (static_cast<int>(projDest)) //switch nicht für float, deshalb cast
-        {
-            case 1:
-                position.x += projSpeed.x * deltaTime;
-                break;
-            case 2:
-                position.x -= projSpeed.x * deltaTime;
-                break;
-            case 3:
-                position.y -= projSpeed.y * deltaTime;
-                break;
-            case 4:
-                position.y += projSpeed.y * deltaTime;
-                break;
-        }
+    projectileRectangle = {projectilePosition.x, projectilePosition.y, static_cast<float>(projectileTexture.width), static_cast<float>(projectileTexture.height)};
 
-    Collision(); //kollisionen mit wänden
+    switch (projectileDestination)
+    {
+        case 1:
+            projectilePosition.x += projectileSpeed.x * deltaTime;
+            break;
+        case 2:
+            projectilePosition.x -= projectileSpeed.x * deltaTime;
+            break;
+        case 3:
+            projectilePosition.y -= projectileSpeed.y * deltaTime;
+            break;
+        case 4:
+            projectilePosition.y += projectileSpeed.y * deltaTime;
+            break;
+    }
+
+    collision();
 }
 
-void Pixelgame::Projectile::Draw()
+void Projectile::draw()
 {
-    if (isActive)
+    if (isProjectileActive)
     {
-        DrawTextureEx(projectileTexture, position, 0, 1.0f, WHITE);
+        DrawTextureEx(projectileTexture, projectilePosition, 0, 1.0f, WHITE);
     }
 }
 
-bool Pixelgame::Projectile::GetActive() {
-    return isActive;
+bool Projectile::getActive()
+{
+    return isProjectileActive;
 }
 
-void Pixelgame::Projectile::SetActive(bool active) {
-    isActive = active;
+void Projectile::setActive(bool isActive)
+{
+    isProjectileActive = isActive;
 }
 
-Rectangle Pixelgame::Projectile::GetRec() {
-    return projectileRec;
+Rectangle Projectile::getRectangle()
+{
+    return projectileRectangle;
 }
 
-void Pixelgame::Projectile::Unload() {
+void Projectile::unload()
+{
     UnloadTexture(projectileTexture);
+}
+
+int Projectile::getProjectileDestination()
+{
+    return projectileDestination;
 }

@@ -1,31 +1,36 @@
+#pragma once
 
-#ifndef RAYLIBSTARTER_PROJECTILE_H
-#define RAYLIBSTARTER_PROJECTILE_H
-#include "ApplicationState.h"
+#include "GameState.h"
+#include <memory>
 #include "raylib.h"
+#include "Enemy.h"
 
+class Enemy;
 
-namespace Pixelgame {
-    class Projectile {
-    public:
-        Projectile();
-        void Load();
-        void Init(Vector2 startPosition, Vector2 speed);
-        void Update(float deltaTime, int direction);
-        void Draw();
-        void Collision();
-        Rectangle GetRec();
-        void SetActive(bool active);
-        bool GetActive();
-        void Unload();
+class Projectile
+{
+public:
+Projectile();
+    static int getProjectileDestination();
+    static int projectileDestination;
+    static std::shared_ptr<Projectile> projectilePointer;
+    static std::shared_ptr<Enemy> enemyPointer;
 
-    private:
-        Vector2 position{};
-        Vector2 projSpeed{};
-        bool isActive;
-        Rectangle projectileRec{};
-        Texture2D projectileTexture{};
-    };
-}
+    void load();
+    void init(Vector2 startPosition, Vector2 speed);
+    void collision();
+    void update(float deltaTime);
+    void draw();
 
-#endif //RAYLIBSTARTER_PROJECTILE_H
+    bool getActive();
+    void setActive(bool isActive);
+    Rectangle getRectangle();
+    void unload();
+
+private:
+    bool isProjectileActive = false;
+    Vector2 projectilePosition;
+    Vector2 projectileSpeed;
+    Texture2D projectileTexture;
+    Rectangle projectileRectangle;
+};

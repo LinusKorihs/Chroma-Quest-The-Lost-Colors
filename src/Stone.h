@@ -1,20 +1,24 @@
 #pragma once
+
 #include "raylib.h"
 #include <vector>
 
-class Stone {
+class Stone
+{
 public:
-    Stone(float x, float y, float size, Texture2D& texture, Rectangle& sourceRect);
+    Stone(float stoneX, float stoneY, float stoneSize, Texture2D& stoneTexture, Rectangle& sourceRectangle);
 
     void draw() const;
-    void move(int direction, const std::vector<Rectangle>& wallRecs);
+    void move(int direction, const std::vector<Rectangle>& wallRectangles);
     Rectangle getRectangle() const;
+    static std::vector<Stone> stoneObjects;
+    static bool stoneCollision;
 
 private:
-    float x, y, size;
+    float stonePositionX, stonePositionY, stoneSize;
     float velocityX, velocityY;
-    Texture2D& texture;
-    Rectangle sourceRect;
+    Texture2D& stoneTexture;
+    Rectangle sourceRectangles;
 
-    bool checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle>& wallRecs) const;
+    bool checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle>& wallRectangles) const;
 };

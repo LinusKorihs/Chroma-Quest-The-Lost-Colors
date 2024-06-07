@@ -1,62 +1,59 @@
-#include "ApplicationState.h"
-#include "config.h"
 #include "InGameHud.h"
 #include <iostream>
+#include "MainCharacter.h"
 
 InGameHud::InGameHud()
 {
-
 }
 
 InGameHud::~InGameHud()
 {
-
 }
 
-void InGameHud::DrawHealthBarTexture()
+void InGameHud::drawHealthBarTexture()
 {
     DrawRectangle(1700, 110, 100, 20, RED);
-    DrawRectangle(1700, 110, gameState.health, 20, GRAY);
-    DrawText(gameState.GetLocalizedText("Healthbar:", "Lebensbalken"), 1700, 90, 20, BLACK);
+    DrawRectangle(1700, 110, MainCharacter::playerHealth, 20, GRAY);
+    DrawText( LanguageManager::getLocalizedGameText("Healthbar:", "Lebensbalken"), 1700, 90, 20, BLACK);
 }
 
-void InGameHud::DrawRGBBarTexture()
+void InGameHud::drawRGBBarTexture()
 {
-    int healthBarX = 1700;
-    int healthBarY = 110;
-    int healthBarWidth = 100;
-    int healthBarHeight = 20;
-    int somePadding = 25;
+    int hudHealthBarX = 1700;
+    int hudHealthBarY = 110;
+    int hudHealthBarWidth = 100;
+    int hudHealthBarHeight = 20;
+    int hudPadding = 25;
 
-    int rectangleX = healthBarX;
-    int rectangleY = healthBarY - healthBarHeight - somePadding;
-    int rectangleWidth = healthBarWidth;
-    int rectangleHeight = 20;
+    int rgbBarX = hudHealthBarX;
+    int rgbBarY = hudHealthBarY - hudHealthBarHeight - hudPadding;
+    int rgbBarWidth = hudHealthBarWidth;
+    int rgbBarHeight = 20;
 
-    int colorWidth = rectangleWidth / 3;
+    int rgbBarColorWidth = rgbBarWidth / 3;
 
-    DrawRectangle(rectangleX, rectangleY, colorWidth, rectangleHeight, RED);
-    DrawRectangle(rectangleX + colorWidth, rectangleY, colorWidth, rectangleHeight, GREEN);
-    DrawRectangle(rectangleX + 2 * colorWidth, rectangleY, colorWidth, rectangleHeight, BLUE);
+    DrawRectangle(rgbBarX, rgbBarY, rgbBarColorWidth, rgbBarHeight, RED);
+    DrawRectangle(rgbBarX + rgbBarColorWidth, rgbBarY, rgbBarColorWidth, rgbBarHeight, GREEN);
+    DrawRectangle(rgbBarX + 2 * rgbBarColorWidth, rgbBarY, rgbBarColorWidth, rgbBarHeight, BLUE);
 
-    DrawText(gameState.GetLocalizedText("RGB:", "RGB:"), rectangleX, rectangleY - 20, 20, BLACK);
+    DrawText(LanguageManager::getLocalizedGameText("RGB:", "RGB:"), rgbBarX, rgbBarY - 20, 20, BLACK);
 }
 
-void InGameHud::DrawImageButton(ImageButton& button)
+void InGameHud::drawImageButton(HudImageButton& button)
 {
-    float centerX = button.rec.x + button.rec.width / 2;
-    float centerY = button.rec.y + button.rec.height / 2;
+    float buttonCenterX = button.rec.x + button.rec.width / 2;
+    float buttonCenterY = button.rec.y + button.rec.height / 2;
 
-    float textureX = centerX - button.texture.width / 2;
-    float textureY = centerY - button.texture.height / 2;
+    float buttonTextureX = buttonCenterX - button.texture.width / 2;
+    float buttonTextureY = buttonCenterY - button.texture.height / 2;
 
-    DrawTextureRec(button.texture, { 0.0f, 0.0f, (float)button.texture.width, (float)button.texture.height }, { textureX, textureY }, WHITE);
+    DrawTextureRec(button.texture, { 0.0f, 0.0f, (float)button.texture.width, (float)button.texture.height }, {buttonTextureX, buttonTextureY }, WHITE);
 
-    int textWidth = MeasureText(button.text.c_str(), 20);
-    int textHeight = 20;
+    int buttonTextWidth = MeasureText(button.buttonText.c_str(), 20);
+    int buttonTextHeight = 20;
 
-    float textX = centerX - textWidth / 2;
-    float textY = centerY - textHeight / 2;
+    float buttonTextX = buttonCenterX - buttonTextWidth / 2;
+    float buttonTextY = buttonCenterY - buttonTextHeight / 2;
 
-    DrawText(button.text.c_str(), textX, textY, 20, BLACK);
+    DrawText(button.buttonText.c_str(), buttonTextX, buttonTextY, 20, BLACK);
 }

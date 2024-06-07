@@ -1,9 +1,17 @@
-
 #include "Enemy.h"
+#include "Projectile.h"
+#include "MainCharacter.h"
 
-Pixelgame::Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, int hits, float knockbackStrength)
+std::shared_ptr<Projectile> Enemy::projectilePointer;
+
+Enemy::Enemy()
 {
-    enemyHit = false;
+    projectilePointer = std::make_shared<Projectile>();
+}
+
+Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, int hits, float knockbackStrength, EnemyType type)
+{
+    enemyDeath = false;
     unload = false;
     positionEnemy = position;
     frameRec1 = { 0.0f, 0.0f, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
@@ -12,53 +20,71 @@ Pixelgame::Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, int hits, flo
     currentFrame = 0;
     framesCounter = 0;
     framesSpeed = 8;
-    enemyHits = 0;
+    animationDeath = 0;
     enemyRec = {positionEnemy.x, positionEnemy.y, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3};
+    enemyHits = 0;
+    enemyType = type;
+    projectilePointer = std::make_shared<Projectile>();
 }
 
-
-void Pixelgame::Enemy::EnemyUpdate(float deltaTime, Texture2D &enemyTexture)
+void Enemy::updateEnemy(float deltaTime, Texture2D &enemyTexture)
 {
-    framesCounter++;
+    framesCounter++; // Update counter
 
-    if (framesCounter >= (60 / framesSpeed))
+    if (framesCounter >= (60 / framesSpeed)) // wechsel frame jede 12 frames
     {
         framesCounter = 0;
-        currentFrame++;
+        currentFrame++; // Update animation frame
 
-        if (currentFrame > 20)
+        if (currentFrame > 20) // Reset bei 20 weil danach death animation
         {
             currentFrame = 0;
         }
 
-        frameRec1.x = (float)currentFrame * (float)enemyTexture.width / 8;
+        frameRec1.x = (float)currentFrame * (float)enemyTexture.width / 8; //weil 8 pro zeile
         frameRec2.x = (float)currentFrame * (float)enemyTexture.width / 8;
         frameRec3.x = (float)currentFrame * (float)enemyTexture.width / 8;
     }
 
-    if(IsKeyPressed(KEY_SPACE))
+    if(getEnemyHits() == 3 && enemyType == ENEMYBLUE) //wie viele hits ein enemy aushält
     {
-        enemyHit = true;
+        enemyDeath = true;
+    }
+    if(getEnemyHits() == 2 && enemyType == SLIMERED)
+    {
+        enemyDeath = true;
+    }
+    if(enemyHits == 4 && enemyType == ENEMYYELLOW)
+    {
+        enemyDeath = true;
+    }
+    if(enemyHits == 20 && enemyType == MINIBOSS)
+    {
+        enemyDeath = true;
     }
 
-    if(enemyHit && !enemyHits)
+    if(enemyDeath && !animationDeath)
     {
         currentFrame = 16;
-        enemyHits = true;
+        animationDeath = true;
     }
 }
 
-void Pixelgame::Enemy::DrawEnemies(Texture2D &enemyTexture) {
-
-    if (!enemyHit && !unload)
+void Enemy::drawEnemy(Texture2D &enemyTexture)
+{
+    if (!enemyDeath && !unload)
     {
         if (currentFrame < 7)
         {
             DrawTextureRec(enemyTexture, frameRec1, positionEnemy, WHITE);
-        } else {
+        }
+        else
+        {
             DrawTextureRec(enemyTexture, frameRec2, positionEnemy, WHITE);
         }
-    } else {
+    }
+    else
+    {
         if (!unload)
         {
             DrawTextureRec(enemyTexture, frameRec3, positionEnemy, WHITE);
@@ -71,13 +97,66 @@ void Pixelgame::Enemy::DrawEnemies(Texture2D &enemyTexture) {
     }
 }
 
-Rectangle Pixelgame::Enemy::GetEnemyRec() {
+Rectangle Enemy::getEnemyRec()
+{
     return enemyRec;
 }
 
-bool Pixelgame::Enemy::GetEnemyHit() {
-    return enemyHit;
+bool Enemy::getEnemyDeath()
+{
+    return enemyDeath;
 }
-void Pixelgame::Enemy::SetEnemyHit(bool hit) {
-    enemyHit = hit;
+void Enemy::setEnemyDead(bool dead)
+{
+    enemyDeath = dead;
+}
+
+bool Enemy::getUnload()
+{
+    return unload;
+}
+
+void Enemy::enemyGetsHit()
+{
+    enemyHits++;
+}
+int Enemy::getEnemyHits()
+{
+    return enemyHits;
+}
+
+Vector2 Enemy::getPosition()
+{
+    return positionEnemy;
+}
+
+void Enemy::enemyAttack()
+{
+    //std::cout << "In Enemy::enemyAttack()" << std::endl;
+    if (!projectilePointer)
+    {
+        std::cout << "projectilePointer is null" << std::endl;
+        return; // Exit the function if projectilePointer is null
+    }
+
+    if (!projectilePointer->getActive() && !Projectile::enemyPointer->getEnemyDeath())
+    {
+        Vector2 startPosition = Projectile::enemyPointer->getPosition();
+        startPosition.y += 10;
+
+        Vector2 enemyProjectileSpeed = {100.0f, 0.0f}; // example speed to the right
+        projectilePointer->init(startPosition, enemyProjectileSpeed);
+        Projectile::projectilePointer->projectileDestination = 1; // Assuming 1 is the right direction
+    }
+
+    if (projectilePointer->getActive() && CheckCollisionRecs(projectilePointer->getRectangle(), MainCharacter::playerCharacterRectangle))
+    {
+        MainCharacter::playerHealth -= 10;
+        projectilePointer->setActive(false);
+    }
+
+    if (CheckCollisionRecs(Projectile::enemyPointer->getEnemyRec(), MainCharacter::playerCharacterRectangle))
+    {
+        MainCharacter::playerHealth -= 10;
+    }
 }

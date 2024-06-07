@@ -1,15 +1,18 @@
 #include "Stone.h"
 
-Stone::Stone(float x, float y, float size, Texture2D& texture, Rectangle& sourceRect)
-        : x(x), y(y), size(size), texture(texture), sourceRect(sourceRect), velocityX(0), velocityY(0) {}
+Stone::Stone(float stoneX, float stoneY, float stoneSize, Texture2D& stoneTexture, Rectangle& sourceRectangle)
+        : stonePositionX(stoneX), stonePositionY(stoneY), stoneSize(stoneSize), stoneTexture(stoneTexture), sourceRectangles(sourceRectangle), velocityX(0), velocityY(0) {}
+
+std::vector<Stone> Stone::stoneObjects;
+bool Stone::stoneCollision;
 
 void Stone::draw() const
 {
-    Rectangle dest = { x, y, size, size };
-    DrawTexturePro(texture, sourceRect, dest, { 0, 0 }, 0.0f, WHITE);
+    Rectangle destination = {stonePositionX, stonePositionY, stoneSize, stoneSize };
+    DrawTexturePro(stoneTexture, sourceRectangles, destination, {0, 0 }, 0.0f, WHITE);
 }
 
-void Stone::move(int direction, const std::vector<Rectangle>& wallRecs)
+void Stone::move(int direction, const std::vector<Rectangle>& wallRectangles)
 {
     float speed = 2.0f; // Adjust speed as necessary
 
@@ -37,21 +40,23 @@ void Stone::move(int direction, const std::vector<Rectangle>& wallRecs)
             break;
     }
 
-    float newX = x + velocityX;
-    float newY = y + velocityY;
+    float newPositionX = stonePositionX + velocityX;
+    float newPositionY = stonePositionY + velocityY;
 
-    if (!checkCollisionWithWalls(newX, newY, wallRecs))
+    if (!checkCollisionWithWalls(newPositionX, newPositionY, wallRectangles))
     {
-        x = newX;
-        y = newY;
+        stonePositionX = newPositionX;
+        stonePositionY = newPositionY;
     }
 }
 
-bool Stone::checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle>& wallRecs) const
+bool Stone::checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle>& wallRectangles) const
 {
-    Rectangle newRec = { newX, newY, size, size };
-    for (const Rectangle& wallRec : wallRecs) {
-        if (CheckCollisionRecs(newRec, wallRec)) {
+    Rectangle newRectangle = {newX, newY, stoneSize, stoneSize };
+    for (const Rectangle& wallRectangle : wallRectangles)
+    {
+        if (CheckCollisionRecs(newRectangle, wallRectangle))
+        {
             return true;
         }
     }
@@ -60,5 +65,5 @@ bool Stone::checkCollisionWithWalls(float newX, float newY, const std::vector<Re
 
 Rectangle Stone::getRectangle() const
 {
-    return { x, y, size, size };
+    return {stonePositionX, stonePositionY, stoneSize, stoneSize };
 }
