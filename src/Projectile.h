@@ -1,36 +1,34 @@
 #pragma once
-
 #include "GameState.h"
 #include <memory>
 #include "raylib.h"
-#include "Enemy.h"
 
-class Enemy;
 
 class Projectile
 {
 public:
-Projectile();
-    static int getProjectileDestination();
-    static int projectileDestination;
-    static std::shared_ptr<Projectile> projectilePointer;
-    static std::shared_ptr<Enemy> enemyPointer;
+    Projectile();
+    int getProjectileDestination();
 
     void load();
     void init(Vector2 startPosition, Vector2 speed);
     void collision();
-    void update(float deltaTime);
+    void update(float deltaTime, int direction);
     void draw();
+    void unload();
+    void setActive(bool isActive);
+    void setProjectileDestination(int destination);
 
     bool getActive();
-    void setActive(bool isActive);
-    Rectangle getRectangle();
-    void unload();
+
+    Rectangle getRec();
+
 
 private:
-    bool isProjectileActive = false;
-    Vector2 projectilePosition;
+    bool isProjActive = false;
+    Vector2 projectilePos;
     Vector2 projectileSpeed;
     Texture2D projectileTexture;
-    Rectangle projectileRectangle;
+    Rectangle projectileRec;
+    int projectileDestination;
 };

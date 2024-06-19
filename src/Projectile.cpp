@@ -1,17 +1,9 @@
 #include "Projectile.h"
-#include "GameState.h"
-#include "Enemy.h"
-#include "PixelGame.h"
 
-std::shared_ptr<Projectile> Projectile::projectilePointer;
-std::shared_ptr<Enemy> Projectile::enemyPointer;
 
 Projectile::Projectile()
 {
-    enemyPointer = std::make_shared<Enemy>(PixelGame::enemy);
 }
-
-int Projectile::projectileDestination;
 
 void Projectile::load()
 {
@@ -20,69 +12,67 @@ void Projectile::load()
 
 void Projectile::init(Vector2 startPosition, Vector2 speed)
 {
-    projectilePosition = startPosition;
+    projectilePos = startPosition;
     projectileSpeed = speed;
-    isProjectileActive = true;
+    isProjActive = true;
 }
 
 void Projectile::collision()
 {
     for (const Rectangle& wallRec : currentGameState.wallRectangles)
     {
-        if (CheckCollisionRecs(projectileRectangle, wallRec) || projectilePosition.x > projectilePosition.x + 200)
+        if (CheckCollisionRecs(projectileRec, wallRec) || projectilePos.x > projectilePos.x + 200)
         {
-            isProjectileActive = false;
+            isProjActive = false;
         }
     }
 }
 
-void Projectile::update(float deltaTime)
+void Projectile::update(float deltaTime, int direction)
 {
-    if (!isProjectileActive)
-        return;
+    projectileRec = {projectilePos.x, projectilePos.y, static_cast<float>(projectileTexture.width) , static_cast<float>(projectileTexture.height)};
 
-    projectileRectangle = {projectilePosition.x, projectilePosition.y, static_cast<float>(projectileTexture.width), static_cast<float>(projectileTexture.height)};
-
-    switch (projectileDestination)
+    switch (static_cast<int>(projectileDestination)) //switch nicht für float, deshalb cast
     {
         case 1:
-            projectilePosition.x += projectileSpeed.x * deltaTime;
+            projectilePos.x += projectileSpeed.x * deltaTime;
             break;
         case 2:
-            projectilePosition.x -= projectileSpeed.x * deltaTime;
+            projectilePos.x -= projectileSpeed.x * deltaTime;
             break;
         case 3:
-            projectilePosition.y -= projectileSpeed.y * deltaTime;
+            projectilePos.y -= projectileSpeed.y * deltaTime;
             break;
         case 4:
-            projectilePosition.y += projectileSpeed.y * deltaTime;
+            projectilePos.y += projectileSpeed.y * deltaTime;
             break;
     }
 
-    collision();
+    collision(); //kollisionen mit wänden
 }
+
 
 void Projectile::draw()
 {
-    if (isProjectileActive)
+    if (isProjActive)
     {
-        DrawTextureEx(projectileTexture, projectilePosition, 0, 1.0f, WHITE);
+        DrawTextureEx(projectileTexture, projectilePos, 0, 1.0f, WHITE);
     }
 }
 
 bool Projectile::getActive()
 {
-    return isProjectileActive;
+    return isProjActive;
 }
 
 void Projectile::setActive(bool isActive)
 {
-    isProjectileActive = isActive;
+    isProjActive = isActive;
 }
 
-Rectangle Projectile::getRectangle()
+Rectangle Projectile::getRec()
 {
-    return projectileRectangle;
+    return projectileRec;
 }
 
 void Projectile::unload()
@@ -93,4 +83,9 @@ void Projectile::unload()
 int Projectile::getProjectileDestination()
 {
     return projectileDestination;
+}
+
+void Projectile::setProjectileDestination(int destination)
+{
+    projectileDestination = destination;
 }

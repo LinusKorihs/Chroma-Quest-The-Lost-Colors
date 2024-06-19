@@ -22,16 +22,17 @@ public:
 
     static bool isPlayerKnocked;
 
-    static std::shared_ptr<Projectile> projectileEnemyPointer;
-    static std::shared_ptr<Projectile> projectilePlayerPointer;
-    static std::shared_ptr<Enemy> enemyPointer;
-
     static void runGameOnce(tson::Map &Map);
 
 private:
     static void drawObjects();
     static void drawHud();
     static void unloadAll();
+
+    static std::shared_ptr<Projectile> projectile_p;
+    static std::shared_ptr<Projectile> projectileEnemy_p;
+   // static EnemyManager enemyManager;
+
 
 };
 

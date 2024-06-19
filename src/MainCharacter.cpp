@@ -15,14 +15,109 @@ float MainCharacter::playerSpawnPositionX = 32*35; //32*35 in new, 80 in old
 float MainCharacter::playerSpawnPositionY = 32*65; //32*65 in new, 368 in old
 float MainCharacter::playerCharacterTextureScale = 0.1425f;
 float MainCharacter::playerCharacterHitBoxScale = 0.1425f;
-float MainCharacter::playerPositionX = MainCharacter::playerSpawnPositionX;
-float MainCharacter::playerPositionY = MainCharacter::playerSpawnPositionY;
+float MainCharacter::playerPosX = MainCharacter::playerSpawnPositionX;
+float MainCharacter::playerPosY = MainCharacter::playerSpawnPositionY;
+std::shared_ptr<Projectile> MainCharacter::projectile_p = std::make_shared<Projectile>();
+//EnemyManager* MainCharacter::enemyManager = nullptr;
+int MainCharacter::currentFrame;
+int MainCharacter::framesCounter;
+int MainCharacter::framesSpeed;
+Rectangle MainCharacter::frameRec;
+//std::shared_ptr<Enemy> MainCharacter::enemy_p;
+
+/*void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
+{
+    enemy_p = enemy;
+}
+void MainCharacter::setEnemyManager(EnemyManager* manager) {
+    enemyManager = manager;
+}*/
+void MainCharacter::setProjectile(const std::shared_ptr<Projectile>& projectile)
+{
+    projectile_p = projectile;
+}
+
+void MainCharacter::initPlayer(Texture myTexture)
+{
+    frameRec = {32, 0.0f, (float)myTexture.width/32, (float)myTexture.height};
+    framesCounter = 0;
+    currentFrame = 0;
+    framesSpeed = 8;
+}
+void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
+{
+    framesCounter++;
+
+    if(IsKeyDown(KEY_S))
+    {
+        if (framesCounter >= (60 / framesSpeed))
+        {
+            framesCounter = 0;
+            if(!ConfigNotConst::lastDirectionDown)
+            {
+                currentFrame = 0;
+            }
+            currentFrame++;
+
+            if (currentFrame > 3) currentFrame = 0;
+
+            frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
+        }
+    }
+    else if(IsKeyDown(KEY_D))
+    {
+        if (framesCounter >= (60 / framesSpeed)) {
+            framesCounter = 0;
+            if(!ConfigNotConst::lastDirectionRight)
+            {
+                currentFrame = 4;
+            }
+            currentFrame++;
+
+            if (currentFrame > 7) currentFrame = 4;
+
+            frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
+        }
+    }
+    else if(IsKeyDown(KEY_W))
+    {
+        if (framesCounter >= (60 / framesSpeed)) {
+            framesCounter = 0;
+            if(!ConfigNotConst::lastDirectionUp)
+            {
+                currentFrame = 8;
+            }
+            currentFrame++;
+
+            if (currentFrame > 11) currentFrame = 8;
+
+            frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
+        }
+    }
+    else if(IsKeyDown(KEY_A))
+    {
+        if (framesCounter >= (60 / framesSpeed)) {
+            framesCounter = 0;
+            if(!ConfigNotConst::lastDirectionLeft)
+            {
+                currentFrame = 12;
+            }
+            currentFrame++;
+
+            if (currentFrame > 15) currentFrame = 12;
+
+            frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
+        }
+    }
+}
 
 void MainCharacter::drawMainCharacter(Texture myTexture)
 {
-    Rectangle source = {0.0f, 0.0f, (float) myTexture.width, (float) myTexture.height};
-    Rectangle destination = {playerPositionX, playerPositionY, myTexture.width * playerCharacterTextureScale, myTexture.height * playerCharacterTextureScale};
-    DrawTexturePro(myTexture, source, destination, {0, 0}, 0.0f, WHITE);
+    /*Rectangle source = {0.0f, 0.0f, (float) myTexture.width, (float) myTexture.height};
+    Rectangle destination = {playerPosX, playerPosY, myTexture.width * playerCharacterTextureScale, myTexture.height * playerCharacterTextureScale};
+    DrawTexturePro(myTexture, source, destination, {0, 0}, 0.0f, WHITE);*/
+
+    DrawTextureRec(myTexture, frameRec, {playerPosX, playerPosY}, WHITE);
 }
 
 float calculateSquaredDistance(float x1, float y1, float x2, float y2)
@@ -32,8 +127,8 @@ float calculateSquaredDistance(float x1, float y1, float x2, float y2)
 
 void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 {
-    float newPositionX = MainCharacter::playerPositionX;
-    float newPositionY = MainCharacter::playerPositionY;
+    float newPositionX = MainCharacter::playerPosX;
+    float newPositionY = MainCharacter::playerPosY;
 
     switch (moveDirection)
     {
@@ -108,29 +203,30 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     else
     {
         // If no stone is close enough, update player position
-        playerPositionX = newPositionX;
-        playerPositionY = newPositionY;
+        playerPosX = newPositionX;
+        playerPosY = newPositionY;
     }
 
-    if(!Projectile::projectilePointer->getActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectiles.h übergeben)
+    if(!projectile_p->getActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectiles.h übergeben)
     {
         if (ConfigNotConst::lastDirectionLeft)
         {
-            Projectile::projectileDestination = 2;
+            projectile_p->setProjectileDestination(2);
         }
         if (ConfigNotConst::lastDirectionRight)
         {
-            Projectile::projectileDestination = 1;
+            projectile_p->setProjectileDestination(1);
         }
         if (ConfigNotConst::lastDirectionUp)
         {
-            Projectile::projectileDestination = 3;
+            projectile_p->setProjectileDestination(3);
         }
         if (ConfigNotConst::lastDirectionDown)
         {
-            Projectile::projectileDestination = 4;
+            projectile_p->setProjectileDestination(4);
         }
     }
+
 }
 
 void MainCharacter::playerDeath()
@@ -157,50 +253,36 @@ void MainCharacter::receiveDamage()
     }*/
 }
 
-void MainCharacter::attack()
-{
-    if (IsKeyPressed(KEY_ENTER) && MainCharacter::playerMana > 0 && !Projectile::projectilePointer->getActive())
+
+void MainCharacter::attack() {
+    if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
     {
         Vector2 startPosition;
-        MainCharacter::playerMana -= 1;
+        playerMana -= 1;
+        if (ConfigNotConst::lastDirectionRight) {
+            startPosition = {playerPosX + 20, playerPosY + 10};
+        }
+        if (ConfigNotConst::lastDirectionLeft) {
+            startPosition = {playerPosX - 1, playerPosY + 10};
+        }
+        if (ConfigNotConst::lastDirectionUp) {
+            startPosition = {playerPosX + 10, playerPosY - 5};
+        }
+        if (ConfigNotConst::lastDirectionDown) {
+            startPosition = {playerPosX + 10, playerPosY + 20};
+        }
 
-        if (ConfigNotConst::lastDirectionRight)
-        {
-            startPosition = {MainCharacter::playerPositionX + 20, MainCharacter::playerPositionY + 10};
-            Projectile::projectilePointer->init(startPosition, {300.0f, 0.0f});
-            Projectile::projectilePointer->projectileDestination = 1;
-        }
-        else if (ConfigNotConst::lastDirectionLeft)
-        {
-            startPosition = {MainCharacter::playerPositionX - 1, MainCharacter::playerPositionY + 10};
-            Projectile::projectilePointer->init(startPosition, {-300.0f, 0.0f});
-            Projectile::projectilePointer->projectileDestination = 2;
-        }
-        else if (ConfigNotConst::lastDirectionUp)
-        {
-            startPosition = {MainCharacter::playerPositionX + 10, MainCharacter::playerPositionY - 5};
-            Projectile::projectilePointer->init(startPosition, {0.0f, -300.0f});
-            Projectile::projectilePointer->projectileDestination = 3;
-        }
-        else if (ConfigNotConst::lastDirectionDown)
-        {
-            startPosition = {MainCharacter::playerPositionX + 10, MainCharacter::playerPositionY + 20};
-            Projectile::projectilePointer->init(startPosition, {0.0f, 300.0f});
-            Projectile::projectilePointer->projectileDestination = 4;
-        }
+        projectile_p->init(startPosition, {300.0f, 300.0f});
+
     }
 
-    if (CheckCollisionRecs(Projectile::projectilePointer->getRectangle(), PixelGame::enemy.getEnemyRec()) &&
-        Projectile::projectilePointer->getActive() && !Projectile::enemyPointer->getUnload())
-    {
-        Projectile::enemyPointer->enemyGetsHit();
-        MainCharacter::playerScore += 10;
-        Projectile::projectilePointer->setActive(false);
-    }
+    //enemy_p->projectileCollision();
+
 }
+
 
 void MainCharacter::setSpawnPosition()
 {
-    playerPositionX = MainCharacter::playerSpawnPositionX;
-    playerPositionY = MainCharacter::playerSpawnPositionY;
+    playerPosX = MainCharacter::playerSpawnPositionX;
+    playerPosY = MainCharacter::playerSpawnPositionY;
 }

@@ -1,19 +1,11 @@
 #include "Enemy.h"
-#include "Projectile.h"
-#include "MainCharacter.h"
 
-std::shared_ptr<Projectile> Enemy::projectilePointer;
-
-Enemy::Enemy()
-{
-    projectilePointer = std::make_shared<Projectile>();
-}
 
 Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, int hits, float knockbackStrength, EnemyType type)
 {
     enemyDeath = false;
     unload = false;
-    positionEnemy = position;
+    posEnemy = position;
     frameRec1 = { 0.0f, 0.0f, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
     frameRec2 = { 0.0f, (float)enemyTexture.height / 3, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
     frameRec3 = { 0.0f, ((float)enemyTexture.height / 3) * 2, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
@@ -21,14 +13,16 @@ Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, int hits, float knockbac
     framesCounter = 0;
     framesSpeed = 8;
     animationDeath = 0;
-    enemyRec = {positionEnemy.x, positionEnemy.y, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3};
+    //enemyRec = {posEnemy.x, posEnemy.y, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3};
     enemyHits = 0;
     enemyType = type;
-    projectilePointer = std::make_shared<Projectile>();
+    projectile_p = std::make_shared<Projectile>();
+    enTexture = enemyTexture;
 }
 
-void Enemy::updateEnemy(float deltaTime, Texture2D &enemyTexture)
+void Enemy::updateEnemy(float deltaTime)
 {
+    enemyRec = {posEnemy.x, posEnemy.y, (float)enTexture.width / 8, (float)enTexture.height / 3};
     framesCounter++; // Update counter
 
     if (framesCounter >= (60 / framesSpeed)) // wechsel frame jede 12 frames
@@ -41,9 +35,9 @@ void Enemy::updateEnemy(float deltaTime, Texture2D &enemyTexture)
             currentFrame = 0;
         }
 
-        frameRec1.x = (float)currentFrame * (float)enemyTexture.width / 8; //weil 8 pro zeile
-        frameRec2.x = (float)currentFrame * (float)enemyTexture.width / 8;
-        frameRec3.x = (float)currentFrame * (float)enemyTexture.width / 8;
+        frameRec1.x = (float)currentFrame * (float)enTexture.width / 8; //weil 8 pro zeile
+        frameRec2.x = (float)currentFrame * (float)enTexture.width / 8;
+        frameRec3.x = (float)currentFrame * (float)enTexture.width / 8;
     }
 
     if(getEnemyHits() == 3 && enemyType == ENEMYBLUE) //wie viele hits ein enemy aushält
@@ -70,28 +64,28 @@ void Enemy::updateEnemy(float deltaTime, Texture2D &enemyTexture)
     }
 }
 
-void Enemy::drawEnemy(Texture2D &enemyTexture)
+void Enemy::drawEnemy()
 {
     if (!enemyDeath && !unload)
     {
         if (currentFrame < 7)
         {
-            DrawTextureRec(enemyTexture, frameRec1, positionEnemy, WHITE);
+            DrawTextureRec(enTexture, frameRec1, posEnemy, WHITE);
         }
         else
         {
-            DrawTextureRec(enemyTexture, frameRec2, positionEnemy, WHITE);
+            DrawTextureRec(enTexture, frameRec2, posEnemy, WHITE);
         }
     }
     else
     {
         if (!unload)
         {
-            DrawTextureRec(enemyTexture, frameRec3, positionEnemy, WHITE);
+            DrawTextureRec(enTexture, frameRec3, posEnemy, WHITE);
         }
         if (currentFrame == 20)
         {
-            UnloadTexture(enemyTexture);
+            UnloadTexture(enTexture);
             unload = true;
         }
     }
@@ -127,36 +121,19 @@ int Enemy::getEnemyHits()
 
 Vector2 Enemy::getPosition()
 {
-    return positionEnemy;
+    return posEnemy;
 }
 
-void Enemy::enemyAttack()
+void Enemy::projectileCollision()
 {
-    //std::cout << "In Enemy::enemyAttack()" << std::endl;
-    if (!projectilePointer)
-    {
-        std::cout << "projectilePointer is null" << std::endl;
-        return; // Exit the function if projectilePointer is null
+    if (CheckCollisionRecs(projectile_p->getRec(), enemyRec)) {
+        enemyGetsHit();
+        projectile_p->setActive(false);
     }
-
-    if (!projectilePointer->getActive() && !Projectile::enemyPointer->getEnemyDeath())
+    /*if (CheckCollisionRecs(playerHitRec, enemyRec) && !getUnload())
     {
-        Vector2 startPosition = Projectile::enemyPointer->getPosition();
-        startPosition.y += 10;
-
-        Vector2 enemyProjectileSpeed = {100.0f, 0.0f}; // example speed to the right
-        projectilePointer->init(startPosition, enemyProjectileSpeed);
-        Projectile::projectilePointer->projectileDestination = 1; // Assuming 1 is the right direction
-    }
-
-    if (projectilePointer->getActive() && CheckCollisionRecs(projectilePointer->getRectangle(), MainCharacter::playerCharacterRectangle))
-    {
-        MainCharacter::playerHealth -= 10;
-        projectilePointer->setActive(false);
-    }
-
-    if (CheckCollisionRecs(Projectile::enemyPointer->getEnemyRec(), MainCharacter::playerCharacterRectangle))
-    {
-        MainCharacter::playerHealth -= 10;
-    }
+        if (IsKeyPressed(KEY_SPACE)) {
+            enemyGetsHit();
+        }
+    }*/
 }

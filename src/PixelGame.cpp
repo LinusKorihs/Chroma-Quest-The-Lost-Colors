@@ -9,12 +9,11 @@
 
 GameState currentGameState;
 
-std::shared_ptr<Enemy> PixelGame::enemyPointer;
-std::shared_ptr<Projectile> PixelGame::projectileEnemyPointer;
+std::shared_ptr<Projectile> PixelGame::projectile_p;
+std::shared_ptr<Projectile> PixelGame::projectileEnemy_p;
 
 Texture2D PixelGame::slimeEnemyTexture;
 
-Enemy PixelGame::enemy;
 
 bool PixelGame::isPlayerKnocked = false;
 
@@ -23,15 +22,19 @@ Rectangle MainCharacter::playerCharacterHitRectangle;
 
 void PixelGame::gameInit()
 {
-    Projectile::projectilePointer = std::make_shared<Projectile>();
-    projectileEnemyPointer = std::make_shared<Projectile>();
+    /*MainCharacter::setEnemyManager(&enemyManager);
+    enemyManager.addEnemy({250.0f, 280.0f}, slimeEnemyTexture, 2, 1.0f, ENEMYBLUE);
+    enemyManager.addEnemy({280.0f, 280.0f}, slimeEnemyTexture, 2, 1.0f, ENEMYBLUE);*/
+
+    projectile_p = std::make_shared<Projectile>();
+    MainCharacter::setProjectile(projectile_p);
+
 
     TextureManage::loadAudio();
-
-    Projectile::projectilePointer->load();
-    projectileEnemyPointer->load();
-
     MainCharacter::playerHealth = 100;
+
+    projectile_p->load();
+    MainCharacter::initPlayer(TextureManager::getTexture("MainCharacter"));
 
     tson::Tileson tileson; // tileson parse
     auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
@@ -61,10 +64,10 @@ void PixelGame::gameInit()
 
 void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
 {
-    MainCharacter::playerCharacterRectangle = {MainCharacter::playerPositionX, MainCharacter::playerPositionY,
+    MainCharacter::playerCharacterRectangle = {MainCharacter::playerPosX, MainCharacter::playerPosY,
                                                TextureManager::getTexture("MainCharacter").width * 0.15f,
                                                TextureManager::getTexture("MainCharacter").height * 0.15f};
-    MainCharacter::playerCharacterHitRectangle = {MainCharacter::playerPositionX, MainCharacter::playerPositionY,
+    MainCharacter::playerCharacterHitRectangle = {MainCharacter::playerPosX, MainCharacter::playerPosY,
                                                   TextureManager::getTexture("MainCharacter").width * 0.18f,
                                                   TextureManager::getTexture("MainCharacter").height * 0.18f};
 
@@ -80,7 +83,7 @@ void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
 
 void PixelGame::gameLoop(tson::Map &Map)
 {
-    enemyPointer = std::make_shared<Enemy>(Vector2{250, 280}, slimeEnemyTexture, 2, 5.0f, SLIMERED);
+    //enemy_p = std::make_shared<Enemy>(Vector2{250, 280}, slimeEnemyTexture, 2, 5.0f, SLIMERED);
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
@@ -105,19 +108,25 @@ void PixelGame::gameLoop(tson::Map &Map)
     }
 
     drawObjects();
-    MainCharacter::drawMainCharacter(TextureManager::getTexture("MainCharacter"));
+    //MainCharacter::drawMainCharacter(TextureManager::getTexture("MainCharacter"));
 
-    enemyPointer->updateEnemy(GetFrameTime(), slimeEnemyTexture);
-    enemyPointer->drawEnemy(slimeEnemyTexture);
+    MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
+    MainCharacter::drawMainCharacter(TextureManager::getTexture("MainCharacter"));
+    MainCharacter::isPlayerDead = false;
+
+   // enemyManager.updateEnemies(GetFrameTime());
+    //enemyManager.drawEnemies();
+
+    //enemy_p->updateEnemy(GetFrameTime());
+    //enemy_p->drawEnemy(slimeEnemyTexture);
+
+    //projectileEnemy_p->update(GetFrameTime(), 2);
+    //projectileEnemy_p->draw();
+    projectile_p->update(GetFrameTime(), projectile_p->getProjectileDestination());
+    projectile_p->draw();
 
     MainCharacter::attack();
-    Enemy::enemyAttack();
 
-    Projectile::projectilePointer->update(GetFrameTime());  // Update and draw the player projectile
-    Projectile::projectilePointer->draw();
-
-    projectileEnemyPointer->update(GetFrameTime()); // Update and draw the enemy projectile
-    projectileEnemyPointer->draw();
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
@@ -156,7 +165,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         StopSound(ConfigNotConst::playerWalkingSound);
     }
     UpdateMusicStream(ConfigNotConst::gameBackgroundMusic);
-    playerCamera::camera.target = (Vector2) {MainCharacter::playerPositionX, MainCharacter::playerPositionY};
+    playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
 
     if (WindowShouldClose())
     {
@@ -172,8 +181,8 @@ void PixelGame::gameLoop(tson::Map &Map)
 void PixelGame::unloadAll()
 {
     UnloadResources::unloadAudio();
-    Projectile::projectilePointer->unload(); //Projectiles Textur
-    projectileEnemyPointer->unload(); //Projectiles Enemy Textur
+    projectile_p->unload(); //Projectile Textur
+    //projectileEnemy_p->unload(); //Projectile Enemy Textur
 }
 
 void PixelGame::drawHud()
