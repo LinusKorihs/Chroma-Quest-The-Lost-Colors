@@ -2,6 +2,8 @@
 #include "raylib.h"
 #include "Enemy.h"
 #include "PixelGame.h"
+#include "EnemyManager.h"
+#include "Projectile.h"
 
 class MainCharacter
 {
@@ -40,6 +42,7 @@ public:
 private:
     static std::shared_ptr<Projectile> projectile_p;
     static std::shared_ptr<Enemy> enemy_p;
+    static std::shared_ptr<EnemyManager> enemyManager_p;
     static EnemyManager* enemyManager;
     static int currentFrame;
     static int framesCounter;

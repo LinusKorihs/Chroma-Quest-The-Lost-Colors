@@ -24,6 +24,9 @@ int MainCharacter::framesCounter;
 int MainCharacter::framesSpeed;
 Rectangle MainCharacter::frameRec;
 std::shared_ptr<Enemy> MainCharacter::enemy_p;
+std::shared_ptr<EnemyManager> MainCharacter::enemyManager_p = std::make_shared<EnemyManager>();
+
+
 
 void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
 {
@@ -282,6 +285,16 @@ void MainCharacter::attack() {
     }
 
     //enemy_p->projectileCollision();
+    for (const auto &enemy : enemyManager->enemies) {
+        if (CheckCollisionRecs(projectile_p->getRec(), enemyManager->getEnemyRec())) {
+            //enemy->enemyGetsHit();
+            projectile_p->setActive(false);
+        }
+    }
+   /* if (CheckCollisionRecs(projectile_p->getRec(), enemyManager->getEnemyRec())) {
+        //enemyGetsHit();
+        projectile_p->setActive(false);
+    }*/
 
 }
 

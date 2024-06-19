@@ -31,3 +31,16 @@ bool EnemyManager::checkProjectileEnemyCollision(const std::shared_ptr<Projectil
     }
     return false;
 }
+
+Rectangle EnemyManager::getEnemyRec() {
+    for (auto& enemy : enemies) {
+        return enemy->getEnemyRec();
+    }
+    return Rectangle();
+}
+Vector2 EnemyManager::getEnemies() {
+    for (auto& enemy : enemies) {
+        return enemy->getPosition();
+    }
+    return Vector2();
+}

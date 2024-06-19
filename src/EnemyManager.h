@@ -15,10 +15,14 @@ public:
     void addEnemy(Vector2 position, Texture2D& enemyTexture, int hits, float knockbackStrength, EnemyType type);
     void updateEnemies(float deltaTime);
     void drawEnemies();
+    Rectangle getEnemyRec();
+    Vector2 getEnemies();
     bool checkProjectileEnemyCollision(const std::shared_ptr<Projectile>& projectile, const std::shared_ptr<Enemy>& enemy);
+    std::vector<std::shared_ptr<Enemy>> enemies;
 
 private:
-    std::vector<std::shared_ptr<Enemy>> enemies;
+
+    Rectangle enemyRec;
 };
 
 

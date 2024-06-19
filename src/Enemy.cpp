@@ -126,7 +126,7 @@ Vector2 Enemy::getPosition()
 
 void Enemy::projectileCollision()
 {
-    if (CheckCollisionRecs(projectile_p->getRec(), enemyRec)) {
+    /*if (CheckCollisionRecs(projectile_p->getRec(), enemyRec)) {
         enemyGetsHit();
         projectile_p->setActive(false);
     }

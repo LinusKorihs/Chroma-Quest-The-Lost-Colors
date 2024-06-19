@@ -11,6 +11,7 @@ GameState currentGameState;
 
 std::shared_ptr<Projectile> PixelGame::projectile_p;
 std::shared_ptr<Projectile> PixelGame::projectileEnemy_p;
+//std::shared_ptr<Enemy> PixelGame::enemy_p;
 EnemyManager PixelGame::enemyManager;
 
 Texture2D PixelGame::slimeEnemyTexture;
@@ -24,6 +25,7 @@ Rectangle MainCharacter::playerCharacterHitRectangle;
 void PixelGame::gameInit()
 {
     slimeEnemyTexture = TextureManager::getTexture("SlimeEnemy");
+    //MainCharacter::setEnemy(enemy_p);
     MainCharacter::setEnemyManager(&enemyManager);
     enemyManager.addEnemy({32*35+30, 32*65-140}, slimeEnemyTexture, 2, 1.0f, ENEMYBLUE);
     enemyManager.addEnemy({32*35-30, 32*65-140}, slimeEnemyTexture, 2, 1.0f, ENEMYBLUE);
