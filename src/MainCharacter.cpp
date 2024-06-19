@@ -169,7 +169,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     }
     Stone *nearestStone = nullptr;
     float nearestDistanceSquared = std::numeric_limits<float>::max();
-    Rectangle newRec = {newPositionX, newPositionY, TextureManager::getTexture("MainCharacter").width * playerCharacterHitBoxScale, TextureManager::m_textures["MainCharacter"].height * playerCharacterHitBoxScale};
+    Rectangle newRec = {newPositionX, newPositionY, TextureManager::getTexture("MainCharacter").width / 32 * playerCharacterHitBoxScale, TextureManager::m_textures["MainCharacter"].height * playerCharacterHitBoxScale};
 
     for (const Rectangle &wallRec: currentGameState.wallRectangles)
     {
@@ -183,7 +183,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     {
         float stoneCenterX = stone.getRectangle().x + stone.getRectangle().width / 2.0f;
         float stoneCenterY = stone.getRectangle().y + stone.getRectangle().height / 2.0f;
-        float playerCenterX = newPositionX + (TextureManager::getTexture("MainCharacter").width * playerCharacterHitBoxScale) / 2.0f;
+        float playerCenterX = newPositionX + (TextureManager::getTexture("MainCharacter").width / 32 * playerCharacterHitBoxScale) / 2.0f;
         float playerCenterY = newPositionY + (TextureManager::getTexture("MainCharacter").height * playerCharacterHitBoxScale) / 2.0f;
 
         float distanceSquared = calculateSquaredDistance(playerCenterX, playerCenterY, stoneCenterX, stoneCenterY);
