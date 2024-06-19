@@ -2,7 +2,7 @@
 #include "GameState.h"
 #include "config.h"
 #include "Configuration.h"
-#include "LoadResources.h"
+#include "TextureManage.h"
 #include "Menu.h"
 #include "PixelGame.h"
 #include "raylib.h"

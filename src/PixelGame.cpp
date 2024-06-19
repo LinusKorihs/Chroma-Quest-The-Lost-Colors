@@ -3,7 +3,7 @@
 #include "DrawMap.h"
 #include "Item.h"
 #include "PixelGame.h"
-#include "LoadResources.h"
+#include "TextureManage.h"
 #include "MainCharacter.h"
 #include "UnloadResources.h"
 
@@ -26,14 +26,14 @@ void PixelGame::gameInit()
     Projectile::projectilePointer = std::make_shared<Projectile>();
     projectileEnemyPointer = std::make_shared<Projectile>();
 
-    LoadResources::loadAudio();
+    TextureManage::loadAudio();
 
     Projectile::projectilePointer->load();
     projectileEnemyPointer->load();
 
     MainCharacter::playerHealth = 100;
 
-    tson::Tileson tileson;    // tileson parse
+    tson::Tileson tileson; // tileson parse
     auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
     tson::Map &Map = *MapPtr;
 
@@ -56,9 +56,7 @@ void PixelGame::gameInit()
         return;
     }
 
-    Stone::stoneObjects.emplace_back(32*32,32*61, 32, stoneTexture, stoneSourceRect); // Create instances of Stone using StoneData
-    Stone::stoneObjects.emplace_back(32*32,32*62, 32, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(32*32,32*63, 32, stoneTexture, stoneSourceRect);
+    Stone::initializeStones(stoneTexture, stoneSourceRect);
 }
 
 void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
@@ -72,12 +70,12 @@ void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
 
     if (Stone::drawStone == 0)
     {
-        for (Stone &stone: Stone::stoneObjects)
+        for (Stone &stone : Stone::stoneObjects)
         {
             stone.draw();
         }
+        Stone::drawStone = 1;
     }
-    Stone::drawStone = 1;
 }
 
 void PixelGame::gameLoop(tson::Map &Map)

@@ -14,7 +14,7 @@ private:
     static bool m_texturesLoaded;
 };
 
-class LoadResources
+class TextureManage
 {
 public:
     static void loadAudio();

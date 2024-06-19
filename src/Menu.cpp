@@ -3,7 +3,7 @@
 #include "config.h"
 #include "Configuration.h"
 #include "InGameHud.h"
-#include "LoadResources.h"
+#include "TextureManage.h"
 #include "Menu.h"
 #include "raylib.h"
 #include "SetKeyBindings.h"
@@ -25,7 +25,7 @@ std::vector<float> Menu::UpdateButtonPositions()
     float upMenuScreenHeight = GetScreenHeight();
 
     float newButtonWidth = Button::buttonScreenWidth;
-    float newButtonHeight = (float)PixelGameConfig::ScreenHeight / 2 - 100;
+    float newButtonHeight = (float)PixelGameConfig::ScreenHeight / 2 - 50;
     Menu::buttonPos = {newButtonWidth, newButtonHeight, upMenuScreenWidth};
 
     float startY = (upMenuScreenHeight - (3 * newButtonHeight + 2 * buttonSpacing)) / 2; // Calculate initial y position for the first button (centered vertically)

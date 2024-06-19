@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LoadResources.h"
+#include "TextureManage.h"
 #include "raylib.h"
 #include "tileson.h"
 

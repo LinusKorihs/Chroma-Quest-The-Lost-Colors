@@ -27,4 +27,6 @@ public:
 
     static Rectangle playerCharacterRectangle;
     static Rectangle playerCharacterHitRectangle;
+    static float playerCharacterHitBoxScale;
+    static float playerCharacterTextureScale;
 };

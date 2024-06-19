@@ -1,5 +1,5 @@
 #include "Configuration.h"
-#include "LoadResources.h"
+#include "TextureManage.h"
 
 const int ConfigConst::targetFPS = 60;
 const float ConfigConst::playerMoveSpeed = 2.0f;

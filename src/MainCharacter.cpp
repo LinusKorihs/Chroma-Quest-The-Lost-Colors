@@ -1,8 +1,8 @@
 #include "Configuration.h"
-#include "LoadResources.h"
+#include "TextureManage.h"
 #include "MainCharacter.h"
 #include "Projectile.h"
-#include "Stone.h"
+#include "Objects.h"
 #include "PixelGame.h"
 #include "Enemy.h"
 
@@ -13,14 +13,21 @@ int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
 float MainCharacter::playerSpawnPositionX = 32*35; //32*35 in new, 80 in old
 float MainCharacter::playerSpawnPositionY = 32*65; //32*65 in new, 368 in old
+float MainCharacter::playerCharacterTextureScale = 0.1425f;
+float MainCharacter::playerCharacterHitBoxScale = 0.1425f;
 float MainCharacter::playerPositionX = MainCharacter::playerSpawnPositionX;
 float MainCharacter::playerPositionY = MainCharacter::playerSpawnPositionY;
 
 void MainCharacter::drawMainCharacter(Texture myTexture)
 {
     Rectangle source = {0.0f, 0.0f, (float) myTexture.width, (float) myTexture.height};
-    Rectangle destination = {playerPositionX, playerPositionY, myTexture.width * 0.15f, myTexture.height * 0.15f};
+    Rectangle destination = {playerPositionX, playerPositionY, myTexture.width * playerCharacterTextureScale, myTexture.height * playerCharacterTextureScale};
     DrawTexturePro(myTexture, source, destination, {0, 0}, 0.0f, WHITE);
+}
+
+float calculateSquaredDistance(float x1, float y1, float x2, float y2)
+{
+    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 }
 
 void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
@@ -65,8 +72,9 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         default:
             break;
     }
-
-    Rectangle newRec = {newPositionX, newPositionY, TextureManager::getTexture("MainCharacter").width * 0.15f, TextureManager::m_textures["MainCharacter"].height * 0.15f};
+    Stone *nearestStone = nullptr;
+    float nearestDistanceSquared = std::numeric_limits<float>::max();
+    Rectangle newRec = {newPositionX, newPositionY, TextureManager::getTexture("MainCharacter").width * playerCharacterHitBoxScale, TextureManager::m_textures["MainCharacter"].height * playerCharacterHitBoxScale};
 
     for (const Rectangle &wallRec: currentGameState.wallRectangles)
     {
@@ -76,18 +84,30 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         }
     }
 
-    Stone::stoneCollision = false;
-    for (Stone &stone: Stone::stoneObjects)
+    for (Stone &stone : Stone::stoneObjects)
     {
-        if (CheckCollisionRecs(newRec, stone.getRectangle()))
+        float stoneCenterX = stone.getRectangle().x + stone.getRectangle().width / 2.0f;
+        float stoneCenterY = stone.getRectangle().y + stone.getRectangle().height / 2.0f;
+        float playerCenterX = newPositionX + (TextureManager::getTexture("MainCharacter").width * playerCharacterHitBoxScale) / 2.0f;
+        float playerCenterY = newPositionY + (TextureManager::getTexture("MainCharacter").height * playerCharacterHitBoxScale) / 2.0f;
+
+        float distanceSquared = calculateSquaredDistance(playerCenterX, playerCenterY, stoneCenterX, stoneCenterY);
+
+        if (distanceSquared < nearestDistanceSquared)
         {
-            stone.move(moveDirection, currentGameState.wallRectangles);
-            Stone::stoneCollision = true;
+            nearestDistanceSquared = distanceSquared;
+            nearestStone = &stone;
         }
     }
 
-    if (!Stone::stoneCollision)
+    // Attempt to move the nearest stone if one was found within a reasonable distance
+    if (nearestStone && nearestDistanceSquared < 1000.0f) // Adjust threshold as needed
     {
+        nearestStone->move(moveDirection, currentGameState.wallRectangles);
+    }
+    else
+    {
+        // If no stone is close enough, update player position
         playerPositionX = newPositionX;
         playerPositionY = newPositionY;
     }

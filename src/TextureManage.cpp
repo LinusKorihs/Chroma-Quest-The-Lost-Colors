@@ -1,7 +1,7 @@
 #include "Audio.h"
 #include "Configuration.h"
 #include <iostream>
-#include "LoadResources.h"
+#include "TextureManage.h"
 #include "raylib.h"
 #include "SetKeyBindings.h"
 #include "tileson.h"
@@ -41,6 +41,8 @@ void TextureManager::init()
     m_textures["leftKeyButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonGreen.png");
     m_textures["rightKeyButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonRed.png");
     m_textures["Stone"] = LoadTexture("assets/graphics/Tiles/Stone.png");
+    m_textures["PlateNormal"] = LoadTexture("assets/graphics/Tiles/PlateUnpressed.png");
+    m_textures["PlatePressed"] = LoadTexture("assets/graphics/Tiles/PlatePressed.png");
 
     for (auto &texture : m_textures)
     {
@@ -61,8 +63,7 @@ Texture2D TextureManager::getTexture(const std::string &name) // call this textu
     return m_textures["ERROR"];
 }
 
-
-void LoadResources::loadAudio()
+void TextureManage::loadAudio()
 {
     //InitAudioDevice(); // Initialize audio device
 

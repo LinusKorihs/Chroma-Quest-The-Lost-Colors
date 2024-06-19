@@ -1,6 +1,6 @@
 #include "Configuration.h"
 #include "InGameHud.h"
-#include "LoadResources.h"
+#include "TextureManage.h"
 #include "raylib.h"
 #include "SetKeyBindings.h"
 #include "Utils.h"

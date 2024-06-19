@@ -23,16 +23,16 @@ add_executable(${PROJECT_NAME} main.cpp
         InGameHud.h
         GameState.cpp
         GameState.h
-        Stone.cpp
-        Stone.h
+        Objects.cpp
+        Objects.h
         Projectile.cpp
         Projectile.h
         Enemy.cpp
         Enemy.h
         Configuration.cpp
         Configuration.h
-        LoadResources.cpp
-        LoadResources.h
+        TextureManage.cpp
+        TextureManage.h
         UnloadResources.cpp
         UnloadResources.h
         MainCharacter.cpp

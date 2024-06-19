@@ -7,7 +7,7 @@
 #include "Menu.h"
 #include "Projectile.h"
 #include "raylib.h"
-#include "Stone.h"
+#include "Objects.h"
 #include "tileson.h"
 
 class PixelGame
