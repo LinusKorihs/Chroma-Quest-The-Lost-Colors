@@ -1,114 +1,108 @@
-﻿#include "GameState.h"
+﻿#include <synchapi.h>
+#include "GameState.h"
 #include "config.h"
 #include "Configuration.h"
+#include "LoadResources.h"
 #include "Menu.h"
 #include "PixelGame.h"
 #include "raylib.h"
 #include "tileson.h"
 #include "Utils.h"
+#include "VMouse.h"
+#include "WindowSizeScale.h"
 
 int main()
 {
-    SetTraceLogLevel(LOG_WARNING);
     GameState applicationState;
-
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(PixelGameConfig::ScreenWidth, PixelGameConfig::ScreenHeight, PixelGameConfig::PROJECT_NAME);
+
     SetTargetFPS(ConfigConst::targetFPS);
+    InitAudioDevice();
 
 #ifdef GAME_START_FULLSCREEN
     ToggleFullscreen();
 #endif
 
     tson::Tileson tileson;
-    auto tileMapPointer = tileson.parse("assets/graphics/Old TileSet & TileMap/tilemap.tmj");
-    tson::Map& tileMap = *tileMapPointer;
+    auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
+    tson::Map& tileMap = *MapPtr;
 
     SetExitKey(KEY_F4);
 
-    while (ConfigNotConst::isGameRunning == true)
+    RenderTexture canvas = LoadRenderTexture(PixelGameConfig::ScreenWidth, PixelGameConfig::ScreenHeight);
+
+    float renderScale = 1.0f;
+    TextureManager::init();
+    PixelGame::gameInit();
+
+    Vector2 previousWindowSize = { (float)GetScreenWidth(), (float)GetScreenHeight() };
+
+    while (ConfigNotConst::isGameRunning && !WindowShouldClose())
     {
-        switch (currentGameState.currentGameMenu)
+        Vector2 currentWindowSize = { (float)GetScreenWidth(), (float)GetScreenHeight() };
+
+        if (currentWindowSize.x != previousWindowSize.x || currentWindowSize.y != previousWindowSize.y)
+        {
+            previousWindowSize = currentWindowSize; // Update previous window size
+        }
+
+        WindowSizeScale::calculateRenderRectangle(renderScale);
+        Rectangle renderRectangle = WindowSizeScale::calculateRenderRectangle(renderScale); // Calculate render rectangle for letterbox
+
+        VMouse::calcVMouse(renderRectangle, renderScale); // Update virtual mouse position
+
+        BeginDrawing();
+        ClearBackground(BLACK);
+        BeginTextureMode(canvas);
+
+        switch (applicationState.currentGameMenu)
         {
             case MenuState::MainMenu:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::MainMenu);
-                Menu::drawMainMenu(currentGameState);
-                Menu::unloadButtonAndKeyButtonTextures();
+                Menu::drawMainMenu(applicationState);
                 break;
-
             case MenuState::GameRunning:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::GameRunning);
-                PixelGame::gameInit();
                 PixelGame::gameLoop(tileMap);
-                Menu::unloadButtonAndKeyButtonTextures();
+                if (IsKeyPressed(KEY_ESCAPE))
+                {
+                    applicationState.currentGameMenu = MenuState::PauseMenu;
+                }
                 break;
-
             case MenuState::SettingsMenu:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::SettingsMenu);
-                Menu::drawSettingsMenu(currentGameState);
-                Menu::unloadButtonAndKeyButtonTextures();
+                Menu::drawSettingsMenu(applicationState);
                 break;
-
             case MenuState::KeyBindingsMenu:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::KeyBindingsMenu);
-                Menu::drawKeyBindingsMenu(currentGameState);
-                Menu::unloadButtonAndKeyButtonTextures();
+                Menu::drawKeyBindingsMenu(applicationState);
                 break;
-
             case MenuState::PauseMenu:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::PauseMenu);
-                ConfigFunction::toggleGamePause();
-                Menu::drawPauseMenu(currentGameState);
-                Menu::unloadButtonAndKeyButtonTextures();
+                Menu::drawPauseMenu(applicationState);
                 break;
-
             case MenuState::ResumeGame:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::ResumeGame);
                 ConfigFunction::toggleGamePause();
-                Menu::unloadButtonAndKeyButtonTextures();
+                applicationState.currentGameMenu = MenuState::GameRunning;
                 break;
-
             case MenuState::VolumeSliders:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::VolumeSliders);
-                Menu::drawVolumeSlidersMenu(currentGameState);
-                Menu::unloadButtonAndKeyButtonTextures();
+                Menu::drawVolumeSlidersMenu(applicationState);
                 break;
-
             case MenuState::Control:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::Control);
-                Menu::drawControlMenu(currentGameState);
-                Menu::unloadButtonAndKeyButtonTextures();
+                Menu::drawControlMenu(applicationState);
                 break;
-
             case MenuState::Language:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::Language);
-                Menu::drawLanguageMenu(currentGameState);
-                Menu::unloadButtonAndKeyButtonTextures();
+                Menu::drawLanguageMenu(applicationState);
                 break;
-
             case MenuState::ControllerMenu:
-                Menu::loadButtonAndKeyButtonTextures();
-                applicationState.changeGameState(MenuState::ControllerMenu);
-                Menu::drawControllerMenu(currentGameState);
-                Menu::unloadButtonAndKeyButtonTextures();
+                Menu::drawControllerMenu(applicationState);
                 break;
-
             case MenuState::None:
-                applicationState.changeGameState(MenuState::None);
-                Menu::unloadButtonAndKeyButtonTextures();
                 ConfigNotConst::isGameRunning = false;
                 break;
         }
-    }
-    CloseWindow();
 
+        EndTextureMode();
+        DrawTexturePro(canvas.texture, {0, 0, (float)canvas.texture.width, (float)-canvas.texture.height}, renderRectangle, {0, 0}, 0.0f, WHITE);
+        EndDrawing();
+    }
+
+    CloseWindow();
     return EXIT_SUCCESS;
 }

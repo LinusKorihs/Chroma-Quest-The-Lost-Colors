@@ -7,8 +7,8 @@ namespace PixelGameConfig {
     inline constexpr const char* PROJECT_VERSION_MINOR = "@PROJECT_VERSION_MINOR@";
     inline constexpr const char* PROJECT_VERSION_PATCH = "@PROJECT_VERSION_PATCH@";
 
-    inline constexpr int ScreenWidth = 1920;
-    inline constexpr int ScreenHeight = 1080;
+    inline constexpr int ScreenWidth = 480;
+    inline constexpr int ScreenHeight = 270;
 
     //#define GAME_START_FULLSCREEN
 }

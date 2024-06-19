@@ -18,7 +18,7 @@ public:
 
     static bool isPlayerDead;
 
-    static void drawMainCharacter(Texture2D& texture);
+    static void drawMainCharacter(Texture texture);
     static void moveMainCharacter(int moveDirection, float deltaTime);
     static void playerDeath();
     static void receiveDamage();

@@ -2,6 +2,8 @@
 #include <iostream>
 #include "MainCharacter.h"
 
+std::vector<HudImageButton> InGameHud::hudImagebuttons;
+
 InGameHud::InGameHud()
 {
 }

@@ -1,5 +1,7 @@
 #include "Configuration.h"
+#include "InGameHud.h"
 #include "Utils.h"
+#include "VMouse.h"
 
 int Button::setKeyBindText = 0;
 int Button::countDrawText = 0;
@@ -8,7 +10,7 @@ bool Button::checkButtonClick(Rectangle button, const char* englishText, const c
 {
     DrawText(LanguageManager::getLocalizedGameText(englishText, germanText), button.x + button.width / 2 - MeasureText(
             LanguageManager::getLocalizedGameText(englishText, germanText), 20) / 2, button.y + button.height / 2 - 10, 20, BLACK);
-    return CheckCollisionPointRec(GetMousePosition(), button) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
+    return CheckCollisionPointRec(VMouse::pos(), button) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON);
 }
 
 void Button::drawPromptText(const char* englishDirection, const char* germanDirection)
@@ -25,3 +27,21 @@ void Button::drawPromptText(const char* englishDirection, const char* germanDire
                      LanguageManager::getLocalizedGameText(englishDirection, germanDirection)), 20) / 2,
              screenHeight / 2 - 150, 20, BLACK);
 }
+
+void Button::updateAllButtonDimensions(float posX, float posY, float width, float height)
+{
+    for (HudImageButton& button : InGameHud::hudImagebuttons)
+    {
+        updateButtonDimensions(button, posX, posY, width, height);
+    }
+}
+
+void Button::updateButtonDimensions(HudImageButton& button, float posX, float posY, float width, float height)
+{
+    button.rec.x = posX;
+    button.rec.y = posY;
+    button.rec.width = width;
+    button.rec.height = height;
+}
+
+

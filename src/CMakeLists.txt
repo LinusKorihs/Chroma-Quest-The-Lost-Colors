@@ -45,6 +45,10 @@ add_executable(${PROJECT_NAME} main.cpp
         Item.h
         Camera.cpp
         Camera.h
+        VMouse.cpp
+        VMouse.h
+        WindowSizeScale.cpp
+        WindowSizeScale.h
 )
 
 # Add config.h.in file

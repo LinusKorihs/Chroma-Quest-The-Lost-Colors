@@ -15,4 +15,6 @@ public:
 
     static bool checkButtonClick(Rectangle button, const char* englishText, const char* germanText);
     static void drawPromptText(const char* englishDirection, const char* germanDirection);
+    static void updateAllButtonDimensions(float posX, float posY, float width, float height);
+    static void updateButtonDimensions(HudImageButton &button, float posX, float posY, float width, float height);
 };

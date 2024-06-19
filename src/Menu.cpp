@@ -10,32 +10,75 @@
 #include "UnloadResources.h"
 #include "Utils.h"
 
+std::vector<float> Menu::buttonPos;
+
 HudImageButton startGameButton, settingsMenuButton, exitGameButton, resumeGameButton, quitGameButton, volumeSettingsButton, controlSettingsButton, languageSettingsButton, keyBoardSettingsButton, controllerSettingsButton, englishLanguageButton, germanLanguageButton;
 
-int Menu::drawMainMenu(GameState &gameState)
-{
-    int menuScreenWidth = PixelGameConfig::ScreenWidth;
-    int menuScreenHeight = PixelGameConfig::ScreenHeight;
+int menuScreenWidth = GetScreenWidth();
+int menuScreenHeight = GetScreenHeight();
+float buttonSpacing = 50.0f; // Adjust this value to increase or decrease the space between buttons
+float Menu::sliderSpacing = 75.0f; // Adjust this value to increase or decrease the space between sliders
 
-    startGameButton.texture = ConfigButton::startGameButtonTexture;
-    startGameButton.rec = {(float)menuScreenWidth / 2 - startGameButton.texture.width / 2, (float)menuScreenHeight / 2 - 75, (float)startGameButton.texture.width, (float)startGameButton.texture.height};
+std::vector<float> Menu::UpdateButtonPositions()
+{
+    float upMenuScreenWidth = GetScreenWidth();
+    float upMenuScreenHeight = GetScreenHeight();
+
+    float newButtonWidth = Button::buttonScreenWidth;
+    float newButtonHeight = (float)PixelGameConfig::ScreenHeight / 2 - 100;
+    Menu::buttonPos = {newButtonWidth, newButtonHeight, upMenuScreenWidth};
+
+    float startY = (upMenuScreenHeight - (3 * newButtonHeight + 2 * buttonSpacing)) / 2; // Calculate initial y position for the first button (centered vertically)
+    Rectangle buttonRec1 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + buttonSpacing * 0, newButtonWidth, newButtonHeight};
+    Rectangle buttonRec2 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + newButtonHeight + buttonSpacing * 1, newButtonWidth, newButtonHeight};
+    Rectangle buttonRec3 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + 2 * newButtonHeight + buttonSpacing * 2, newButtonWidth, newButtonHeight};
+    Rectangle buttonRec4 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + newButtonHeight + buttonSpacing * 1, newButtonWidth, newButtonHeight};
+    Rectangle buttonRec5 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + 2 * newButtonHeight + buttonSpacing * 2, newButtonWidth, newButtonHeight};
+
+    startGameButton.rec = buttonRec1;
+    settingsMenuButton.rec = buttonRec2;
+    exitGameButton.rec = buttonRec3;
+
+    volumeSettingsButton.rec = buttonRec1;
+    controlSettingsButton.rec = buttonRec2;
+    languageSettingsButton.rec = buttonRec3;
+
+    englishLanguageButton.rec = buttonRec4;
+    germanLanguageButton.rec = buttonRec5;
+
+    keyBoardSettingsButton.rec = buttonRec4;
+    controllerSettingsButton.rec = buttonRec5;
+
+    resumeGameButton.rec = buttonRec4;
+    quitGameButton.rec = buttonRec5;
+
+    return Menu::buttonPos;
+}
+
+int Menu::drawMainMenu(GameState &currentGameState)
+{
+    Menu::buttonPos = UpdateButtonPositions();
+    float newButtonWidth = Menu::buttonPos[0];
+    float newButtonHeight = Menu::buttonPos[1];
+    int upMenuScreenWidth = static_cast<int>(Menu::buttonPos[2]);
+
+    startGameButton.texture = TextureManager::getTexture("StartGameButtonTexture");
+    Button::updateButtonDimensions(startGameButton, newButtonWidth, newButtonHeight + buttonSpacing * 0, Button::buttonWidth, Button::buttonHeight);
     startGameButton.buttonText = LanguageManager::getLocalizedGameText("Start Game", "Spiel starten");
 
-    settingsMenuButton.texture = ConfigButton::settingsMenuButtonTexture;
-    settingsMenuButton.rec = {(float)menuScreenWidth / 2 - settingsMenuButton.texture.width / 2, (float)menuScreenHeight / 2, (float)settingsMenuButton.texture.width, (float)settingsMenuButton.texture.height};
+    settingsMenuButton.texture = TextureManager::getTexture("SettingsMenuButtonTexture");
+    Button::updateButtonDimensions(settingsMenuButton, newButtonWidth, newButtonHeight + buttonSpacing * 1, Button::buttonWidth, Button::buttonHeight);
     settingsMenuButton.buttonText = LanguageManager::getLocalizedGameText("Settings", "Einstellungen");
 
-    exitGameButton.texture = ConfigButton::exitGameButtonTexture;
-    exitGameButton.rec = {(float)menuScreenWidth / 2 - exitGameButton.texture.width / 2, (float)menuScreenHeight / 2 + 75, (float)exitGameButton.texture.width, (float)exitGameButton.texture.height};
+    exitGameButton.texture = TextureManager::getTexture("ExitGameButtonTexture");
+    Button::updateButtonDimensions(exitGameButton, newButtonWidth, newButtonHeight + buttonSpacing * 2, Button::buttonWidth, Button::buttonHeight);
     exitGameButton.buttonText = LanguageManager::getLocalizedGameText("Quit Game", "Spiel beenden");
 
-    BeginDrawing();
     ClearBackground(DARKGRAY);
 
     DrawText(LanguageManager::getLocalizedGameText("Chroma Quest: The Lost Colors", "Chroma Quest: Die verlorenen Farben"),
-             PixelGameConfig::ScreenWidth/2 - MeasureText(
-                     LanguageManager::getLocalizedGameText("Chroma Quest: The Lost Colors",
-                                                    "Chroma Quest: Die verlorenen Farben"), 20) / 2, 50, 20, BLACK);
+             upMenuScreenWidth / 2 - MeasureText(LanguageManager::getLocalizedGameText("Chroma Quest: The Lost Colors", "Chroma Quest: Die verlorenen Farben"), 20) / 2,
+             50, 20, BLACK);
 
     InGameHud::drawImageButton(startGameButton);
     InGameHud::drawImageButton(settingsMenuButton);
@@ -43,95 +86,176 @@ int Menu::drawMainMenu(GameState &gameState)
 
     if (Button::checkButtonClick(startGameButton.rec, "Start Game", "Spiel starten"))
     {
-        gameState.gameMenuStack.push(MenuState::GameRunning);
-        gameState.currentGameMenu = MenuState::GameRunning;
-        ConfigNotConst::isGameRunning = 1;
+        currentGameState.changeGameState(MenuState::GameRunning);
+        ConfigNotConst::isGameRunning = true;
     }
 
     if (Button::checkButtonClick(settingsMenuButton.rec, "Settings", "Einstellungen"))
     {
-        gameState.gameMenuStack.push(MenuState::SettingsMenu);
-        gameState.currentGameMenu = MenuState::SettingsMenu;
+        currentGameState.changeGameState(MenuState::SettingsMenu);
     }
 
     if (Button::checkButtonClick(exitGameButton.rec, "Quit Game", "Spiel beenden"))
     {
-        ConfigNotConst::isGameRunning = false;
         TraceLog(LOG_INFO, "Quit button clicked");
-        gameState.gameMenuStack.push(MenuState::None);
-        gameState.currentGameMenu = MenuState::None;
-
+        ConfigNotConst::isGameRunning = false;
+        currentGameState.changeGameState(MenuState::None);
     }
 
-    if (IsKeyPressed(KEY_ESCAPE) && !gameState.gameMenuStack.empty())
+    if (IsKeyPressed(KEY_ESCAPE))
     {
-        gameState.gameMenuStack.pop();
-        if (!gameState.gameMenuStack.empty())
+        currentGameState.gameMenuStack.pop();
+        if (!currentGameState.gameMenuStack.empty())
         {
-            gameState.currentGameMenu = gameState.gameMenuStack.top();
+            currentGameState.currentGameMenu = currentGameState.gameMenuStack.top();
         }
         else
         {
-            gameState.currentGameMenu = MenuState::MainMenu;
+            currentGameState.currentGameMenu = MenuState::MainMenu;
         }
     }
-
-    EndDrawing();
 
     return ConfigNotConst::isProgramRunning ? 1 : 0;
 }
 
-void Menu::drawKeyBindingsMenu(GameState &gameState)
+void Menu::drawSettingsMenu(GameState &currentGameState)
 {
-    SetKeyBindings::settingTheKeyButtons(gameState);
+    Menu::buttonPos = UpdateButtonPositions();
+    float newButtonWidth = Menu::buttonPos[0];
+    float newButtonHeight = Menu::buttonPos[1];
 
-    BeginDrawing();
+    volumeSettingsButton.texture = TextureManager::getTexture("VolumeButtonTexture");
+    Button::updateButtonDimensions(volumeSettingsButton, newButtonWidth, newButtonHeight + buttonSpacing * 0, Button::buttonWidth, Button::buttonHeight);
+    volumeSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Sound", "Ton");
+
+    controlSettingsButton.texture = TextureManager::getTexture("ControlButtonTexture");
+    Button::updateButtonDimensions(controlSettingsButton, newButtonWidth, newButtonHeight + buttonSpacing * 1, Button::buttonWidth, Button::buttonHeight);
+    controlSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Controls", "Steuerung");
+
+    languageSettingsButton.texture = TextureManager::getTexture("LanguageButtonTexture");
+    Button::updateButtonDimensions(languageSettingsButton, newButtonWidth, newButtonHeight + buttonSpacing * 2, Button::buttonWidth, Button::buttonHeight);
+    languageSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Language", "Sprache");
+
     ClearBackground(DARKGRAY);
 
-    SetKeyBindings::drawKeyBindingsMenu(gameState);
+    InGameHud::drawImageButton(volumeSettingsButton);
+    InGameHud::drawImageButton(controlSettingsButton);
+    InGameHud::drawImageButton(languageSettingsButton);
 
-    EndDrawing();
-}
-
-int Menu::drawControllerMenu(GameState &gameState)
-{
-    while (!WindowShouldClose() && ConfigNotConst::isProgramRunning)
+    if (Button::checkButtonClick(volumeSettingsButton.rec, "Sound", "Ton"))
     {
-        BeginDrawing();
-        ClearBackground(DARKGRAY);
-
-        const char* text = LanguageManager::getLocalizedGameText("No Controller Implementation yet.",
-                                                          "Keine Controller Implementierung bisher.");
-        int menuTextWidth = MeasureText(text, 20);
-
-        DrawText(text, PixelGameConfig::ScreenWidth / 2 - menuTextWidth / 2, PixelGameConfig::ScreenHeight / 2, 20, BLACK);
-
-        if (IsKeyPressed(KEY_ESCAPE))
-        {
-            gameState.gameMenuStack.pop();
-            gameState.currentGameMenu = MenuState::Control;
-            return 0;
-        }
-        EndDrawing();
+        currentGameState.currentGameMenu = MenuState::VolumeSliders;
     }
-    CloseWindow();
-    return 0;
+
+    if (Button::checkButtonClick(controlSettingsButton.rec, "Controls", "Steuerung"))
+    {
+        currentGameState.currentGameMenu = MenuState::Control;
+    }
+
+    if (Button::checkButtonClick(languageSettingsButton.rec, "Language", "Sprache"))
+    {
+        currentGameState.currentGameMenu = MenuState::Language;
+    }
+
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        currentGameState.currentGameMenu = MenuState::MainMenu;
+    }
 }
 
-void Menu::drawLanguageMenu(GameState &gameState)
+void Menu::drawVolumeSlidersMenu(GameState &currentGameState)
 {
-    int menuScreenWidth = PixelGameConfig::ScreenWidth;
-    int menuScreenHeight = PixelGameConfig::ScreenHeight;
+    ClearBackground(DARKGRAY);
 
-    englishLanguageButton.texture = ConfigButton::languageDEButtonTexture;
-    englishLanguageButton.rec = {(float)menuScreenWidth / 2 - 50, (float)menuScreenHeight / 2 - 50, 150, 30};
+    Rectangle sliderPos1 = Audio::updateSliderPositions(Audio::index = 0);
+    Audio::drawVolumeSlider(VolumeType::Global, &ConfigNotConst::globalVolumeLevel, "Global Volume", "Globale Lautstärke", sliderPos1.y);
+
+    Rectangle sliderPos2 = Audio::updateSliderPositions(Audio::index = 1);
+    Audio::drawVolumeSlider(VolumeType::BGMusic, &ConfigNotConst::backgroundMusicVolumeLevel, "Music Volume", "Musiklautstärke", sliderPos2.y);
+
+    Rectangle sliderPos3 = Audio::updateSliderPositions(Audio::index = 2);
+    Audio::drawVolumeSlider(VolumeType::SFX, &ConfigNotConst::soundEffectsVolumeLevel, "Sound Effect Volume", "Soundeffektlautstärke", sliderPos3.y);
+
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        currentGameState.currentGameMenu = MenuState::SettingsMenu;
+    }
+}
+
+void Menu::drawControlMenu(GameState &currentGameState)
+{
+    Menu::buttonPos = UpdateButtonPositions();
+    float newButtonWidth = Menu::buttonPos[0];
+    float newButtonHeight = Menu::buttonPos[1];
+
+    keyBoardSettingsButton.texture = TextureManager::getTexture("KeyboardButtonTexture");
+    Button::updateButtonDimensions(keyBoardSettingsButton, newButtonWidth, newButtonHeight + buttonSpacing * 1, Button::buttonWidth, Button::buttonHeight);
+    keyBoardSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Keyboard/Mouse", "Tastatur/Maus");
+
+    controllerSettingsButton.texture = TextureManager::getTexture("ControllerButtonTexture");
+    Button::updateButtonDimensions(controllerSettingsButton, newButtonWidth, newButtonHeight + buttonSpacing * 2, Button::buttonWidth, Button::buttonHeight);
+    controllerSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Controller", "Kontroller");
+
+    ClearBackground(DARKGRAY);
+
+    InGameHud::drawImageButton(keyBoardSettingsButton);
+    InGameHud::drawImageButton(controllerSettingsButton);
+
+    if (Button::checkButtonClick(keyBoardSettingsButton.rec, "Keyboard/Mouse", "Tastatur/Maus"))
+    {
+        currentGameState.currentGameMenu = MenuState::KeyBindingsMenu;
+        drawKeyBindingsMenu(currentGameState);
+    }
+    if (Button::checkButtonClick(controllerSettingsButton.rec, "Controller", "Controller"))
+    {
+        currentGameState.currentGameMenu = MenuState::ControllerMenu;
+        drawControllerMenu(currentGameState);
+    }
+
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        currentGameState.currentGameMenu = MenuState::SettingsMenu;
+    }
+}
+
+void Menu::drawKeyBindingsMenu(GameState &currentGameState)
+{
+    SetKeyBindings::settingTheKeyButtons(currentGameState);
+
+    ClearBackground(DARKGRAY);
+
+    SetKeyBindings::drawKeyBindingsMenu(currentGameState);
+}
+
+void Menu::drawControllerMenu(GameState &currentGameState)
+{
+    ClearBackground(DARKGRAY);
+
+    const char* text = LanguageManager::getLocalizedGameText("No Controller Implementation yet.",
+                                                          "Keine Controller Implementierung bisher.");
+    int menuTextWidth = MeasureText(text, 20);
+    DrawText(text, menuScreenWidth / 2 - menuTextWidth / 2, menuScreenHeight / 2, 20, BLACK);
+
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        currentGameState.currentGameMenu = MenuState::Control;
+    }
+}
+
+void Menu::drawLanguageMenu(GameState &currentGameState)
+{
+    Menu::buttonPos = UpdateButtonPositions();
+    float newButtonWidth = Menu::buttonPos[0];
+    float newButtonHeight = Menu::buttonPos[1];
+
+    englishLanguageButton.texture = TextureManager::getTexture("LanguageENButtonTexture");
+    Button::updateButtonDimensions(englishLanguageButton, newButtonWidth, newButtonHeight + buttonSpacing * 1, Button::buttonWidth, Button::buttonHeight);
     englishLanguageButton.buttonText = LanguageManager::getLocalizedGameText("English", "Englisch");
 
-    germanLanguageButton.texture = ConfigButton::languageENButtonTexture;
-    germanLanguageButton.rec = {(float)menuScreenWidth / 2 - 50, (float)menuScreenHeight / 2, 150, 30};
+    germanLanguageButton.texture = TextureManager::getTexture("LanguageDEButtonTexture");
+    Button::updateButtonDimensions(germanLanguageButton, newButtonWidth, newButtonHeight + buttonSpacing * 2, Button::buttonWidth, Button::buttonHeight);
     germanLanguageButton.buttonText = LanguageManager::getLocalizedGameText("German", "Deutsch");
 
-    BeginDrawing();
     ClearBackground(DARKGRAY);
 
     InGameHud::drawImageButton(englishLanguageButton);
@@ -155,225 +279,55 @@ void Menu::drawLanguageMenu(GameState &gameState)
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
-        gameState.gameMenuStack.pop();
-        if (!gameState.gameMenuStack.empty())
-        {
-            gameState.currentGameMenu = gameState.gameMenuStack.top();
-        }
-        else
-        {
-            gameState.currentGameMenu = MenuState::SettingsMenu;
-        }
+        currentGameState.currentGameMenu = MenuState::SettingsMenu;
     }
-    EndDrawing();
 }
 
-bool Menu::drawSettingsMenu(GameState &gameState)
+void Menu::drawPauseMenu(GameState &currentGameState)
 {
-    int menuScreenWidth = PixelGameConfig::ScreenWidth;
-    int menuScreenHeight = PixelGameConfig::ScreenHeight;
+    Menu::buttonPos = UpdateButtonPositions();
+    float newButtonWidth = Menu::buttonPos[0];
+    float newButtonHeight = Menu::buttonPos[1];
 
-    volumeSettingsButton.texture = ConfigButton::volumeButtonTexture;
-    volumeSettingsButton.rec = {(float)menuScreenWidth / 2 - 50, (float)menuScreenHeight / 2 - 50, 150, 30};
-    volumeSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Sound", "Ton");
-
-    controlSettingsButton.texture = ConfigButton::controlButtonTexture;
-    controlSettingsButton.rec = {(float)menuScreenWidth / 2 - 50, (float)menuScreenHeight / 2, 150, 30};
-    controlSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Controls", "Steuerung");
-
-    languageSettingsButton.texture = ConfigButton::languageButtonTexture;
-    languageSettingsButton.rec = {(float)menuScreenWidth / 2 - 50, (float)menuScreenHeight / 2 + 50, 150, 30};
-    languageSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Language", "Sprache");
-
-    BeginDrawing();
-    ClearBackground(DARKGRAY);
-
-    InGameHud::drawImageButton(volumeSettingsButton);
-    InGameHud::drawImageButton(controlSettingsButton);
-    InGameHud::drawImageButton(languageSettingsButton);
-
-    if (Button::checkButtonClick(volumeSettingsButton.rec, "Sound", "Ton"))
-    {
-        gameState.gameMenuStack.push(MenuState::VolumeSliders);
-        gameState.currentGameMenu = MenuState::VolumeSliders;
-    }
-
-    if (Button::checkButtonClick(controlSettingsButton.rec, "Controls", "Steuerung"))
-    {
-        gameState.gameMenuStack.push(MenuState::Control);
-        gameState.currentGameMenu = MenuState::Control;
-    }
-
-    if (Button::checkButtonClick(languageSettingsButton.rec, "Language", "Sprache"))
-    {
-        gameState.gameMenuStack.push(MenuState::Language);
-        gameState.currentGameMenu = MenuState::Language;
-    }
-
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        gameState.gameMenuStack.pop();
-        if (!gameState.gameMenuStack.empty())
-        {
-            gameState.currentGameMenu = gameState.gameMenuStack.top();
-        }
-        else
-        {
-            gameState.currentGameMenu = MenuState::MainMenu;
-        }
-    }
-    EndDrawing();
-
-    return true;
-}
-
-void Menu::drawPauseMenu(GameState &gameState)
-{
-    int menuScreenWidth = PixelGameConfig::ScreenWidth;
-    int menuScreenHeight = PixelGameConfig::ScreenHeight;
-
-    resumeGameButton.texture = ConfigButton::resumeButtonTexture;
-    resumeGameButton.rec = {(float)menuScreenWidth / 2 - 50, (float)menuScreenHeight / 2 - 175, 150, 30};
+    resumeGameButton.texture = TextureManager::getTexture("ResumeButtonTexture");
+    Button::updateButtonDimensions(resumeGameButton, newButtonWidth, newButtonHeight + buttonSpacing * 1, Button::buttonWidth, Button::buttonHeight);
     resumeGameButton.buttonText = LanguageManager::getLocalizedGameText("Resume PixelGame", "Spiel fortsetzen");
 
-    quitGameButton.texture = ConfigButton::quitButtonTexture;
-    quitGameButton.rec = {(float)menuScreenWidth / 2 - 50, (float)menuScreenHeight / 2 + 150, 150, 30};
+    quitGameButton.texture = TextureManager::getTexture("QuitButtonTexture");
+    Button::updateButtonDimensions(quitGameButton, newButtonWidth, newButtonHeight + buttonSpacing * 2, Button::buttonWidth, Button::buttonHeight);
     quitGameButton.buttonText = LanguageManager::getLocalizedGameText("Back to Menu", "Zurück zum Menü");
 
-    while (!WindowShouldClose() && ConfigNotConst::isGamePaused)
-    {
-        BeginDrawing();
-        ClearBackground(DARKGRAY);
-
-        InGameHud::drawImageButton(resumeGameButton);
-        InGameHud::drawImageButton(quitGameButton);
-
-        drawVolumeSlidersPauseMenu(gameState);
-        Audio::updateAudioVolumes();
-
-        if (Button::checkButtonClick(resumeGameButton.rec, "Resume PixelGame", "Spiel fortsetzen"))
-        {
-            ConfigNotConst::isGamePaused = false;
-            gameState.gameMenuStack.pop();
-            break;
-        }
-        else if (Button::checkButtonClick(quitGameButton.rec, "Back to Menu", "Zurück zum Menü"))
-        {
-            ConfigNotConst::isGamePaused = false;
-            ConfigNotConst::isGameRunning = 0;
-            gameState.gameMenuStack.pop();
-            gameState.currentGameMenu = MenuState::MainMenu;
-            break;
-        }
-
-        DrawText(LanguageManager::getLocalizedGameText("Pause Menu", "Pause Menü"), 10, 10, 20, BLACK);
-
-        EndDrawing();
-    }
-}
-
-bool Menu::drawControlMenu(GameState &gameState)
-{
-    keyBoardSettingsButton.texture = ConfigButton::keyboardButtonTexture;
-    keyBoardSettingsButton.rec = {(float)Button::buttonScreenWidth - 25, (float)PixelGameConfig::ScreenHeight / 2 - 50, Button::buttonWidth + 50, Button::buttonHeight};
-    keyBoardSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Keyboard/Mouse", "Tastatur/Maus");
-
-    controllerSettingsButton.texture = ConfigButton::controllerButtonTexture;
-    controllerSettingsButton.rec = {(float)Button::buttonScreenWidth - 25, (float)PixelGameConfig::ScreenHeight / 2, Button::buttonWidth + 50, Button::buttonHeight};
-    controllerSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Controller", "Kontroller");
-
-    BeginDrawing();
     ClearBackground(DARKGRAY);
 
-    InGameHud::drawImageButton(keyBoardSettingsButton);
-    InGameHud::drawImageButton(controllerSettingsButton);
+    InGameHud::drawImageButton(resumeGameButton);
+    InGameHud::drawImageButton(quitGameButton);
 
-    if (Button::checkButtonClick(keyBoardSettingsButton.rec, "Keyboard/Mouse", "Tastatur/Maus"))
-    {
-        gameState.gameMenuStack.push(MenuState::KeyBindingsMenu);
-        gameState.currentGameMenu = MenuState::KeyBindingsMenu;
-        drawKeyBindingsMenu(gameState);
-    }
-    if (Button::checkButtonClick(controllerSettingsButton.rec, "Controller", "Controller"))
-    {
-        gameState.gameMenuStack.push(MenuState::ControllerMenu);
-        gameState.currentGameMenu = MenuState::ControllerMenu;
-        drawControllerMenu(gameState);
-    }
+    drawVolumeSlidersPauseMenu();
+    Audio::updateAudioVolumes();
 
-    if (IsKeyPressed(KEY_ESCAPE))
+    if (Button::checkButtonClick(resumeGameButton.rec, "Resume PixelGame", "Spiel fortsetzen"))
     {
-        gameState.gameMenuStack.pop();
-        if (!gameState.gameMenuStack.empty())
-        {
-            gameState.currentGameMenu = gameState.gameMenuStack.top();
-        }
-        else
-        {
-            gameState.currentGameMenu = MenuState::SettingsMenu;
-        }
+        currentGameState.changeGameState(MenuState::ResumeGame);  // Update state to ResumeGame
+        ConfigNotConst::isGamePaused = false;
     }
-    EndDrawing();
-
-    return true;
+    if (Button::checkButtonClick(quitGameButton.rec, "Back to Menu", "Zurück zum Menü"))
+    {
+        currentGameState.currentGameMenu = MenuState::MainMenu;  // Update state to MainMenu
+        ConfigNotConst::isGameRunning = false;  // Optionally stop the game
+    }
+    DrawText(LanguageManager::getLocalizedGameText("Pause Menu", "Pause Menü"), 10, 10, 20, BLACK);
 }
 
-void Menu::drawVolumeSlidersMenu(GameState &gameState)
+void Menu::drawVolumeSlidersPauseMenu()
 {
-    int screenHeight = PixelGameConfig::ScreenHeight;
-
-    BeginDrawing();
     ClearBackground(DARKGRAY);
 
-    Audio::drawVolumeSlider(VolumeType::Global, &ConfigNotConst::globalVolumeLevel, "Global Volume", "Globale Lautstärke",
-                            (float) screenHeight / 2 - 75);
-    Audio::drawVolumeSlider(VolumeType::BGMusic, &ConfigNotConst::backgroundMusicVolumeLevel, "Music Volume",
-                            "Musiklautstärke",
-                            (float) screenHeight / 2);
-    Audio::drawVolumeSlider(VolumeType::SFX, &ConfigNotConst::soundEffectsVolumeLevel, "Sound Effect Volume",
-                            "Soundeffektlautstärke",
-                            (float) screenHeight / 2 + 75);
+    Rectangle sliderPos1 = Audio::updateSliderPositions(Audio::index = 0);
+    Audio::drawVolumeSlider(VolumeType::Global, &ConfigNotConst::globalVolumeLevel, "Global Volume", "Globale Lautstärke", sliderPos1.y);
 
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        gameState.gameMenuStack.pop();
-        if (!gameState.gameMenuStack.empty())
-        {
-            gameState.currentGameMenu = gameState.gameMenuStack.top();
-        }
-        else
-        {
-            gameState.currentGameMenu = MenuState::SettingsMenu;
-        }
-    }
+    Rectangle sliderPos2 = Audio::updateSliderPositions(Audio::index = 1);
+    Audio::drawVolumeSlider(VolumeType::BGMusic, &ConfigNotConst::backgroundMusicVolumeLevel, "Music Volume", "Musiklautstärke", sliderPos2.y);
 
-    EndDrawing();
+    Rectangle sliderPos3 = Audio::updateSliderPositions(Audio::index = 2);
+    Audio::drawVolumeSlider(VolumeType::SFX, &ConfigNotConst::soundEffectsVolumeLevel, "Sound Effect Volume", "Soundeffektlautstärke", sliderPos3.y);
 }
-
-void Menu::drawVolumeSlidersPauseMenu(GameState &gameState)
-{
-    int screenHeight = PixelGameConfig::ScreenHeight;
-
-    Audio::drawVolumeSlider(VolumeType::Global, &ConfigNotConst::globalVolumeLevel, "Global Volume", "Globale Lautstärke",
-                            (float) screenHeight / 2 - 75);
-    Audio::drawVolumeSlider(VolumeType::BGMusic, &ConfigNotConst::backgroundMusicVolumeLevel, "Music Volume",
-                            "Musiklautstärke",
-                            (float) screenHeight / 2);
-    Audio::drawVolumeSlider(VolumeType::SFX, &ConfigNotConst::soundEffectsVolumeLevel, "Sound Effect Volume",
-                            "Soundeffektlautstärke",
-                            (float) screenHeight / 2 + 75);
-}
-
-void Menu::loadButtonAndKeyButtonTextures()
-{
-    LoadResources::loadButtonTextures();
-    LoadResources::loadKeyButtonTextures();
-}
-
-void Menu::unloadButtonAndKeyButtonTextures()
-{
-    UnloadResources::unloadButtonTextures();
-    UnloadResources::unloadKeyButtonTextures();
-}
-
-

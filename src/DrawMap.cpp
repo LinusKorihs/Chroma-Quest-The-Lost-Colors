@@ -3,7 +3,6 @@
 
 void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
 {
-/*
     auto layer1 = gameMap.getLayer("Black")->getData();
     drawLayer(layer1, gameMap, tileTexture);
 
@@ -14,24 +13,23 @@ void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
     drawLayer(layer3, gameMap, tileTexture);
 
     auto layer4 = gameMap.getLayer("Schatten")->getData();
-    drawLayer(layer4, gameMap, tileTexture);
-    */
+    //drawLayer(layer4, gameMap, tileTexture);
 
-
+/*
     auto layer1 = gameMap.getLayer("Kachelebene 2")->getData();
     drawLayer(layer1, gameMap, tileTexture);
 
     auto layer2 = gameMap.getLayer("animation")->getData();
-    drawLayer(layer2, gameMap, tileTexture);
+    drawLayer(layer2, gameMap, tileTexture); */
 }
 
 void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, Texture2D &tileTexture)
 {
     const int currentFrame = int(GetTime() * 6) % 4;
-    int multiplier = 2;
+    int multiplier = 1;
 
-    float tileWidth = 16; //neu 32x32, old 16x16
-    int tileSetColumns = 16;
+    float tileWidth = 32; // Old 16x16
+    int tileSetColumns = 8; // Old 16;
 
     for (int y = 0; y < Map.getSize().y; y++)
     {
@@ -40,7 +38,7 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
             int data = layer[y * Map.getSize().x + x];
 
             tson::Tileset* tileset = Map.getTilesetByGid(data); // Get the tile from the tileset
-            if (tileset != nullptr)
+            if (tileset != nullptr) //TODO this has to be moved to happen ONCE on map load
             {
                 tson::Tile* tile = tileset->getTile(data);
 
@@ -62,6 +60,7 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                 source.x += (float) (currentFrame * tileWidth);
             }
             DrawTexturePro(tileTexture, source, destination, {0, 0}, 0, WHITE);
+            //std::cout << currentGameState.wallRectangles.size() << std::endl;
         }
     }
 }

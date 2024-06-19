@@ -1,39 +1,36 @@
 #include "Configuration.h"
 #include "InGameHud.h"
+#include "LoadResources.h"
 #include "raylib.h"
 #include "SetKeyBindings.h"
 #include "Utils.h"
 
-Texture2D SetKeyBindings::upKeyButtonTexture;
-Texture2D SetKeyBindings::downKeyButtonTexture;
-Texture2D SetKeyBindings::leftKeyButtonTexture;
-Texture2D SetKeyBindings::rightKeyButtonTexture;
 HudImageButton upKeySettingsButton, downKeySettingsButton, leftKeySettingsButton, rightKeySettingsButton;
 
-void SetKeyBindings::settingTheKeyButtons(GameState &gameState)
+void SetKeyBindings::settingTheKeyButtons(GameState &currentGameState)
 {
-    upKeySettingsButton.texture = upKeyButtonTexture;
+    upKeySettingsButton.texture = TextureManager::getTexture("upKeyButtonTexture");
     upKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2 - 100, Button::buttonWidth, Button::buttonHeight};
-    upKeySettingsButton.buttonText = TextFormat("Up: %c", gameState.playerKeyBindings[Direction::UP]),
-            TextFormat("Hoch: %c", gameState.playerKeyBindings[Direction::UP]);
+    upKeySettingsButton.buttonText = TextFormat("Up: %c", currentGameState.playerKeyBindings[Direction::UP]),
+            TextFormat("Hoch: %c", currentGameState.playerKeyBindings[Direction::UP]);
 
-    downKeySettingsButton.texture = downKeyButtonTexture;
+    downKeySettingsButton.texture = TextureManager::getTexture("downKeyButtonTexture");
     downKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2 - 50, Button::buttonWidth, Button::buttonHeight};
-    downKeySettingsButton.buttonText = TextFormat("Down: %c", gameState.playerKeyBindings[Direction::DOWN]),
-            TextFormat("Runter: %c", gameState.playerKeyBindings[Direction::DOWN]);
+    downKeySettingsButton.buttonText = TextFormat("Down: %c", currentGameState.playerKeyBindings[Direction::DOWN]),
+            TextFormat("Runter: %c", currentGameState.playerKeyBindings[Direction::DOWN]);
 
-    leftKeySettingsButton.texture = leftKeyButtonTexture;
+    leftKeySettingsButton.texture = TextureManager::getTexture("leftKeyButtonTexture");
     leftKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2, Button::buttonWidth, Button::buttonHeight};
-    leftKeySettingsButton.buttonText = TextFormat("Left: %c", gameState.playerKeyBindings[Direction::LEFT]),
-            TextFormat("Links: %c", gameState.playerKeyBindings[Direction::LEFT]);
+    leftKeySettingsButton.buttonText = TextFormat("Left: %c", currentGameState.playerKeyBindings[Direction::LEFT]),
+            TextFormat("Links: %c", currentGameState.playerKeyBindings[Direction::LEFT]);
 
-    rightKeySettingsButton.texture = rightKeyButtonTexture;
+    rightKeySettingsButton.texture = TextureManager::getTexture("rightKeyButtonTexture");
     rightKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2 + 50, Button::buttonWidth, Button::buttonHeight};
-    rightKeySettingsButton.buttonText = TextFormat("Right: %c", gameState.playerKeyBindings[Direction::RIGHT]),
-            TextFormat("Rechts: %c", gameState.playerKeyBindings[Direction::RIGHT]);
+    rightKeySettingsButton.buttonText = TextFormat("Right: %c", currentGameState.playerKeyBindings[Direction::RIGHT]),
+            TextFormat("Rechts: %c", currentGameState.playerKeyBindings[Direction::RIGHT]);
 }
 
-void SetKeyBindings::drawKeyBindingsMenu(GameState &gameState)
+void SetKeyBindings::drawKeyBindingsMenu(GameState &currentGameState)
 {
     InGameHud::drawImageButton(upKeySettingsButton);
     InGameHud::drawImageButton(downKeySettingsButton);
@@ -41,29 +38,29 @@ void SetKeyBindings::drawKeyBindingsMenu(GameState &gameState)
     InGameHud::drawImageButton(rightKeySettingsButton);
 
     if (Button::checkButtonClick(upKeySettingsButton.rec,
-                                 TextFormat("Up: %c", gameState.playerKeyBindings[Direction::UP]),
-                                 TextFormat("Hoch: %c", gameState.playerKeyBindings[Direction::UP])))
+                                 TextFormat("Up: %c", currentGameState.playerKeyBindings[Direction::UP]),
+                                 TextFormat("Hoch: %c", currentGameState.playerKeyBindings[Direction::UP])))
     {
         ConfigNotConst::selectedPlayerKey = Direction::UP;
         ConfigNotConst::isWaitingForKeyInput = true;
     }
     else if (Button::checkButtonClick(downKeySettingsButton.rec,
-                                      TextFormat("Down: %c", gameState.playerKeyBindings[Direction::DOWN]),
-                                      TextFormat("Runter: %c", gameState.playerKeyBindings[Direction::DOWN])))
+                                      TextFormat("Down: %c", currentGameState.playerKeyBindings[Direction::DOWN]),
+                                      TextFormat("Runter: %c", currentGameState.playerKeyBindings[Direction::DOWN])))
     {
         ConfigNotConst::selectedPlayerKey = Direction::DOWN;
         ConfigNotConst::isWaitingForKeyInput = true;
     }
     else if (Button::checkButtonClick(leftKeySettingsButton.rec,
-                                      TextFormat("Left: %c", gameState.playerKeyBindings[Direction::LEFT]),
-                                      TextFormat("Links: %c", gameState.playerKeyBindings[Direction::LEFT])))
+                                      TextFormat("Left: %c", currentGameState.playerKeyBindings[Direction::LEFT]),
+                                      TextFormat("Links: %c", currentGameState.playerKeyBindings[Direction::LEFT])))
     {
         ConfigNotConst::selectedPlayerKey = Direction::LEFT;
         ConfigNotConst::isWaitingForKeyInput = true;
     }
     else if (Button::checkButtonClick(rightKeySettingsButton.rec,
-                                      TextFormat("Right: %c", gameState.playerKeyBindings[Direction::RIGHT]),
-                                      TextFormat("Rechts: %c", gameState.playerKeyBindings[Direction::RIGHT])))
+                                      TextFormat("Right: %c", currentGameState.playerKeyBindings[Direction::RIGHT]),
+                                      TextFormat("Rechts: %c", currentGameState.playerKeyBindings[Direction::RIGHT])))
     {
         ConfigNotConst::selectedPlayerKey = Direction::RIGHT;
         ConfigNotConst::isWaitingForKeyInput = true;
@@ -82,7 +79,7 @@ void SetKeyBindings::drawKeyBindingsMenu(GameState &gameState)
             if (IsKeyPressed(key))
             {
                 bool isKeyAlreadyBound = false;
-                for (const auto& binding : gameState.playerKeyBindings)
+                for (const auto& binding : currentGameState.playerKeyBindings)
                 {
                     if (binding.second == key)
                     {
@@ -92,9 +89,9 @@ void SetKeyBindings::drawKeyBindingsMenu(GameState &gameState)
                 }
                 if (!isKeyAlreadyBound)
                 {
-                    gameState.playerKeyBindings[ConfigNotConst::selectedPlayerKey] = key;
+                    currentGameState.playerKeyBindings[ConfigNotConst::selectedPlayerKey] = key;
                     ConfigNotConst::isWaitingForKeyInput = false;
-                    gameState.lastChangedPlayerKey = {ConfigNotConst::selectedPlayerKey, key};
+                    currentGameState.lastChangedPlayerKey = {ConfigNotConst::selectedPlayerKey, key};
                 }
                 break;
             }
@@ -128,11 +125,11 @@ void SetKeyBindings::drawKeyBindingsMenu(GameState &gameState)
         }
     }
 
-    if (gameState.lastChangedPlayerKey.first != Direction::NONE)
+    if (currentGameState.lastChangedPlayerKey.first != Direction::NONE)
     {
         const char *englishDirection;
         const char *germanDirection;
-        switch (gameState.lastChangedPlayerKey.first)
+        switch (currentGameState.lastChangedPlayerKey.first)
         {
             case Direction::UP:
                 englishDirection = "move forward";
@@ -154,11 +151,11 @@ void SetKeyBindings::drawKeyBindingsMenu(GameState &gameState)
 
         DrawText(TextFormat(
                          LanguageManager::getLocalizedGameText("You have remapped %s to %c!", "Du hast %s nach %c umgelegt!"),
-                         LanguageManager::getLocalizedGameText(englishDirection, germanDirection), gameState.lastChangedPlayerKey.second),
+                         LanguageManager::getLocalizedGameText(englishDirection, germanDirection), currentGameState.lastChangedPlayerKey.second),
                  PixelGameConfig::ScreenWidth / 2 - MeasureText(TextFormat(
                          LanguageManager::getLocalizedGameText("You have remapped %s to %c!", "Du hast %s nach %c umgelegt!"),
                          LanguageManager::getLocalizedGameText(englishDirection,
-                                                               germanDirection), gameState.lastChangedPlayerKey.second), 20) / 2,
+                                                               germanDirection), currentGameState.lastChangedPlayerKey.second), 20) / 2,
                  PixelGameConfig::ScreenHeight / 2 - 150, 20, BLACK);
         Button::countDrawText++;
     }
@@ -167,9 +164,8 @@ void SetKeyBindings::drawKeyBindingsMenu(GameState &gameState)
     {
         ConfigNotConst::selectedPlayerKey = Direction::NONE;
         ConfigNotConst::isWaitingForKeyInput = false;
-        gameState.gameMenuStack.pop();
-        gameState.currentGameMenu = MenuState::Control;
-        gameState.lastChangedPlayerKey = {Direction::NONE, -1};
+        currentGameState.currentGameMenu = MenuState::Control;
+        currentGameState.lastChangedPlayerKey = {Direction::NONE, -1};
 
         Button::setKeyBindText = 0;
         Button::countDrawText = 0;

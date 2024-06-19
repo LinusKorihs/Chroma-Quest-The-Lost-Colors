@@ -5,7 +5,6 @@ LanguageManager::Language LanguageManager::currentLanguage = LanguageManager::La
 void GameState::changeGameState(MenuState newState)
 {
     currentGameMenu = newState;
-    gameMenuStack.push(newState);
 }
 
 const char* LanguageManager::getLocalizedGameText(const char* englishText, const char* germanText)

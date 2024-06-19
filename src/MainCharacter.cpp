@@ -1,4 +1,5 @@
 #include "Configuration.h"
+#include "LoadResources.h"
 #include "MainCharacter.h"
 #include "Projectile.h"
 #include "Stone.h"
@@ -10,16 +11,15 @@ int MainCharacter::damagePerFrame = 2;
 bool MainCharacter::isPlayerDead = false;
 int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
-float MainCharacter::playerSpawnPositionX = 80; //32*35 in new
-float MainCharacter::playerSpawnPositionY = 368;//32*65 in new
+float MainCharacter::playerSpawnPositionX = 32*35; //32*35 in new, 80 in old
+float MainCharacter::playerSpawnPositionY = 32*65; //32*65 in new, 368 in old
 float MainCharacter::playerPositionX = MainCharacter::playerSpawnPositionX;
 float MainCharacter::playerPositionY = MainCharacter::playerSpawnPositionY;
 
-void MainCharacter::drawMainCharacter(Texture2D &myTexture)
+void MainCharacter::drawMainCharacter(Texture myTexture)
 {
     Rectangle source = {0.0f, 0.0f, (float) myTexture.width, (float) myTexture.height};
     Rectangle destination = {playerPositionX, playerPositionY, myTexture.width * 0.15f, myTexture.height * 0.15f};
-
     DrawTexturePro(myTexture, source, destination, {0, 0}, 0.0f, WHITE);
 }
 
@@ -66,7 +66,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
             break;
     }
 
-    Rectangle newRec = {newPositionX, newPositionY, ConfigConst::playerMC.width * 0.15f, ConfigConst::playerMC.height * 0.15f};
+    Rectangle newRec = {newPositionX, newPositionY, TextureManager::getTexture("MainCharacter").width * 0.15f, TextureManager::m_textures["MainCharacter"].height * 0.15f};
 
     for (const Rectangle &wallRec: currentGameState.wallRectangles)
     {
@@ -88,8 +88,8 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
     if (!Stone::stoneCollision)
     {
-        MainCharacter::playerPositionX = newPositionX;
-        MainCharacter::playerPositionY = newPositionY;
+        playerPositionX = newPositionX;
+        playerPositionY = newPositionY;
     }
 
     if(!Projectile::projectilePointer->getActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectiles.h übergeben)
@@ -113,7 +113,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     }
 }
 
-void MainCharacter::playerDeath() //muss noch richtig implementiert werden
+void MainCharacter::playerDeath()
 {
     if (MainCharacter::playerHealth <= 0)
     {
@@ -125,16 +125,16 @@ void MainCharacter::playerDeath() //muss noch richtig implementiert werden
     }
 }
 
-void MainCharacter::receiveDamage() //muss noch richtig implementiert werden
+void MainCharacter::receiveDamage()
 {
-    if (CheckCollisionRecs(MainCharacter::playerCharacterRectangle, PixelGame::lavaTileRectangle))
+    /*if (CheckCollisionRecs(MainCharacter::playerCharacterRectangle, PixelGame::lavaTileRectangle))
     {
         MainCharacter::playerHealth -= MainCharacter::damagePerFrame;
         if (MainCharacter::playerHealth <= 0)
         {
             playerDeath();
         }
-    }
+    }*/
 }
 
 void MainCharacter::attack()
@@ -144,7 +144,7 @@ void MainCharacter::attack()
         Vector2 startPosition;
         MainCharacter::playerMana -= 1;
 
-        if (ConfigNotConst::lastDirectionRight) // Determine the starting position based on the player's direction
+        if (ConfigNotConst::lastDirectionRight)
         {
             startPosition = {MainCharacter::playerPositionX + 20, MainCharacter::playerPositionY + 10};
             Projectile::projectilePointer->init(startPosition, {300.0f, 0.0f});
@@ -181,6 +181,6 @@ void MainCharacter::attack()
 
 void MainCharacter::setSpawnPosition()
 {
-    playerPositionX = MainCharacter::playerSpawnPositionX; // Reset the position to the spawn point
+    playerPositionX = MainCharacter::playerSpawnPositionX;
     playerPositionY = MainCharacter::playerSpawnPositionY;
 }
