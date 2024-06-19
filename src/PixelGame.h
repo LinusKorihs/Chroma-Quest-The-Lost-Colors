@@ -9,6 +9,7 @@
 #include "raylib.h"
 #include "Objects.h"
 #include "tileson.h"
+#include "EnemyManager.h"
 
 class PixelGame
 {
@@ -31,8 +32,7 @@ private:
 
     static std::shared_ptr<Projectile> projectile_p;
     static std::shared_ptr<Projectile> projectileEnemy_p;
-   // static EnemyManager enemyManager;
-
+    static EnemyManager enemyManager;
 
 };
 

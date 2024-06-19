@@ -11,6 +11,7 @@ GameState currentGameState;
 
 std::shared_ptr<Projectile> PixelGame::projectile_p;
 std::shared_ptr<Projectile> PixelGame::projectileEnemy_p;
+EnemyManager PixelGame::enemyManager;
 
 Texture2D PixelGame::slimeEnemyTexture;
 
@@ -22,9 +23,10 @@ Rectangle MainCharacter::playerCharacterHitRectangle;
 
 void PixelGame::gameInit()
 {
-    /*MainCharacter::setEnemyManager(&enemyManager);
-    enemyManager.addEnemy({250.0f, 280.0f}, slimeEnemyTexture, 2, 1.0f, ENEMYBLUE);
-    enemyManager.addEnemy({280.0f, 280.0f}, slimeEnemyTexture, 2, 1.0f, ENEMYBLUE);*/
+    slimeEnemyTexture = TextureManager::getTexture("SlimeEnemy");
+    MainCharacter::setEnemyManager(&enemyManager);
+    enemyManager.addEnemy({32*35+30, 32*65-140}, slimeEnemyTexture, 2, 1.0f, ENEMYBLUE);
+    enemyManager.addEnemy({32*35-30, 32*65-140}, slimeEnemyTexture, 2, 1.0f, ENEMYBLUE);
 
     projectile_p = std::make_shared<Projectile>();
     MainCharacter::setProjectile(projectile_p);
@@ -108,14 +110,12 @@ void PixelGame::gameLoop(tson::Map &Map)
     }
 
     drawObjects();
-    //MainCharacter::drawMainCharacter(TextureManager::getTexture("MainCharacter"));
-
     MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
     MainCharacter::drawMainCharacter(TextureManager::getTexture("MainCharacter"));
     MainCharacter::isPlayerDead = false;
 
-   // enemyManager.updateEnemies(GetFrameTime());
-    //enemyManager.drawEnemies();
+    enemyManager.updateEnemies(GetFrameTime());
+    enemyManager.drawEnemies();
 
     //enemy_p->updateEnemy(GetFrameTime());
     //enemy_p->drawEnemy(slimeEnemyTexture);

@@ -49,6 +49,8 @@ add_executable(${PROJECT_NAME} main.cpp
         VMouse.h
         WindowSizeScale.cpp
         WindowSizeScale.h
+        EnemyManager.cpp
+        EnemyManager.h
 )
 
 # Add config.h.in file

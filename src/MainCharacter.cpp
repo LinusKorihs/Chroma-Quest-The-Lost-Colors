@@ -18,20 +18,20 @@ float MainCharacter::playerCharacterHitBoxScale = 0.425f;
 float MainCharacter::playerPosX = MainCharacter::playerSpawnPositionX;
 float MainCharacter::playerPosY = MainCharacter::playerSpawnPositionY;
 std::shared_ptr<Projectile> MainCharacter::projectile_p = std::make_shared<Projectile>();
-//EnemyManager* MainCharacter::enemyManager = nullptr;
+EnemyManager* MainCharacter::enemyManager = nullptr;
 int MainCharacter::currentFrame;
 int MainCharacter::framesCounter;
 int MainCharacter::framesSpeed;
 Rectangle MainCharacter::frameRec;
-//std::shared_ptr<Enemy> MainCharacter::enemy_p;
+std::shared_ptr<Enemy> MainCharacter::enemy_p;
 
-/*void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
+void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
 {
     enemy_p = enemy;
 }
 void MainCharacter::setEnemyManager(EnemyManager* manager) {
     enemyManager = manager;
-}*/
+}
 void MainCharacter::setProjectile(const std::shared_ptr<Projectile>& projectile)
 {
     projectile_p = projectile;
