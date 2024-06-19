@@ -28,6 +28,7 @@ public:
     static bool lastDirectionRight;
     static bool lastDirectionDown;
 
+
     static Direction selectedPlayerKey;
 
     static Sound playerWalkingSound;

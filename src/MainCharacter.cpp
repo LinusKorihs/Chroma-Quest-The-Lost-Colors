@@ -13,8 +13,8 @@ int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
 float MainCharacter::playerSpawnPositionX = 32*35; //32*35 in new, 80 in old
 float MainCharacter::playerSpawnPositionY = 32*65; //32*65 in new, 368 in old
-float MainCharacter::playerCharacterTextureScale = 0.1425f;
-float MainCharacter::playerCharacterHitBoxScale = 0.1425f;
+float MainCharacter::playerCharacterTextureScale = 0.425f;
+float MainCharacter::playerCharacterHitBoxScale = 0.425f;
 float MainCharacter::playerPosX = MainCharacter::playerSpawnPositionX;
 float MainCharacter::playerPosY = MainCharacter::playerSpawnPositionY;
 std::shared_ptr<Projectile> MainCharacter::projectile_p = std::make_shared<Projectile>();
@@ -59,7 +59,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
             currentFrame++;
 
-            if (currentFrame > 3) currentFrame = 0;
+            if (currentFrame > 3 || currentFrame < 0) currentFrame = 0;
 
             frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
         }
@@ -74,7 +74,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
             currentFrame++;
 
-            if (currentFrame > 7) currentFrame = 4;
+            if (currentFrame > 7 || currentFrame < 4) currentFrame = 4;
 
             frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
         }
@@ -89,7 +89,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
             currentFrame++;
 
-            if (currentFrame > 11) currentFrame = 8;
+            if (currentFrame > 11 || currentFrame < 8) currentFrame = 8;
 
             frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
         }
@@ -104,7 +104,10 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
             currentFrame++;
 
-            if (currentFrame > 15) currentFrame = 12;
+            if (currentFrame > 15 || currentFrame < 12)
+            {
+                currentFrame = 12;
+            }
 
             frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
         }
@@ -169,8 +172,8 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     }
     Stone *nearestStone = nullptr;
     float nearestDistanceSquared = std::numeric_limits<float>::max();
-    Rectangle newRec = {newPositionX, newPositionY, TextureManager::getTexture("MainCharacter").width / 32 * playerCharacterHitBoxScale, TextureManager::m_textures["MainCharacter"].height * playerCharacterHitBoxScale};
-
+    //Rectangle newRec = {newPositionX, newPositionY, static_cast<float>(TextureManager::getTexture("MainCharacter").width / 32) /* * playerCharacterHitBoxScale*/, static_cast<float>(TextureManager::m_textures["MainCharacter"].height) /* * playerCharacterHitBoxScale */};
+    Rectangle newRec = {newPositionX, newPositionY, 30, 30};
     for (const Rectangle &wallRec: currentGameState.wallRectangles)
     {
         if (CheckCollisionRecs(newRec, wallRec))
@@ -183,8 +186,10 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     {
         float stoneCenterX = stone.getRectangle().x + stone.getRectangle().width / 2.0f;
         float stoneCenterY = stone.getRectangle().y + stone.getRectangle().height / 2.0f;
-        float playerCenterX = newPositionX + (TextureManager::getTexture("MainCharacter").width / 32 * playerCharacterHitBoxScale) / 2.0f;
-        float playerCenterY = newPositionY + (TextureManager::getTexture("MainCharacter").height * playerCharacterHitBoxScale) / 2.0f;
+        /*float playerCenterX = newPositionX + (TextureManager::getTexture("MainCharacter").width / 32 * playerCharacterHitBoxScale) / 2.0f;
+        float playerCenterY = newPositionY + (TextureManager::getTexture("MainCharacter").height  * playerCharacterHitBoxScale) / 2.0f;*/
+        float playerCenterX = newPositionX + 30 / 2.0f;
+        float playerCenterY = newPositionY + 30 / 2.0f;
 
         float distanceSquared = calculateSquaredDistance(playerCenterX, playerCenterY, stoneCenterX, stoneCenterY);
 
