@@ -66,6 +66,7 @@ void Enemy::updateEnemy(float deltaTime)
 
 void Enemy::drawEnemy()
 {
+    unload = false;
     if (!enemyDeath && !unload)
     {
         if (currentFrame < 7)
@@ -85,7 +86,7 @@ void Enemy::drawEnemy()
         }
         if (currentFrame == 20)
         {
-            UnloadTexture(enTexture);
+            //UnloadTexture(enTexture); //statt unload braucht es jetzt vector delete
             unload = true;
         }
     }
@@ -122,18 +123,4 @@ int Enemy::getEnemyHits()
 Vector2 Enemy::getPosition()
 {
     return posEnemy;
-}
-
-void Enemy::projectileCollision()
-{
-    /*if (CheckCollisionRecs(projectile_p->getRec(), enemyRec)) {
-        enemyGetsHit();
-        projectile_p->setActive(false);
-    }
-    /*if (CheckCollisionRecs(playerHitRec, enemyRec) && !getUnload())
-    {
-        if (IsKeyPressed(KEY_SPACE)) {
-            enemyGetsHit();
-        }
-    }*/
 }

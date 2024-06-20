@@ -26,21 +26,42 @@ bool EnemyManager::checkProjectileEnemyCollision(const std::shared_ptr<Projectil
         if (CheckCollisionRecs(projectile->getRec(), enemy->getEnemyRec())) {
             enemy->enemyGetsHit();
             projectile->setActive(false);
+            return true;
         }
-        return true;
     }
     return false;
 }
 
 Rectangle EnemyManager::getEnemyRec() {
     for (auto& enemy : enemies) {
-        return enemy->getEnemyRec();
-    }
-    return Rectangle();
+return enemy->getEnemyRec();
+}
+return Rectangle();
 }
 Vector2 EnemyManager::getEnemies() {
     for (auto& enemy : enemies) {
         return enemy->getPosition();
     }
     return Vector2();
+}
+void EnemyManager::EnemyHits() {
+    for (auto& enemy : enemies) {
+        enemy->enemyGetsHit();
+    }
+}
+int EnemyManager::getEnemyHits() {
+    for (auto& enemy : enemies) {
+        return enemy->getEnemyHits();
+    }
+    return 0;
+}
+
+void EnemyManager::deleteEnemy() {
+    for (auto it = enemies.begin(); it != enemies.end(); /* keine Inkrementierung hier */) {
+        if ((*it)->getUnload()) {
+            it = enemies.erase(it); // Löscht das Element und gibt den neuen Iterator zurück
+        } else {
+            ++it; // Inkrementiert den Iterator nur, wenn kein Element gelöscht wurde
+        }
+    }
 }

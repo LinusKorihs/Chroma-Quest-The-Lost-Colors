@@ -284,18 +284,20 @@ void MainCharacter::attack() {
 
     }
 
-    //enemy_p->projectileCollision();
-    for (const auto &enemy : enemyManager->enemies) {
-        if (CheckCollisionRecs(projectile_p->getRec(), enemyManager->getEnemyRec())) {
-            //enemy->enemyGetsHit();
-            projectile_p->setActive(false);
-        }
-    }
-   /* if (CheckCollisionRecs(projectile_p->getRec(), enemyManager->getEnemyRec())) {
-        //enemyGetsHit();
-        projectile_p->setActive(false);
-    }*/
+    enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
+    enemyManager->deleteEnemy();
 
+   /*
+    for(const auto &enemy : enemyManager->enemies)
+    {
+        if (CheckCollisionRecs(MainCharacter::playerCharacterHitRectangle, enemy->getEnemyRec()) && !enemy->getEnemyDeath())
+        {
+            if (IsKeyPressed(KEY_SPACE))
+            {
+                enemy->enemyGetsHit();
+            }
+        }
+    }*/
 }
 
 
