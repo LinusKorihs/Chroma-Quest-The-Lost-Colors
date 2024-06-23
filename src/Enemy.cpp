@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
 
-Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, int hits, float knockbackStrength, EnemyType type)
+Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type)
 {
     enemyDeath = false;
     unload = false;
@@ -25,10 +25,10 @@ void Enemy::updateEnemy(float deltaTime)
     enemyRec = {posEnemy.x, posEnemy.y, (float)enTexture.width / 8, (float)enTexture.height / 3};
     framesCounter++; // Update counter
 
-    if (framesCounter >= (60 / framesSpeed)) // wechsel frame jede 12 frames
+    if (framesCounter >= (60 / framesSpeed))
     {
         framesCounter = 0;
-        currentFrame++; // Update animation frame
+        currentFrame++;
 
         if (currentFrame > 20) // Reset bei 20 weil danach death animation
         {
@@ -86,7 +86,6 @@ void Enemy::drawEnemy()
         }
         if (currentFrame == 20)
         {
-            //UnloadTexture(enTexture); //statt unload braucht es jetzt vector delete
             unload = true;
         }
     }

@@ -17,7 +17,7 @@ class Enemy
 {
 public:
 
-    Enemy(Vector2 position, Texture2D &enemTexture, int hits, float knockbackStrength, EnemyType type);
+    Enemy(Vector2 position, Texture2D &enemTexture, EnemyType type);
 
     void drawEnemy();
     void updateEnemy(float deltaTime);

@@ -217,7 +217,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
     if(!projectile_p->getActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectiles.h übergeben)
     {
-        if (ConfigNotConst::lastDirectionLeft)
+        if (ConfigNotConst::lastDirectionLeft) //sollte enum werden
         {
             projectile_p->setProjectileDestination(2);
         }

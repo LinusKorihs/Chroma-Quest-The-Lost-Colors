@@ -5,8 +5,8 @@ EnemyManager::EnemyManager() {
 
 }
 
-void EnemyManager::addEnemy(Vector2 position, Texture2D& enemyTexture, int hits, float knockbackStrength, EnemyType type) {
-    enemies.push_back(std::make_shared<Enemy>(position, enemyTexture, hits, knockbackStrength, type));
+void EnemyManager::addEnemy(Vector2 position, Texture2D& enemyTexture, EnemyType type) {
+    enemies.push_back(std::make_shared<Enemy>(position, enemyTexture, type));
 }
 
 void EnemyManager::updateEnemies(float deltaTime) {
@@ -57,11 +57,11 @@ int EnemyManager::getEnemyHits() {
 }
 
 void EnemyManager::deleteEnemy() {
-    for (auto it = enemies.begin(); it != enemies.end(); /* keine Inkrementierung hier */) {
+    for (auto it = enemies.begin(); it != enemies.end();) {
         if ((*it)->getUnload()) {
-            it = enemies.erase(it); // Löscht das Element und gibt den neuen Iterator zurück
+            it = enemies.erase(it);
         } else {
-            ++it; // Inkrementiert den Iterator nur, wenn kein Element gelöscht wurde
+            ++it;
         }
     }
 }

@@ -32,19 +32,19 @@ void Projectile::update(float deltaTime, int direction)
 {
     projectileRec = {projectilePos.x, projectilePos.y, static_cast<float>(projectileTexture.width) , static_cast<float>(projectileTexture.height)};
 
-    switch (static_cast<int>(projectileDestination)) //switch nicht für float, deshalb cast
+    switch (projectileDestination)
     {
         case 1:
-            projectilePos.x += projectileSpeed.x * deltaTime;
+            projectilePos.x += projectileSpeed.x  * deltaTime;
             break;
         case 2:
-            projectilePos.x -= projectileSpeed.x * deltaTime;
+            projectilePos.x -= projectileSpeed.x  * deltaTime;
             break;
         case 3:
-            projectilePos.y -= projectileSpeed.y * deltaTime;
+            projectilePos.y -= projectileSpeed.y  * deltaTime;
             break;
         case 4:
-            projectilePos.y += projectileSpeed.y * deltaTime;
+            projectilePos.y += projectileSpeed.y  * deltaTime;
             break;
     }
 
@@ -56,7 +56,7 @@ void Projectile::draw()
 {
     if (isProjActive)
     {
-        DrawTextureEx(projectileTexture, projectilePos, 0, 1.0f, WHITE);
+        DrawTextureV(projectileTexture, projectilePos, WHITE);
     }
 }
 
