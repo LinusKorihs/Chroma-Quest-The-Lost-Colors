@@ -32,11 +32,15 @@ public:
     int getEnemyHits();
     Vector2 getPosition();
 
+    int enemyHits;
+    bool enemyHit;
+
 private:
     bool enemyDeath;
     bool turnAround;
     bool unload;
     bool isKnockedBack;
+
 
     EnemyType enemyType;
 
@@ -51,7 +55,7 @@ private:
     int framesCounter;
     int framesSpeed;
     int animationDeath;
-    int enemyHits;
+
     int frames;
 
     Texture2D enTexture;

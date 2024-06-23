@@ -284,7 +284,10 @@ void MainCharacter::attack() {
 
     }
 
-    enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
+    if(projectile_p->getActive())
+    {
+        enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
+    }
     enemyManager->deleteEnemy();
 
    /*
