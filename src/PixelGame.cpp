@@ -13,12 +13,11 @@ std::shared_ptr<Projectile> PixelGame::projectile_p;
 std::shared_ptr<Projectile> PixelGame::projectileEnemy_p;
 //std::shared_ptr<Enemy> PixelGame::enemy_p;
 EnemyManager PixelGame::enemyManager;
-
 Texture2D PixelGame::slimeEnemyTexture;
 
+std::vector<PressurePlate> pressurePlates;
 
 bool PixelGame::isPlayerKnocked = false;
-
 Rectangle MainCharacter::playerCharacterRectangle;
 Rectangle MainCharacter::playerCharacterHitRectangle;
 
@@ -33,6 +32,8 @@ void PixelGame::gameInit()
     projectile_p = std::make_shared<Projectile>();
     MainCharacter::setProjectile(projectile_p);
 
+    Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
+    pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
 
     TextureManage::loadAudio();
     MainCharacter::playerHealth = 100;
@@ -80,7 +81,15 @@ void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
         for (Stone &stone : Stone::stoneObjects)
         {
             stone.draw();
+            stone.drawHitboxes();
         }
+
+        for (const PressurePlate& plate : pressurePlates) // Draw pressure plates
+        {
+            plate.draw();
+            plate.drawHitboxes();
+        }
+
         Stone::drawStone = 1;
     }
 }
@@ -109,11 +118,21 @@ void PixelGame::gameLoop(tson::Map &Map)
     for (const Stone &stone: Stone::stoneObjects)
     {
         stone.draw();
+        stone.drawHitboxes();
+    }
+
+    for (PressurePlate& plate : pressurePlates) // Draw pressure plates
+    {
+        plate.update();
+        plate.draw();
+        plate.drawHitboxes();
     }
 
     drawObjects();
     MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
-    MainCharacter::drawMainCharacter(TextureManager::getTexture("MainCharacter"));
+    MainCharacter character;
+    Texture texture = TextureManager::getTexture("MainCharacter");
+    MainCharacter::drawMainCharacter(texture, character);
     MainCharacter::isPlayerDead = false;
 
     enemyManager.updateEnemies(GetFrameTime());

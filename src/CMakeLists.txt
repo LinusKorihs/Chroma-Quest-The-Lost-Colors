@@ -51,6 +51,8 @@ add_executable(${PROJECT_NAME} main.cpp
         WindowSizeScale.h
         EnemyManager.cpp
         EnemyManager.h
+        RoomTransition.cpp
+        RoomTransition.h
 )
 
 # Add config.h.in file

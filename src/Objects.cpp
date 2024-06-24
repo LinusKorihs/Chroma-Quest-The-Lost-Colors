@@ -1,7 +1,6 @@
-#include "Configuration.h"
-#include <iostream>
 #include "Objects.h"
 #include "TextureManage.h"
+#include "MainCharacter.h"
 
 int Stone::drawStone = 0;
 
@@ -125,5 +124,78 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 61, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 62, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 63, multiple, stoneTexture, stoneSourceRect);
+}
+
+PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture)
+        : platePositionX(x), platePositionY(y), plateSize(size), plateTexture(texture), pressed(false)
+{
+}
+
+void PressurePlate::draw() const
+{
+    Texture2D plateTexture = pressed ? TextureManager::getTexture("PlatePressed") : TextureManager::getTexture("PlateNormal");
+    DrawTexture(plateTexture, platePositionX, platePositionY, WHITE);
+}
+
+Rectangle PressurePlate::getRectangle() const
+{
+    return { platePositionX, platePositionY, plateSize, plateSize };
+}
+
+bool PressurePlate::isPressed() const
+{
+    return pressed;
+}
+
+bool CheckProximity(Rectangle r1, Rectangle r2, float proximity)
+{
+    return (fabs(r1.x - r2.x) <= proximity && fabs(r1.y - r2.y) <= proximity) ||
+           (fabs(r1.x + r1.width - r2.x) <= proximity && fabs(r1.y + r1.height - r2.y) <= proximity);
+}
+
+void PressurePlate::update()
+{
+    Rectangle playerRect = {
+            MainCharacter::playerPosX,
+            MainCharacter::playerPosY,
+            TextureManager::getTexture("MainCharacter").width * MainCharacter::playerCharacterHitBoxScale,
+            TextureManager::getTexture("MainCharacter").height * MainCharacter::playerCharacterHitBoxScale
+    };
+
+    Rectangle plateRect = getRectangle();
+
+    // Debugging prints to check the rectangles
+    std::cout << "Player Rectangle: " << playerRect.x << ", " << playerRect.y << ", " << playerRect.width << ", " << playerRect.height << std::endl;
+    std::cout << "Plate Rectangle: " << plateRect.x << ", " << plateRect.y << ", " << plateRect.width << ", " << plateRect.height << std::endl;
+
+    if (CheckProximity(plateRect, playerRect, 8.0f))
+    {
+        pressed = true;
+    }
+    else
+    {
+        pressed = false;
+    }
+    drawHitboxes();
+}
+
+
+// Hitboxes
+void PressurePlate::drawHitboxes() const
+{
+    Rectangle plateRect = getRectangle();
+    DrawRectangleLines(plateRect.x, plateRect.y, plateRect.width, plateRect.height, RED);
+}
+
+void Stone::drawHitboxes() const
+{
+    Rectangle stoneRect = getRectangle();
+    DrawRectangleLines(stoneRect.x, stoneRect.y, stoneRect.width, stoneRect.height, BLUE);
+}
+
+void MainCharacter::drawHitboxes() const
+{
+    Rectangle playerRect = getRectangle();
+    DrawRectangleLines(playerRect.x, playerRect.y, playerRect.width, playerRect.height, GREEN);
 }
 

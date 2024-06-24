@@ -32,9 +32,12 @@ void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
 {
     enemy_p = enemy;
 }
-void MainCharacter::setEnemyManager(EnemyManager* manager) {
+
+void MainCharacter::setEnemyManager(EnemyManager* manager)
+{
     enemyManager = manager;
 }
+
 void MainCharacter::setProjectile(const std::shared_ptr<Projectile>& projectile)
 {
     projectile_p = projectile;
@@ -47,6 +50,7 @@ void MainCharacter::initPlayer(Texture myTexture)
     currentFrame = 0;
     framesSpeed = 8;
 }
+
 void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 {
     framesCounter++;
@@ -69,7 +73,8 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
     }
     else if(IsKeyDown(KEY_D))
     {
-        if (framesCounter >= (60 / framesSpeed)) {
+        if (framesCounter >= (60 / framesSpeed))
+        {
             framesCounter = 0;
             if(!ConfigNotConst::lastDirectionRight)
             {
@@ -84,7 +89,8 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
     }
     else if(IsKeyDown(KEY_W))
     {
-        if (framesCounter >= (60 / framesSpeed)) {
+        if (framesCounter >= (60 / framesSpeed))
+        {
             framesCounter = 0;
             if(!ConfigNotConst::lastDirectionUp)
             {
@@ -99,7 +105,8 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
     }
     else if(IsKeyDown(KEY_A))
     {
-        if (framesCounter >= (60 / framesSpeed)) {
+        if (framesCounter >= (60 / framesSpeed))
+        {
             framesCounter = 0;
             if(!ConfigNotConst::lastDirectionLeft)
             {
@@ -115,15 +122,34 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
         }
     }
+
+    playerCharacterRectangle = {
+            playerPosX,
+            playerPosY,
+            myTexture.width * playerCharacterTextureScale,
+            myTexture.height * playerCharacterTextureScale
+    };
+
+    playerCharacterHitRectangle = {
+            playerPosX + (myTexture.width * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
+            playerPosY + (myTexture.height * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
+            myTexture.width * playerCharacterHitBoxScale,
+            myTexture.height * playerCharacterHitBoxScale
+    };
 }
 
-void MainCharacter::drawMainCharacter(Texture myTexture)
+void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& character)
 {
-    /*Rectangle source = {0.0f, 0.0f, (float) myTexture.width, (float) myTexture.height};
-    Rectangle destination = {playerPosX, playerPosY, myTexture.width * playerCharacterTextureScale, myTexture.height * playerCharacterTextureScale};
-    DrawTexturePro(myTexture, source, destination, {0, 0}, 0.0f, WHITE);*/
+    // Draw the player sprite
+    DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
-    DrawTextureRec(myTexture, frameRec, {playerPosX, playerPosY}, WHITE);
+    DrawRectangleLines(
+            playerCharacterHitRectangle.x,
+            playerCharacterHitRectangle.y,
+            playerCharacterHitRectangle.width,
+            playerCharacterHitRectangle.height,
+            GREEN
+    );
 }
 
 float calculateSquaredDistance(float x1, float y1, float x2, float y2)
@@ -262,21 +288,26 @@ void MainCharacter::receiveDamage()
 }
 
 
-void MainCharacter::attack() {
+void MainCharacter::attack()
+{
     if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
     {
         Vector2 startPosition;
         playerMana -= 1;
-        if (ConfigNotConst::lastDirectionRight) {
+        if (ConfigNotConst::lastDirectionRight)
+        {
             startPosition = {playerPosX + 20, playerPosY + 10};
         }
-        if (ConfigNotConst::lastDirectionLeft) {
+        if (ConfigNotConst::lastDirectionLeft)
+        {
             startPosition = {playerPosX - 1, playerPosY + 10};
         }
-        if (ConfigNotConst::lastDirectionUp) {
+        if (ConfigNotConst::lastDirectionUp)
+        {
             startPosition = {playerPosX + 10, playerPosY - 5};
         }
-        if (ConfigNotConst::lastDirectionDown) {
+        if (ConfigNotConst::lastDirectionDown)
+        {
             startPosition = {playerPosX + 10, playerPosY + 20};
         }
 
@@ -303,9 +334,18 @@ void MainCharacter::attack() {
     }*/
 }
 
-
 void MainCharacter::setSpawnPosition()
 {
     playerPosX = MainCharacter::playerSpawnPositionX;
     playerPosY = MainCharacter::playerSpawnPositionY;
+}
+
+Rectangle MainCharacter::getRectangle() const
+{
+    Rectangle rect;
+    rect.x = this->playerCharacterHitRectangle.x;
+    rect.y = this->playerCharacterHitRectangle.y;
+    rect.width = this->playerCharacterHitRectangle.width;
+    rect.height = this->playerCharacterHitRectangle.height;
+    return rect;
 }

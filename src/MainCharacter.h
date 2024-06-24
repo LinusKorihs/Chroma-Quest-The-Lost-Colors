@@ -8,6 +8,7 @@
 class MainCharacter
 {
 public:
+
     static int playerHealth;
     static int damagePerFrame;
     static int playerScore;
@@ -20,7 +21,7 @@ public:
 
     static bool isPlayerDead;
 
-    static void drawMainCharacter(Texture texture);
+    static void drawMainCharacter(Texture texture, MainCharacter& character);
     static void moveMainCharacter(int moveDirection, float deltaTime);
     static void playerDeath();
     static void receiveDamage();
@@ -33,11 +34,13 @@ public:
     static void updatePlayer(Texture myTexture, float deltaTime);
     static void initPlayer(Texture myTexture);
 
-
     static Rectangle playerCharacterRectangle;
     static Rectangle playerCharacterHitRectangle;
     static float playerCharacterHitBoxScale;
     static float playerCharacterTextureScale;
+
+    void drawHitboxes() const;
+    Rectangle getRectangle() const;
 
 private:
     static std::shared_ptr<Projectile> projectile_p;
@@ -50,5 +53,4 @@ private:
     static bool forward;
     static Rectangle frameRec;
     static Texture2D PlayerTexture;
-
 };
