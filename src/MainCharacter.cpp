@@ -324,11 +324,11 @@ void MainCharacter::attack()
    /*
     for(const auto &enemy : enemyManager->enemies)
     {
-        if (CheckCollisionRecs(MainCharacter::playerCharacterHitRectangle, enemy->getEnemyRec()) && !enemy->getEnemyDeath())
+        if (CheckCollisionRecs(MainCharacter::playerCharacterHitRectangle, enemy->getBossRec()) && !enemy->getBossDeath())
         {
             if (IsKeyPressed(KEY_SPACE))
             {
-                enemy->enemyGetsHit();
+                enemy->bossGetsHit();
             }
         }
     }*/

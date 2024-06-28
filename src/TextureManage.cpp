@@ -23,6 +23,7 @@ void TextureManager::init()
     //m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/MainCharacter.png");
     m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/MC_animation_sheet.png");
     m_textures["SlimeEnemy"] = LoadTexture("assets/graphics/Enemies/TestSlime.png");
+    m_textures["BossRed"] = LoadTexture("assets/graphics/Items/Frucht.png");
     m_textures["TileSet"] = LoadTexture("assets/graphics/TileSet & TileMap/TileSet.png");
     m_textures["StartGameButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonBlue.png");
     m_textures["SettingsMenuButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonYellow.png");

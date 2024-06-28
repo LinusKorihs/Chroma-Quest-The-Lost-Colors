@@ -10,6 +10,7 @@
 #include "Objects.h"
 #include "tileson.h"
 #include "EnemyManager.h"
+#include "MiniBoss.h"
 
 class PixelGame
 {
@@ -32,8 +33,11 @@ private:
 
     static std::shared_ptr<Projectile> projectile_p;
     static std::shared_ptr<Projectile> projectileEnemy_p;
+    static std::shared_ptr<MiniBoss> miniBoss_p;
     //static std::shared_ptr<Enemy> enemy_p;
     static EnemyManager enemyManager;
+    static Texture2D BossRed;
+    static Vector2 BossRedPosition;
 
 };
 

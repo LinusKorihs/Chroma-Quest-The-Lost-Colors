@@ -53,6 +53,8 @@ add_executable(${PROJECT_NAME} main.cpp
         EnemyManager.h
         RoomTransition.cpp
         RoomTransition.h
+        MiniBoss.cpp
+        MiniBoss.h
 )
 
 # Add config.h.in file
