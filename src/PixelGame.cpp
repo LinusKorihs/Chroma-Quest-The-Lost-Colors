@@ -44,6 +44,7 @@ void PixelGame::gameInit()
     pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
     openDoors.emplace_back(0, doorTexture, 1120, 1886);
     openDoors.emplace_back(1, doorTexture, 1120, 1742); //eigenglich natürlich andere textur aber nur zum test -> Positionen nicht final da character Hitbox noch nicht richtig + bool "Wall" muss bei den Stellen weg
+    openDoors.emplace_back(2, doorTexture, 1000, 1640);
 
     TextureManage::loadAudio();
     MainCharacter::playerHealth = 100;
@@ -183,6 +184,16 @@ void PixelGame::gameLoop(tson::Map &Map)
 
         roomChanger.update();
     }
+
+    /*for (const Door& doors : openDoors)
+    {
+        //if (doors.isOpen()) - noch nicht implementiert
+        if(!roomChanger.isTransitioning())
+        {
+            roomChanger.update();
+        }
+    }*/
+    //So ungefähr möchte ich das noch implementieren, die einzelnen Positionen usw werden dann in die Klasse ausgelagert, damit dass nicht alles in Pixelgame stehen muss
 
 
     if (IsKeyPressed(KEY_ESCAPE))
