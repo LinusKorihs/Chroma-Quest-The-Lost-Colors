@@ -172,10 +172,10 @@ void PressurePlate::update()
     {
         pressed = true;
     }
-    else
+    /*else //hab das auskommentiert weil die platte soll ja nur 1x drückbar sein oder?
     {
         pressed = false;
-    }
+    }*/
     drawHitboxes();
 }
 
@@ -199,3 +199,18 @@ void MainCharacter::drawHitboxes() const
     DrawRectangleLines(playerRect.x, playerRect.y, playerRect.width, playerRect.height, GREEN);
 }
 
+
+Door::Door(int doorNum, Texture2D texture, float positionX, float positionY)
+        : doorNumber(doorNum), doorTexture(texture), doorPositionX(positionX), doorPositionY(positionY)
+{
+}
+
+void Door::draw() const
+{
+    DrawTextureV(TextureManager::getTexture("OpenWoodDoor"), {doorPositionX, doorPositionY}, WHITE);
+}
+
+Rectangle Door::getRectangle() const //doors müssen in einen vektor gespeichert werden
+{
+    return {doorPositionX, doorPositionY, 40, 40};
+}

@@ -5,8 +5,8 @@ EnemyManager::EnemyManager() {
 
 }
 
-void EnemyManager::addEnemy(Vector2 position, Texture2D& enemyTexture, EnemyType type) {
-    enemies.push_back(std::make_shared<Enemy>(position, enemyTexture, type));
+void EnemyManager::addEnemy(Vector2 position, Texture2D& enemyTexture, EnemyType type, EnemyBehaviour behaviour, EnemyDirection enDirection) {
+    enemies.push_back(std::make_shared<Enemy>(position, enemyTexture, type, behaviour, enDirection));
 }
 
 void EnemyManager::updateEnemies(float deltaTime) {

@@ -55,6 +55,8 @@ add_executable(${PROJECT_NAME} main.cpp
         RoomTransition.h
         MiniBoss.cpp
         MiniBoss.h
+        RoomChanger.cpp
+        RoomChanger.h
 )
 
 # Add config.h.in file

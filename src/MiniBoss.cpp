@@ -14,8 +14,8 @@ MiniBoss::MiniBoss(Vector2 position, Texture2D &enemTexture, MiniBossType type) 
     speed = 100.0f;
     leftLimit = 1050.0f;
     rightLimit = 1180.0f;
-    upLimit = 1920.0f;
-    downLimit = 2100.0f;
+    upLimit = 1580.0f;
+    downLimit = 1700.0f;
     moveDelay = 2.0f;
 }
 

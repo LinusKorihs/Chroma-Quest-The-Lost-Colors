@@ -12,12 +12,27 @@ enum EnemyType {
     MINIBOSS
 };
 
+enum EnemyBehaviour {
+    WALKHORIZONTAL,
+    WALKVERTICL,
+    STAND,
+    SHOOT
+};
+
+enum EnemyDirection {
+    LEFTEN,
+    RIGHTEN,
+    UPEN,
+    DOWNEN,
+    NONEEN
+};
+
 
 class Enemy
 {
 public:
 
-    Enemy(Vector2 position, Texture2D &enemTexture, EnemyType type);
+    Enemy(Vector2 position, Texture2D &enemTexture, EnemyType type, EnemyBehaviour behaviour, EnemyDirection enDirection);
 
     void drawEnemy();
     void updateEnemy(float deltaTime);
@@ -43,6 +58,8 @@ private:
 
 
     EnemyType enemyType;
+    EnemyBehaviour enemyBehaviour;
+    EnemyDirection direction;
 
     Vector2 posEnemy;
 
@@ -50,13 +67,14 @@ private:
     Rectangle frameRec2;
     Rectangle frameRec3;
     Rectangle enemyRec;
+    Rectangle frameRec;
 
     int currentFrame;
     int framesCounter;
     int framesSpeed;
     int animationDeath;
-
     int frames;
+
 
     Texture2D enTexture;
 

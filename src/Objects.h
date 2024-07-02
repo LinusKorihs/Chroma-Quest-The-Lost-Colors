@@ -49,3 +49,20 @@ private:
     Texture2D& plateTexture;
     bool pressed;
 };
+
+class Door
+{
+    public:
+    Door(int doorNum, Texture2D texture, float positionX, float positionY);
+
+    void draw() const;
+    Rectangle getRectangle() const;
+    bool isOpen() const;
+
+
+private:
+    int doorNumber;
+    Texture2D &doorTexture;
+    float doorPositionX;
+    float doorPositionY;
+};

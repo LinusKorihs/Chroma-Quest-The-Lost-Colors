@@ -1,3 +1,4 @@
+
 class RoomTransition
 {
     static void UpdateTransition();

@@ -5,6 +5,7 @@
 #include "EnemyManager.h"
 #include "Projectile.h"
 
+
 class MainCharacter
 {
 public:
@@ -33,6 +34,7 @@ public:
     static void setEnemyManager(EnemyManager* manager);
     static void updatePlayer(Texture myTexture, float deltaTime);
     static void initPlayer(Texture myTexture);
+    static void setPosition(Vector2 pos);
 
     static Rectangle playerCharacterRectangle;
     static Rectangle playerCharacterHitRectangle;
@@ -41,6 +43,7 @@ public:
 
     void drawHitboxes() const;
     Rectangle getRectangle() const;
+    static Vector2 getPosition();
 
 private:
     static std::shared_ptr<Projectile> projectile_p;

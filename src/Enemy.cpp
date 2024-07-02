@@ -1,14 +1,13 @@
 #include "Enemy.h"
+#include "iostream"
 
 
-Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type)
+Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type, EnemyBehaviour behaviour, EnemyDirection enDirection)
 {
     enemyDeath = false;
     unload = false;
     posEnemy = position;
-    frameRec1 = { 0.0f, 0.0f, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
-    frameRec2 = { 0.0f, (float)enemyTexture.height / 3, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
-    frameRec3 = { 0.0f, ((float)enemyTexture.height / 3) * 2, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3 };
+    frameRec = {0.0f, 0.0f, (float)enemyTexture.width / 24, (float)enemyTexture.height};
     currentFrame = 0;
     framesCounter = 0;
     framesSpeed = 8;
@@ -16,29 +15,67 @@ Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type)
     //enemyRec = {posEnemy.x, posEnemy.y, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3};
     enemyHits = 0;
     enemyType = type;
+    direction = enDirection;
+    enemyBehaviour = behaviour;
     projectile_p = std::make_shared<Projectile>();
     enTexture = enemyTexture;
 }
 
 void Enemy::updateEnemy(float deltaTime)
 {
-    enemyRec = {posEnemy.x, posEnemy.y, (float)enTexture.width / 8, (float)enTexture.height / 3};
+    enemyRec = {posEnemy.x, posEnemy.y, (float)enTexture.width / 24, (float)enTexture.height};
     framesCounter++; // Update counter
 
-    if (framesCounter >= (60 / framesSpeed))
-    {
+    if (framesCounter >= (60 / framesSpeed)) {
         framesCounter = 0;
-        currentFrame++;
 
-        if (currentFrame > 20) // Reset bei 20 weil danach death animation
-        {
-            currentFrame = 0;
+        if (enemyDeath) {
+            if (currentFrame < 19) {
+                currentFrame = 19;
+            }
+            currentFrame++;
+
+            if (currentFrame > 23) // Ende der Death-Animation
+            {
+                unload = true;
+            }
+        } else {
+            if (enemyBehaviour == STAND) {
+                currentFrame++;
+                if (currentFrame > 3) { // Reset bei 4, weil normale Animation 0-3
+                    currentFrame = 0;
+                }
+            } else if (enemyBehaviour == WALKHORIZONTAL) {
+                currentFrame++;
+                if (direction == RIGHTEN) {
+                    if (currentFrame > 11) {
+                        currentFrame = 8; // Reset bei 8-11, weil Lauf-Animation
+                    }
+                } else if (direction == LEFTEN) {
+                    if (currentFrame > 19 || currentFrame < 16) {
+                        currentFrame = 16; // Reset bei 16-19, weil Lauf-Animation
+                    }
+                }
+            } else if (enemyBehaviour == WALKVERTICL) {
+                currentFrame++;
+                if (direction == UPEN) {
+                    if (currentFrame > 15 || currentFrame < 12) {
+                        currentFrame = 12; // Reset bei 12-15, weil Lauf-Animation
+                    }
+                } else if (direction == DOWNEN) {
+                    if (currentFrame > 7) {
+                        currentFrame = 4; // Reset bei 4-7, weil Lauf-Animation
+                    }
+                }
+            }
         }
 
-        frameRec1.x = (float)currentFrame * (float)enTexture.width / 8; //weil 8 pro zeile
-        frameRec2.x = (float)currentFrame * (float)enTexture.width / 8;
-        frameRec3.x = (float)currentFrame * (float)enTexture.width / 8;
+        frameRec.x = (float) currentFrame * (float) enTexture.width / 24; //weil 8 pro Zeile
+        std::cout << "currentFrame: " << currentFrame << std::endl;
     }
+
+
+
 
     if(getEnemyHits() == 3 && enemyType == ENEMYBLUE) //wie viele hits ein enemy aushält
     {
@@ -57,38 +94,62 @@ void Enemy::updateEnemy(float deltaTime)
         enemyDeath = true;
     }
 
-    if(enemyDeath && !animationDeath)
+    if(enemyBehaviour == WALKHORIZONTAL)
     {
-        currentFrame = 16;
-        animationDeath = true;
+        if (direction == RIGHTEN)
+        {
+            posEnemy.x += 0.5;
+        }
+        else
+        {
+            posEnemy.x -= 0.5;
+        }
     }
+    if(enemyBehaviour == WALKVERTICL)
+    {
+        if (direction == UPEN)
+        {
+            posEnemy.y -= 0.5;
+        }
+        else
+        {
+            posEnemy.y += 0.5;
+        }
+    }
+
+    for (const Rectangle &wallRec: currentGameState.wallRectangles) {
+        if (enemyBehaviour == WALKHORIZONTAL && CheckCollisionRecs(enemyRec, wallRec)) {
+            if (direction == RIGHTEN) {
+                posEnemy.x -= 2;
+                direction = LEFTEN;
+            } else {
+                posEnemy.x += 2;
+                direction = RIGHTEN;
+            }
+        }
+    }
+  if (enemyBehaviour == WALKVERTICL) {
+        for (const Rectangle &wallRec: currentGameState.wallRectangles) {
+            if (CheckCollisionRecs(enemyRec, wallRec)) {
+                if (direction == UPEN) {
+                    posEnemy.y += 2;
+                    direction = DOWNEN;
+                } else {
+                    posEnemy.y -= 2;
+                    direction = UPEN;
+                }
+            }
+        }
+    }
+
 }
 
 void Enemy::drawEnemy()
 {
-    unload = false;
-    if (!enemyDeath && !unload)
-    {
-        if (currentFrame < 7)
-        {
-            DrawTextureRec(enTexture, frameRec1, posEnemy, WHITE);
-        }
-        else
-        {
-            DrawTextureRec(enTexture, frameRec2, posEnemy, WHITE);
-        }
-    }
-    else
-    {
-        if (!unload)
-        {
-            DrawTextureRec(enTexture, frameRec3, posEnemy, WHITE);
-        }
-        if (currentFrame == 20)
-        {
-            unload = true;
-        }
-    }
+   if(!unload)
+   {
+       DrawTextureRec(enTexture, frameRec, posEnemy, WHITE);
+   }
 }
 
 Rectangle Enemy::getEnemyRec()

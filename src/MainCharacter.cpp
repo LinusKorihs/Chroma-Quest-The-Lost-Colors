@@ -6,6 +6,7 @@
 #include "PixelGame.h"
 #include "Enemy.h"
 
+
 int MainCharacter::playerHealth = 100;
 int MainCharacter::damagePerFrame = 2;
 bool MainCharacter::isPlayerDead = false;
@@ -25,6 +26,7 @@ int MainCharacter::framesSpeed;
 Rectangle MainCharacter::frameRec;
 std::shared_ptr<Enemy> MainCharacter::enemy_p;
 std::shared_ptr<EnemyManager> MainCharacter::enemyManager_p = std::make_shared<EnemyManager>();
+
 
 
 
@@ -157,111 +159,102 @@ float calculateSquaredDistance(float x1, float y1, float x2, float y2)
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 }
 
-void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
-{
-    float newPositionX = MainCharacter::playerPosX;
-    float newPositionY = MainCharacter::playerPosY;
+void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime) {
 
-    switch (moveDirection)
-    {
-        case KEY_RIGHT:
-        case KEY_D:
-            newPositionX += ConfigConst::playerMoveSpeed;
-            ConfigNotConst::lastDirectionLeft = false;
-            ConfigNotConst::lastDirectionUp = false;
-            ConfigNotConst::lastDirectionDown = false;
-            ConfigNotConst::lastDirectionRight = true;
-            break;
-        case KEY_LEFT:
-        case KEY_A:
-            newPositionX -= ConfigConst::playerMoveSpeed;
-            ConfigNotConst::lastDirectionLeft = true;
-            ConfigNotConst::lastDirectionUp = false;
-            ConfigNotConst::lastDirectionDown = false;
-            ConfigNotConst::lastDirectionRight = false;
-            break;
-        case KEY_UP:
-        case KEY_W:
-            newPositionY -= ConfigConst::playerMoveSpeed;
-            ConfigNotConst::lastDirectionUp = true;
-            ConfigNotConst::lastDirectionDown = false;
-            ConfigNotConst::lastDirectionRight = false;
-            ConfigNotConst::lastDirectionLeft = false;
-            break;
-        case KEY_DOWN:
-        case KEY_S:
-            newPositionY += ConfigConst::playerMoveSpeed;
-            ConfigNotConst::lastDirectionUp = false;
-            ConfigNotConst::lastDirectionDown = true;
-            ConfigNotConst::lastDirectionRight = false;
-            ConfigNotConst::lastDirectionLeft = false;
-            break;
-        default:
-            break;
-    }
-    Stone *nearestStone = nullptr;
-    float nearestDistanceSquared = std::numeric_limits<float>::max();
-    //Rectangle newRec = {newPositionX, newPositionY, static_cast<float>(TextureManager::getTexture("MainCharacter").width / 32) /* * playerCharacterHitBoxScale*/, static_cast<float>(TextureManager::m_textures["MainCharacter"].height) /* * playerCharacterHitBoxScale */};
-    Rectangle newRec = {newPositionX, newPositionY, 30, 30};
-    for (const Rectangle &wallRec: currentGameState.wallRectangles)
-    {
-        if (CheckCollisionRecs(newRec, wallRec))
-        {
-            return;
-        }
-    }
+        float newPositionX = MainCharacter::playerPosX;
+        float newPositionY = MainCharacter::playerPosY;
 
-    for (Stone &stone : Stone::stoneObjects)
-    {
-        float stoneCenterX = stone.getRectangle().x + stone.getRectangle().width / 2.0f;
-        float stoneCenterY = stone.getRectangle().y + stone.getRectangle().height / 2.0f;
-        /*float playerCenterX = newPositionX + (TextureManager::getTexture("MainCharacter").width / 32 * playerCharacterHitBoxScale) / 2.0f;
-        float playerCenterY = newPositionY + (TextureManager::getTexture("MainCharacter").height  * playerCharacterHitBoxScale) / 2.0f;*/
-        float playerCenterX = newPositionX + 30 / 2.0f;
-        float playerCenterY = newPositionY + 30 / 2.0f;
+        switch (moveDirection) {
+            case KEY_RIGHT:
+            case KEY_D:
+                newPositionX += ConfigConst::playerMoveSpeed;
+                ConfigNotConst::lastDirectionLeft = false;
+                ConfigNotConst::lastDirectionUp = false;
+                ConfigNotConst::lastDirectionDown = false;
+                ConfigNotConst::lastDirectionRight = true;
+                break;
+            case KEY_LEFT:
+            case KEY_A:
+                newPositionX -= ConfigConst::playerMoveSpeed;
+                ConfigNotConst::lastDirectionLeft = true;
+                ConfigNotConst::lastDirectionUp = false;
+                ConfigNotConst::lastDirectionDown = false;
+                ConfigNotConst::lastDirectionRight = false;
+                break;
+            case KEY_UP:
+            case KEY_W:
+                newPositionY -= ConfigConst::playerMoveSpeed;
+                ConfigNotConst::lastDirectionUp = true;
+                ConfigNotConst::lastDirectionDown = false;
+                ConfigNotConst::lastDirectionRight = false;
+                ConfigNotConst::lastDirectionLeft = false;
+                break;
+            case KEY_DOWN:
+            case KEY_S:
+                newPositionY += ConfigConst::playerMoveSpeed;
+                ConfigNotConst::lastDirectionUp = false;
+                ConfigNotConst::lastDirectionDown = true;
+                ConfigNotConst::lastDirectionRight = false;
+                ConfigNotConst::lastDirectionLeft = false;
+                break;
+            default:
+                break;
+        }
+        Stone *nearestStone = nullptr;
+        float nearestDistanceSquared = std::numeric_limits<float>::max();
+        //Rectangle newRec = {newPositionX, newPositionY, static_cast<float>(TextureManager::getTexture("MainCharacter").width / 32) /* * playerCharacterHitBoxScale*/, static_cast<float>(TextureManager::m_textures["MainCharacter"].height) /* * playerCharacterHitBoxScale */};
+        Rectangle newRec = {newPositionX, newPositionY, 30, 30};
+        for (const Rectangle &wallRec: currentGameState.wallRectangles) {
+            if (CheckCollisionRecs(newRec, wallRec)) {
+                return;
+            }
+        }
 
-        float distanceSquared = calculateSquaredDistance(playerCenterX, playerCenterY, stoneCenterX, stoneCenterY);
+        for (Stone &stone: Stone::stoneObjects) {
+            float stoneCenterX = stone.getRectangle().x + stone.getRectangle().width / 2.0f;
+            float stoneCenterY = stone.getRectangle().y + stone.getRectangle().height / 2.0f;
+            /*float playerCenterX = newPositionX + (TextureManager::getTexture("MainCharacter").width / 32 * playerCharacterHitBoxScale) / 2.0f;
+            float playerCenterY = newPositionY + (TextureManager::getTexture("MainCharacter").height  * playerCharacterHitBoxScale) / 2.0f;*/
+            float playerCenterX = newPositionX + 30 / 2.0f;
+            float playerCenterY = newPositionY + 30 / 2.0f;
 
-        if (distanceSquared < nearestDistanceSquared)
-        {
-            nearestDistanceSquared = distanceSquared;
-            nearestStone = &stone;
-        }
-    }
+            float distanceSquared = calculateSquaredDistance(playerCenterX, playerCenterY, stoneCenterX, stoneCenterY);
 
-    // Attempt to move the nearest stone if one was found within a reasonable distance
-    if (nearestStone && nearestDistanceSquared < 1000.0f) // Adjust threshold as needed
-    {
-        nearestStone->move(moveDirection, currentGameState.wallRectangles);
-    }
-    else
-    {
-        // If no stone is close enough, update player position
-        playerPosX = newPositionX;
-        playerPosY = newPositionY;
-    }
+            if (distanceSquared < nearestDistanceSquared) {
+                nearestDistanceSquared = distanceSquared;
+                nearestStone = &stone;
+            }
+        }
 
-    if(!projectile_p->getActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectiles.h übergeben)
-    {
-        if (ConfigNotConst::lastDirectionLeft) //sollte enum werden
+        // Attempt to move the nearest stone if one was found within a reasonable distance
+        if (nearestStone && nearestDistanceSquared < 1000.0f) // Adjust threshold as needed
         {
-            projectile_p->setProjectileDestination(2);
+            nearestStone->move(moveDirection, currentGameState.wallRectangles);
+        } else {
+            // If no stone is close enough, update player position
+            playerPosX = newPositionX;
+            playerPosY = newPositionY;
         }
-        if (ConfigNotConst::lastDirectionRight)
+
+        if (!projectile_p->getActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectiles.h übergeben)
         {
-            projectile_p->setProjectileDestination(1);
+            if (ConfigNotConst::lastDirectionLeft) //sollte enum werden
+            {
+                projectile_p->setProjectileDestination(2);
+            }
+            if (ConfigNotConst::lastDirectionRight) {
+                projectile_p->setProjectileDestination(1);
+            }
+            if (ConfigNotConst::lastDirectionUp) {
+                projectile_p->setProjectileDestination(3);
+            }
+            if (ConfigNotConst::lastDirectionDown) {
+                projectile_p->setProjectileDestination(4);
+            }
         }
-        if (ConfigNotConst::lastDirectionUp)
-        {
-            projectile_p->setProjectileDestination(3);
-        }
-        if (ConfigNotConst::lastDirectionDown)
-        {
-            projectile_p->setProjectileDestination(4);
-        }
+
     }
 
-}
 
 void MainCharacter::playerDeath()
 {
@@ -348,4 +341,15 @@ Rectangle MainCharacter::getRectangle() const
     rect.width = this->playerCharacterHitRectangle.width;
     rect.height = this->playerCharacterHitRectangle.height;
     return rect;
+}
+
+void MainCharacter::setPosition(Vector2 pos)
+{
+    playerPosX = pos.x;
+    playerPosY = pos.y;
+}
+
+Vector2 MainCharacter::getPosition()
+{
+    return {playerPosX, playerPosY};
 }

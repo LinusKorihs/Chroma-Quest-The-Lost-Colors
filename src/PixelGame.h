@@ -12,6 +12,7 @@
 #include "EnemyManager.h"
 #include "MiniBoss.h"
 
+
 class PixelGame
 {
 public:
@@ -37,7 +38,10 @@ private:
     //static std::shared_ptr<Enemy> enemy_p;
     static EnemyManager enemyManager;
     static Texture2D BossRed;
+    static Texture2D slimeEnemyTextureRed;
     static Vector2 BossRedPosition;
+    static Door door;
+
 
 };
 
