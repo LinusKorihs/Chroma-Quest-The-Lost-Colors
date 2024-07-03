@@ -32,7 +32,7 @@ class Enemy
 {
 public:
 
-    Enemy(Vector2 position, Texture2D &enemTexture, EnemyType type, EnemyBehaviour behaviour, EnemyDirection enDirection);
+    Enemy(Vector2 position, Texture2D &enemTexture, EnemyType type, EnemyBehaviour behaviour, EnemyDirection enDirection, float rLimit, float lLimit, float uLimit, float dLimit);
 
     void drawEnemy();
     void updateEnemy(float deltaTime);
@@ -74,6 +74,10 @@ private:
     int framesSpeed;
     int animationDeath;
     int frames;
+    float rightLimit = 0;
+    float leftLimit = 0;
+    float upLimit = 0;
+    float downLimit = 0;
 
 
     Texture2D enTexture;
