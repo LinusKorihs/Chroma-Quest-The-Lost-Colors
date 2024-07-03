@@ -59,6 +59,8 @@ public:
     Rectangle getRectangle() const;
     bool isOpen() const;
     void setOpened();
+    static void initDoors(Texture2D& doorTexture1, Texture2D& doorTexture2, Texture2D& doorTexture3, Texture2D& doorTexture4);
+    static std::vector<Door> openDoors;
 
 private:
     int doorOpen;
@@ -66,5 +68,6 @@ private:
     Texture2D doorTexture;
     float doorPositionX;
     float doorPositionY;
+
 
 };
