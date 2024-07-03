@@ -75,7 +75,7 @@ void Stone::move(int moveDirection, const std::vector<Rectangle>& wallRectangles
 
 bool Stone::checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle>& wallRecs) const
 {
-    Rectangle newRec = { newX+, newY, stoneSize, stoneSize };
+    Rectangle newRec = { newX, newY, stoneSize, stoneSize };
     for (const Rectangle& wallRec : wallRecs)
     {
         if (CheckCollisionRecs(newRec, wallRec))
