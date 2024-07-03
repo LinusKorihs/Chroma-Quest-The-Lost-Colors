@@ -75,7 +75,7 @@ void Stone::move(int moveDirection, const std::vector<Rectangle>& wallRectangles
 
 bool Stone::checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle>& wallRecs) const
 {
-    Rectangle newRec = { newX, newY, stoneSize, stoneSize };
+    Rectangle newRec = { newX+, newY, stoneSize, stoneSize };
     for (const Rectangle& wallRec : wallRecs)
     {
         if (CheckCollisionRecs(newRec, wallRec))
@@ -140,7 +140,7 @@ void PressurePlate::draw() const
 
 Rectangle PressurePlate::getRectangle() const
 {
-    return { platePositionX, platePositionY, plateSize, plateSize };
+    return { platePositionX +6, platePositionY +5, 19, 20 }; //hab das jetzt auf die actual größe der platte gesetzt
 }
 
 bool PressurePlate::isPressed() const
@@ -156,12 +156,14 @@ bool CheckProximity(Rectangle r1, Rectangle r2, float proximity)
 
 void PressurePlate::update()
 {
+    // das ist jetzt die größe der Füße von dem character, damit die platte nur gedrückt wird, wenn die füße drauf sind
     Rectangle playerRect = {
-            MainCharacter::playerPosX,
-            MainCharacter::playerPosY,
-            TextureManager::getTexture("MainCharacter").width * MainCharacter::playerCharacterHitBoxScale,
-            TextureManager::getTexture("MainCharacter").height * MainCharacter::playerCharacterHitBoxScale
+            MainCharacter::playerPosX+12,
+            MainCharacter::playerPosY +27,
+            8,//TextureManager::getTexture("MainCharacter").width * MainCharacter::playerCharacterHitBoxScale,
+            5//TextureManager::getTexture("MainCharacter").height * MainCharacter::playerCharacterHitBoxScale
     };
+    DrawRectangleLines(playerRect.x, playerRect.y, playerRect.width, playerRect.height, PINK);
 
     Rectangle plateRect = getRectangle();
 
@@ -169,7 +171,11 @@ void PressurePlate::update()
     std::cout << "Player Rectangle: " << playerRect.x << ", " << playerRect.y << ", " << playerRect.width << ", " << playerRect.height << std::endl;
     std::cout << "Plate Rectangle: " << plateRect.x << ", " << plateRect.y << ", " << plateRect.width << ", " << plateRect.height << std::endl;
 
-    if (CheckProximity(plateRect, playerRect, 8.0f))
+    if(CheckCollisionRecs(playerRect, plateRect)) //füße und richtige plate größe werden gecheckt
+    {
+        pressed = true;
+    }
+   /* if (CheckProximity(plateRect, playerRect, 8.0f))
     {
         pressed = true;
     }

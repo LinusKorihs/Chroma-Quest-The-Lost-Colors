@@ -55,12 +55,14 @@ void MainCharacter::initPlayer(Texture myTexture)
 }
 
 void MainCharacter::updateRec() {
+    //rec für kollision des chars
     playerRec = {
-            playerPosX,
+            playerPosX+4,
             playerPosY,
-            32,//static_cast<float>(myTexture.width)* playerCharacterTextureScale,
+            24,//static_cast<float>(myTexture.width)* playerCharacterTextureScale,
             32//static_cast<float>(myTexture.height)* playerCharacterTextureScale
     };
+    //Rec zum hitten von enemies
     HitRec = {
             playerPosX, //+ (myTexture.width * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
             playerPosY ,//+ (myTexture.height * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
@@ -149,10 +151,10 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
     DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
     DrawRectangleLines(
-            HitRec.x,
-            HitRec.y,
-            HitRec.width,
-            HitRec.height,
+            playerRec.x,
+            playerRec.y,
+            playerRec.width,
+            playerRec.height,
             GREEN
     );
 }
@@ -208,7 +210,8 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime) {
         Stone *nearestStone = nullptr;
         float nearestDistanceSquared = std::numeric_limits<float>::max();
         //Rectangle newRec = {newPositionX, newPositionY, static_cast<float>(TextureManager::getTexture("MainCharacter").width / 32) /* * playerCharacterHitBoxScale*/, static_cast<float>(TextureManager::m_textures["MainCharacter"].height) /* * playerCharacterHitBoxScale */};
-        Rectangle newRec = {newPositionX, newPositionY, 30, 30};
+        //Rectangle newRec = {newPositionX, newPositionY, 30, 30};
+        Rectangle newRec = {newPositionX +4, newPositionY, playerRec.width, playerRec.height};
 
 
         for (const Rectangle &wallRec: currentGameState.wallRectangles) {
