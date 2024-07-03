@@ -7,12 +7,10 @@ Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type, EnemyBeh
     enemyDeath = false;
     unload = false;
     posEnemy = position;
-    frameRec = {0.0f, 0.0f, (float)enemyTexture.width / 24, (float)enemyTexture.height};
     currentFrame = 0;
     framesCounter = 0;
     framesSpeed = 8;
     animationDeath = 0;
-    //enemyRec = {posEnemy.x, posEnemy.y, (float)enemyTexture.width / 8, (float)enemyTexture.height / 3};
     enemyHits = 0;
     enemyType = type;
     direction = enDirection;
@@ -23,16 +21,24 @@ Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type, EnemyBeh
     leftLimit = lLimit;
     upLimit = uLimit;
     downLimit = dLimit;
+    frameRec = {0, 0, (float)enTexture.width / 24, (float)enTexture.height};
 }
 
 void Enemy::updateEnemy(float deltaTime)
 {
-    std::cout << "deltaTime: " << deltaTime << std::endl;
-    std::cout << "posEnemy: (" << posEnemy.x << ", " << posEnemy.y << ")" << std::endl;
-    std::cout << "direction: " << direction << std::endl;
-    std::cout << "enemyBehaviour: " << enemyBehaviour << std::endl;
-    std::cout << "enemyUPlimit: " << upLimit << std::endl;
-    enemyRec = {posEnemy.x, posEnemy.y, (float)enTexture.width / 24, (float)enTexture.height};
+
+    if(enemyType == SLIMERED)
+    {
+        enemyRec = {posEnemy.x + 8, posEnemy.y +12, 16, 12};
+    }
+    if(enemyType == ENEMYBLUE)
+    {
+        enemyRec = {posEnemy.x +4, posEnemy.y +4, 24, 24};
+    }
+    if(enemyType == ENEMYYELLOW)
+    {
+        enemyRec = {posEnemy.x, posEnemy.y, 32, 32};
+    }
     framesCounter++; // Update counter
 
     if (framesCounter >= (60 / framesSpeed)) {
@@ -109,7 +115,6 @@ void Enemy::updateEnemy(float deltaTime)
     }
     if(enemyBehaviour == WALKVERTICL) {
         if (posEnemy.y <= upLimit) {
-            std::cout << "limitUP#################################################################"<< std::endl;
             posEnemy.y = upLimit;
             direction = DOWNEN;
         } else if (posEnemy.y >= downLimit) {
@@ -202,10 +207,11 @@ void Enemy::drawEnemy()
    if(!unload)
    {
        DrawTextureRec(enTexture, frameRec, posEnemy, WHITE);
+       DrawRectangleLines(enemyRec.x, enemyRec.y, enemyRec.width, enemyRec.height, RED);
    }
 }
 
-Rectangle Enemy::getEnemyRec()
+Rectangle Enemy::getRec()
 {
     return enemyRec;
 }

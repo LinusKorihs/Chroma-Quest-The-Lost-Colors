@@ -124,6 +124,7 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 61, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 62, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 63, multiple, stoneTexture, stoneSourceRect);
+
 }
 
 PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture)

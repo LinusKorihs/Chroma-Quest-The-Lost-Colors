@@ -41,7 +41,7 @@ public:
     void projectileCollision();
     void punchCollision();
 
-    Rectangle getEnemyRec();
+    Rectangle getRec();
     bool getEnemyDeath();
     bool getUnload();
     int getEnemyHits();

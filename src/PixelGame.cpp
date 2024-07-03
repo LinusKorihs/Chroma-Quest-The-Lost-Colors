@@ -25,8 +25,8 @@ RoomChanger roomChanger;
 bool PixelGame::isPlayerKnocked = false;
 bool PixelGame::doorsErased1 = false;
 bool PixelGame::doorsErased2 = false;
-Rectangle MainCharacter::playerCharacterRectangle;
-Rectangle MainCharacter::playerCharacterHitRectangle;
+Rectangle MainCharacter::playerRec;
+Rectangle MainCharacter::HitRec;
 
 void PixelGame::gameInit()
 {
@@ -82,10 +82,10 @@ void PixelGame::gameInit()
 
 void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
 {
-    MainCharacter::playerCharacterRectangle = {MainCharacter::playerPosX, MainCharacter::playerPosY,
+    MainCharacter::playerRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
                                                TextureManager::getTexture("MainCharacter").width * 0.15f,
                                                TextureManager::getTexture("MainCharacter").height * 0.15f};
-    MainCharacter::playerCharacterHitRectangle = {MainCharacter::playerPosX, MainCharacter::playerPosY,
+    MainCharacter::HitRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
                                                   TextureManager::getTexture("MainCharacter").width * 0.18f,
                                                   TextureManager::getTexture("MainCharacter").height * 0.18f};
 
@@ -188,12 +188,12 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     if(pressurePlates[0].isPressed())
     {
-        if (CheckCollisionRecs(MainCharacter::playerCharacterRectangle, Door::openDoors[0].getRectangle()) &&
+        if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[0].getRectangle()) &&
             !roomChanger.isTransitioning())
         {
             roomChanger.startTransition(1, {1120, 1742}); // neue Position und Raum anpassen
         }
-        if(CheckCollisionRecs(MainCharacter::playerCharacterRectangle, Door::openDoors[1].getRectangle()) && !roomChanger.isTransitioning())
+        if(CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[1].getRectangle()) && !roomChanger.isTransitioning())
         {
             roomChanger.startTransition(1, {1120, 1905});
         }
@@ -209,7 +209,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         if(doors.isOpen())
         {
            if (!roomChanger.isTransitioning() &&
-                CheckCollisionRecs(MainCharacter::playerCharacterRectangle, doors.getRectangle())) {
+                CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle())) {
                 roomChanger.setTargetPos();
                 Vector2 newPos = roomChanger.getTargetPos();
                 roomChanger.startTransition(0, newPos); // neue Position und Raum anpassen

@@ -23,7 +23,7 @@ void EnemyManager::drawEnemies() {
 
 bool EnemyManager::checkProjectileEnemyCollision(const std::shared_ptr<Projectile>& projectile, const std::shared_ptr<Enemy>& enemy) {
     for (auto& enemy : enemies) {
-        if (CheckCollisionRecs(projectile->getRec(), enemy->getEnemyRec())) {
+        if (CheckCollisionRecs(projectile->getRec(), enemy->getRec())) {
             projectile->setActive(false);
             enemy->enemyGetsHit();
             std::cout << getEnemyHits() << std::endl;
@@ -36,7 +36,7 @@ bool EnemyManager::checkProjectileEnemyCollision(const std::shared_ptr<Projectil
 
 Rectangle EnemyManager::getEnemyRec() {
     for (auto& enemy : enemies) {
-return enemy->getEnemyRec();
+return enemy->getRec();
 }
 return Rectangle();
 }

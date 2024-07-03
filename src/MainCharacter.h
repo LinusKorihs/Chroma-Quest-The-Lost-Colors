@@ -36,8 +36,8 @@ public:
     static void initPlayer(Texture myTexture);
     static void setPosition(Vector2 pos);
 
-    static Rectangle playerCharacterRectangle;
-    static Rectangle playerCharacterHitRectangle;
+    static Rectangle playerRec;
+    static Rectangle HitRec;
     static float playerCharacterHitBoxScale;
     static float playerCharacterTextureScale;
 

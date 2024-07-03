@@ -55,13 +55,13 @@ void MainCharacter::initPlayer(Texture myTexture)
 }
 
 void MainCharacter::updateRec() {
-    playerCharacterRectangle = {
+    playerRec = {
             playerPosX,
             playerPosY,
             32,//static_cast<float>(myTexture.width)* playerCharacterTextureScale,
             32//static_cast<float>(myTexture.height)* playerCharacterTextureScale
     };
-    playerCharacterHitRectangle = {
+    HitRec = {
             playerPosX, //+ (myTexture.width * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
             playerPosY ,//+ (myTexture.height * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
             32,//*playerCharacterHitBoxScale,
@@ -149,10 +149,10 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
     DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
     DrawRectangleLines(
-            playerCharacterHitRectangle.x,
-            playerCharacterHitRectangle.y,
-            playerCharacterHitRectangle.width,
-            playerCharacterHitRectangle.height,
+            HitRec.x,
+            HitRec.y,
+            HitRec.width,
+            HitRec.height,
             GREEN
     );
 }
@@ -289,7 +289,7 @@ void MainCharacter::playerDeath()
 
 void MainCharacter::receiveDamage()
 {
-    /*if (CheckCollisionRecs(MainCharacter::playerCharacterRectangle, PixelGame::lavaTileRectangle))
+    /*if (CheckCollisionRecs(MainCharacter::playerRec, PixelGame::lavaTileRectangle))
     {
         MainCharacter::playerHealth -= MainCharacter::damagePerFrame;
         if (MainCharacter::playerHealth <= 0)
@@ -333,17 +333,17 @@ void MainCharacter::attack()
     }
     enemyManager->deleteEnemy();
 
-   /*
+
     for(const auto &enemy : enemyManager->enemies)
     {
-        if (CheckCollisionRecs(MainCharacter::playerCharacterHitRectangle, enemy->getBossRec()) && !enemy->getBossDeath())
+        if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()))
         {
             if (IsKeyPressed(KEY_SPACE))
             {
-                enemy->bossGetsHit();
+                enemy->enemyGetsHit();
             }
         }
-    }*/
+    }
 }
 
 void MainCharacter::setSpawnPosition()
@@ -355,10 +355,10 @@ void MainCharacter::setSpawnPosition()
 Rectangle MainCharacter::getRectangle() const
 {
     Rectangle rect;
-    rect.x = playerCharacterHitRectangle.x;
-    rect.y = playerCharacterHitRectangle.y;
-    rect.width = playerCharacterHitRectangle.width;
-    rect.height = playerCharacterHitRectangle.height;
+    rect.x = HitRec.x;
+    rect.y = HitRec.y;
+    rect.width = HitRec.width;
+    rect.height = HitRec.height;
     return rect;
 }
 
