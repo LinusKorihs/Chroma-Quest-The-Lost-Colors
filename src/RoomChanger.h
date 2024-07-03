@@ -9,6 +9,8 @@ public:
     void update();
     void startTransition(int newRoom, Vector2 newPosition);
     bool isTransitioning() const;
+    Vector2 getTargetPos();
+    void setTargetPos();
 
 private:
     enum class TransitionPhase {

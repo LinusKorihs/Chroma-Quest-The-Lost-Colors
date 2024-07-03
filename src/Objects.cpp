@@ -200,17 +200,54 @@ void MainCharacter::drawHitboxes() const
 }
 
 
-Door::Door(int doorNum, Texture2D texture, float positionX, float positionY)
-        : doorNumber(doorNum), doorTexture(texture), doorPositionX(positionX), doorPositionY(positionY)
+Door::Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum)
+        : doorOpen(doorOp), doorTexture(texture), doorPositionX(positionX), doorPositionY(positionY), doorNumber(doorNum)
 {
 }
 
 void Door::draw() const
 {
-    DrawTextureV(TextureManager::getTexture("OpenWoodDoor"), {doorPositionX, doorPositionY}, WHITE);
+    DrawTextureV(doorTexture, {doorPositionX, doorPositionY}, WHITE);
+    DrawRectangleLines(Door::getRectangle().x,Door::getRectangle().y,Door::getRectangle().width,Door::getRectangle().height, RED);
 }
 
-Rectangle Door::getRectangle() const //doors müssen in einen vektor gespeichert werden
+Rectangle Door::getRectangle() const
 {
-    return {doorPositionX, doorPositionY, 40, 40};
+    if(doorOpen == 0 && doorNumber == 1)
+    {
+        return {doorPositionX, doorPositionY, 32, 16}; // durch 2 damit man in die halbe tür laufen kann
+    }
+    if(doorOpen == 0 && doorNumber == 2)
+    {
+        return {doorPositionX, doorPositionY +16, 32, 16}; // durch 2 damit man in die halbe tür laufen kann
+    }
+    if(doorOpen == 0 && doorNumber == 3)
+    {
+        return {doorPositionX, doorPositionY, 16, 32}; // durch 2 damit man in die halbe tür laufen kann
+    }
+    if(doorOpen == 0 && doorNumber == 4)
+    {
+        return {doorPositionX + 16, doorPositionY, 16, 32}; // durch 2 damit man in die halbe tür laufen kann
+    }
+    else
+    {
+        return {doorPositionX, doorPositionY, 32, 32}; //geschlossene tür
+    }
+}
+
+bool Door::isOpen() const
+{
+    if(doorOpen == 0)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void Door::setOpened()
+{
+    doorOpen = 0;
 }

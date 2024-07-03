@@ -52,17 +52,19 @@ private:
 
 class Door
 {
-    public:
-    Door(int doorNum, Texture2D texture, float positionX, float positionY);
+public:
+    Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum);
 
     void draw() const;
     Rectangle getRectangle() const;
     bool isOpen() const;
-
+    void setOpened();
 
 private:
-    int doorNumber;
-    Texture2D &doorTexture;
+    int doorOpen;
+    int doorNumber; //1 Up, 2 Down, 3 Left, 4 Right
+    Texture2D doorTexture;
     float doorPositionX;
     float doorPositionY;
+
 };

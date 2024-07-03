@@ -47,10 +47,26 @@ void MainCharacter::setProjectile(const std::shared_ptr<Projectile>& projectile)
 
 void MainCharacter::initPlayer(Texture myTexture)
 {
-    frameRec = {32, 0.0f, (float)myTexture.width/32, (float)myTexture.height};
+    frameRec = {32, 0.0f, 32, 32};
     framesCounter = 0;
     currentFrame = 0;
     framesSpeed = 8;
+
+}
+
+void MainCharacter::updateRec() {
+    playerCharacterRectangle = {
+            playerPosX,
+            playerPosY,
+            32,//static_cast<float>(myTexture.width)* playerCharacterTextureScale,
+            32//static_cast<float>(myTexture.height)* playerCharacterTextureScale
+    };
+    playerCharacterHitRectangle = {
+            playerPosX, //+ (myTexture.width * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
+            playerPosY ,//+ (myTexture.height * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
+            32,//*playerCharacterHitBoxScale,
+            32//static_cast<float>(myTexture.height)* playerCharacterHitBoxScale
+    };
 }
 
 void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
@@ -70,7 +86,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 
             if (currentFrame > 3 || currentFrame < 0) currentFrame = 0;
 
-            frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
+            frameRec.x = (float) currentFrame * 32;
         }
     }
     else if(IsKeyDown(KEY_D))
@@ -86,7 +102,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 
             if (currentFrame > 7 || currentFrame < 4) currentFrame = 4;
 
-            frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
+            frameRec.x = (float) currentFrame * 32;
         }
     }
     else if(IsKeyDown(KEY_W))
@@ -102,7 +118,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 
             if (currentFrame > 11 || currentFrame < 8) currentFrame = 8;
 
-            frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
+            frameRec.x = (float) currentFrame * 32;
         }
     }
     else if(IsKeyDown(KEY_A))
@@ -121,23 +137,10 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
                 currentFrame = 12;
             }
 
-            frameRec.x = (float) currentFrame * (float) myTexture.width / 32;
+            frameRec.x = (float) currentFrame * 32;
         }
     }
 
-    playerCharacterRectangle = {
-            playerPosX,
-            playerPosY,
-            myTexture.width * playerCharacterTextureScale,
-            myTexture.height * playerCharacterTextureScale
-    };
-
-    playerCharacterHitRectangle = {
-            playerPosX + (myTexture.width * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
-            playerPosY + (myTexture.height * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
-            myTexture.width * playerCharacterHitBoxScale,
-            myTexture.height * playerCharacterHitBoxScale
-    };
 }
 
 void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& character)
@@ -160,6 +163,8 @@ float calculateSquaredDistance(float x1, float y1, float x2, float y2)
 }
 
 void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime) {
+
+    bool collision = false;
 
         float newPositionX = MainCharacter::playerPosX;
         float newPositionY = MainCharacter::playerPosY;
@@ -204,10 +209,24 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime) {
         float nearestDistanceSquared = std::numeric_limits<float>::max();
         //Rectangle newRec = {newPositionX, newPositionY, static_cast<float>(TextureManager::getTexture("MainCharacter").width / 32) /* * playerCharacterHitBoxScale*/, static_cast<float>(TextureManager::m_textures["MainCharacter"].height) /* * playerCharacterHitBoxScale */};
         Rectangle newRec = {newPositionX, newPositionY, 30, 30};
+
+
         for (const Rectangle &wallRec: currentGameState.wallRectangles) {
             if (CheckCollisionRecs(newRec, wallRec)) {
-                return;
+                collision = true;
+                break;
             }
+        }
+
+        for (const Rectangle &doorRec: currentGameState.doorRectangles) {
+            if (CheckCollisionRecs(newRec, doorRec)) {
+                collision = true;
+                break;
+            }
+        }
+
+        if (collision) {
+            return;
         }
 
         for (Stone &stone: Stone::stoneObjects) {
@@ -336,10 +355,10 @@ void MainCharacter::setSpawnPosition()
 Rectangle MainCharacter::getRectangle() const
 {
     Rectangle rect;
-    rect.x = this->playerCharacterHitRectangle.x;
-    rect.y = this->playerCharacterHitRectangle.y;
-    rect.width = this->playerCharacterHitRectangle.width;
-    rect.height = this->playerCharacterHitRectangle.height;
+    rect.x = playerCharacterHitRectangle.x;
+    rect.y = playerCharacterHitRectangle.y;
+    rect.width = playerCharacterHitRectangle.width;
+    rect.height = playerCharacterHitRectangle.height;
     return rect;
 }
 

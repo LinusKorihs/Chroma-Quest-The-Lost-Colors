@@ -16,14 +16,15 @@ std::shared_ptr<MiniBoss> PixelGame::miniBoss_p;
 EnemyManager PixelGame::enemyManager;
 Texture2D PixelGame::slimeEnemyTexture;
 Texture2D PixelGame::BossRed;
-Vector2 PixelGame::BossRedPosition = {32*35, 32*65-500};
+Vector2 PixelGame::BossRedPosition = {1120, 252};
 
 std::vector<PressurePlate> pressurePlates;
 std::vector<Door> openDoors;
-Door PixelGame::door(0, TextureManager::getTexture("OpenWoodDoor"), 1120, 1886);
 RoomChanger roomChanger;
 
 bool PixelGame::isPlayerKnocked = false;
+bool PixelGame::doorsErased1 = false;
+bool PixelGame::doorsErased2 = false;
 Rectangle MainCharacter::playerCharacterRectangle;
 Rectangle MainCharacter::playerCharacterHitRectangle;
 
@@ -39,12 +40,44 @@ void PixelGame::gameInit()
     projectile_p = std::make_shared<Projectile>();
     MainCharacter::setProjectile(projectile_p);
 
-    Texture2D doorTexture = TextureManager::getTexture("OpenWoodDoor");
+    Texture2D doorTexture1 = TextureManager::getTexture("OpenWoodDoor");
+    Texture2D doorTexture2 = TextureManager::getTexture("OpenWoodDoor2");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
     pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
-    openDoors.emplace_back(0, doorTexture, 1120, 1886);
-    openDoors.emplace_back(1, doorTexture, 1120, 1742); //eigenglich natürlich andere textur aber nur zum test -> Positionen nicht final da character Hitbox noch nicht richtig + bool "Wall" muss bei den Stellen weg
-    openDoors.emplace_back(2, doorTexture, 1000, 1640);
+
+    openDoors.emplace_back(1, doorTexture1, 1120, 1888,1); //raum 1 tür oben
+    openDoors.emplace_back(1, doorTexture2, 1120, 1760,2); //raum 2 tür unten
+    openDoors.emplace_back(0, doorTexture1, 992, 1632,3); //raum 2 tür links
+    openDoors.emplace_back(0, doorTexture1, 864, 1632, 4); //raum 3 tür rechts
+    openDoors.emplace_back(0, doorTexture1, 704, 1600, 1); //raum 3 tür oben
+    openDoors.emplace_back(0, doorTexture1, 704, 1472, 2); //raum 4 tür unten
+    openDoors.emplace_back(0, doorTexture1, 1024, 992, 2); //raum 4 tür rechts unten
+    openDoors.emplace_back(0, doorTexture1, 1024, 1120, 1); //raum 5 tür oben
+    openDoors.emplace_back(0, doorTexture1, 1344, 1184, 4); //raum 5 tür rechts
+    openDoors.emplace_back(0, doorTexture1, 1472, 1184, 3); //raum 6 tür links
+    openDoors.emplace_back(0, doorTexture1, 1632, 1344,2); //raum 6 tür unten
+    openDoors.emplace_back(0, doorTexture1, 1632, 1472, 1); //raum 7 tür oben rechts
+    openDoors.emplace_back(0, doorTexture1, 1376, 1632, 3); //raum 7 tür unten links
+    openDoors.emplace_back(0, doorTexture1, 1440, 1600, 1); //raum 7 tür oben
+    openDoors.emplace_back(0, doorTexture1, 1248, 1632, 4); // raum 2 tür rechts
+    openDoors.emplace_back(0, doorTexture1, 1120, 1536, 1); //raum 2 tür oben
+    openDoors.emplace_back(0, doorTexture1, 928, 1376, 4); //raum 3 tür rechts unten
+    openDoors.emplace_back(0, doorTexture1, 1056, 1376, 3); //raum 5 tür links unten
+    openDoors.emplace_back(0, doorTexture1, 1184, 1376,4); //raum 5 tür rechts unten
+    openDoors.emplace_back(0, doorTexture1, 1280, 1376,3); // raum 7 tür links oben
+    openDoors.emplace_back(1, doorTexture1, 1440, 1568,4); //raum 4 tür rechts umten (zu)
+    openDoors.emplace_back(1, doorTexture1, 1152, 1248,1); //raum 5 tür darunter (zu)
+    openDoors.emplace_back(1, doorTexture1, 1152, 1216,2); //raum 5 tür unten (zu)
+    openDoors.emplace_back(0, doorTexture1, 1792, 1184,4); //raum 6 tür rechts
+    openDoors.emplace_back(0, doorTexture1, 1920, 1184,3); //raum hebel rechts links
+    openDoors.emplace_back(1, doorTexture1, 576, 992,3); //raum 4 tür links (zu)
+    openDoors.emplace_back(1, doorTexture1, 544, 992,3); //raum 4 tür links (zu)
+    openDoors.emplace_back(0, doorTexture1, 448, 1184,3); //raum 4 tür links mitte
+    openDoors.emplace_back(0, doorTexture1, 320, 1184,4); //raum hebel links rechts
+    openDoors.emplace_back(0, doorTexture1, 1120, 672,1); //bossraum
+
+
+
 
     TextureManage::loadAudio();
     MainCharacter::playerHealth = 100;
@@ -63,6 +96,7 @@ void PixelGame::gameInit()
                                                          "Fehler beim Parsen der Karte, Fehler: ")
                 << Map.getStatusMessage() << std::endl;
     }
+
 
     playerCamera();
 
@@ -136,6 +170,8 @@ void PixelGame::gameLoop(tson::Map &Map)
         stone.draw();
         stone.drawHitboxes();
     }
+    bool shouldEraseDoors = false;
+
     for (PressurePlate& plate : pressurePlates) // Draw pressure plates
     {
         plate.update();
@@ -146,8 +182,18 @@ void PixelGame::gameLoop(tson::Map &Map)
         {
             openDoors[0].draw();
             openDoors[1].draw();
-        }
+            shouldEraseDoors = true;
 
+        }
+    }
+
+    if (shouldEraseDoors)
+    {
+        if(!doorsErased1) {
+            currentGameState.doorRectangles.pop_back();
+            currentGameState.doorRectangles.pop_back();
+            doorsErased1 = true;
+        }
     }
 
     drawObjects();
@@ -155,6 +201,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     if(!roomChanger.isTransitioning()) {
         MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
     }
+    MainCharacter::updateRec();
     MainCharacter character;
     Texture texture = TextureManager::getTexture("MainCharacter");
     MainCharacter::drawMainCharacter(texture, character);
@@ -172,28 +219,37 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     MainCharacter::attack();
 
-    if(pressurePlates[0].isPressed()) {
+    if(pressurePlates[0].isPressed())
+    {
         if (CheckCollisionRecs(MainCharacter::playerCharacterRectangle, openDoors[0].getRectangle()) &&
-            !roomChanger.isTransitioning()) {
-            roomChanger.startTransition(1, {1120, 1728}); // neue Position und Raum anpassen
+            !roomChanger.isTransitioning())
+        {
+            roomChanger.startTransition(1, {1120, 1742}); // neue Position und Raum anpassen
         }
         if(CheckCollisionRecs(MainCharacter::playerCharacterRectangle, openDoors[1].getRectangle()) && !roomChanger.isTransitioning())
         {
-            roomChanger.startTransition(0, {1120, 1928});
+            roomChanger.startTransition(1, {1120, 1905});
         }
 
         roomChanger.update();
+        openDoors[0].setOpened();
+        openDoors[1].setOpened();
     }
 
-    /*for (const Door& doors : openDoors)
+    for (Door& doors : openDoors)
     {
-        //if (doors.isOpen()) - noch nicht implementiert
-        if(!roomChanger.isTransitioning())
+
+        if(doors.isOpen())
         {
-            roomChanger.update();
+           if (!roomChanger.isTransitioning() &&
+                CheckCollisionRecs(MainCharacter::playerCharacterRectangle, doors.getRectangle())) {
+                roomChanger.setTargetPos();
+                Vector2 newPos = roomChanger.getTargetPos();
+                roomChanger.startTransition(0, newPos); // neue Position und Raum anpassen
+                roomChanger.update();
+            }
         }
-    }*/
-    //So ungefähr möchte ich das noch implementieren, die einzelnen Positionen usw werden dann in die Klasse ausgelagert, damit dass nicht alles in Pixelgame stehen muss
+    }
 
 
     if (IsKeyPressed(KEY_ESCAPE))

@@ -42,6 +42,9 @@ private:
     static Vector2 BossRedPosition;
     static Door door;
 
+    static bool doorsErased1;
+    static bool doorsErased2;
+
 
 };
 

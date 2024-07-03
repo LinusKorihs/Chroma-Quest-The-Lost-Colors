@@ -44,6 +44,7 @@ public:
     void drawHitboxes() const;
     Rectangle getRectangle() const;
     static Vector2 getPosition();
+    static void updateRec();
 
 private:
     static std::shared_ptr<Projectile> projectile_p;
