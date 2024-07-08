@@ -158,7 +158,7 @@ void PressurePlate::update()
 {
     // das ist jetzt die größe der Füße von dem character, damit die platte nur gedrückt wird, wenn die füße drauf sind
     Rectangle playerRect = {
-            MainCharacter::playerPosX+12,
+            MainCharacter::playerPosX +12,
             MainCharacter::playerPosY +27,
             8,//TextureManager::getTexture("MainCharacter").width * MainCharacter::playerCharacterHitBoxScale,
             5//TextureManager::getTexture("MainCharacter").height * MainCharacter::playerCharacterHitBoxScale

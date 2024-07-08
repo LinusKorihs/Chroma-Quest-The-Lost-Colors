@@ -44,7 +44,7 @@ void PixelGame::gameInit()
     Texture2D doorTexture1 = TextureManager::getTexture("OpenWoodDoor");
     Texture2D doorTexture2 = TextureManager::getTexture("OpenWoodDoor2");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
-    pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
+    pressurePlates.emplace_back(32 * 42, 32 * 62, 32, plateTexture);
     Door::initDoors(doorTexture1, doorTexture2, doorTexture1, doorTexture2);
 
     TextureManage::loadAudio();
@@ -110,7 +110,8 @@ void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
 void PixelGame::gameLoop(tson::Map &Map)
 {
     static bool isBossInitialized = false;
-    if (!isBossInitialized) {
+    if (!isBossInitialized)
+    {
         miniBoss_p = std::make_shared<MiniBoss>(BossRedPosition, BossRed, BOSSRED);
         isBossInitialized = true;
     }
@@ -156,7 +157,8 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     if (shouldEraseDoors)
     {
-        if(!doorsErased1) {
+        if(!doorsErased1)
+        {
             currentGameState.doorRectangles.pop_back();
             currentGameState.doorRectangles.pop_back();
             doorsErased1 = true;
@@ -165,7 +167,8 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     drawObjects();
 
-    if(!roomChanger.isTransitioning()) {
+    if(!roomChanger.isTransitioning())
+    {
         MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
     }
     MainCharacter::updateRec();
