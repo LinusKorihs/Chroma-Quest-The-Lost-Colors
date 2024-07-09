@@ -26,6 +26,7 @@ int MainCharacter::framesSpeed;
 Rectangle MainCharacter::frameRec;
 std::shared_ptr<Enemy> MainCharacter::enemy_p;
 std::shared_ptr<EnemyManager> MainCharacter::enemyManager_p = std::make_shared<EnemyManager>();
+lastDirection MainCharacter::lastDir;
 
 
 
@@ -51,6 +52,7 @@ void MainCharacter::initPlayer(Texture myTexture)
     framesCounter = 0;
     currentFrame = 0;
     framesSpeed = 8;
+    lastDir = LASTRIGHT;
 
 }
 
@@ -80,7 +82,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         if (framesCounter >= (60 / framesSpeed))
         {
             framesCounter = 0;
-            if(!ConfigNotConst::lastDirectionDown)
+            if(lastDir != LASTDOWN)
             {
                 currentFrame = 0;
             }
@@ -96,7 +98,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         if (framesCounter >= (60 / framesSpeed))
         {
             framesCounter = 0;
-            if(!ConfigNotConst::lastDirectionRight)
+            if(lastDir != LASTRIGHT)
             {
                 currentFrame = 4;
             }
@@ -112,7 +114,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         if (framesCounter >= (60 / framesSpeed))
         {
             framesCounter = 0;
-            if(!ConfigNotConst::lastDirectionUp)
+            if(lastDir != LASTUP)
             {
                 currentFrame = 8;
             }
@@ -128,7 +130,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         if (framesCounter >= (60 / framesSpeed))
         {
             framesCounter = 0;
-            if(!ConfigNotConst::lastDirectionLeft)
+            if(lastDir != LASTLEFT)
             {
                 currentFrame = 12;
             }
@@ -175,34 +177,22 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime) {
             case KEY_RIGHT:
             case KEY_D:
                 newPositionX += ConfigConst::playerMoveSpeed;
-                ConfigNotConst::lastDirectionLeft = false;
-                ConfigNotConst::lastDirectionUp = false;
-                ConfigNotConst::lastDirectionDown = false;
-                ConfigNotConst::lastDirectionRight = true;
+                lastDir = LASTRIGHT;
                 break;
             case KEY_LEFT:
             case KEY_A:
                 newPositionX -= ConfigConst::playerMoveSpeed;
-                ConfigNotConst::lastDirectionLeft = true;
-                ConfigNotConst::lastDirectionUp = false;
-                ConfigNotConst::lastDirectionDown = false;
-                ConfigNotConst::lastDirectionRight = false;
+                lastDir = LASTLEFT;
                 break;
             case KEY_UP:
             case KEY_W:
                 newPositionY -= ConfigConst::playerMoveSpeed;
-                ConfigNotConst::lastDirectionUp = true;
-                ConfigNotConst::lastDirectionDown = false;
-                ConfigNotConst::lastDirectionRight = false;
-                ConfigNotConst::lastDirectionLeft = false;
+                lastDir = LASTUP;
                 break;
             case KEY_DOWN:
             case KEY_S:
                 newPositionY += ConfigConst::playerMoveSpeed;
-                ConfigNotConst::lastDirectionUp = false;
-                ConfigNotConst::lastDirectionDown = true;
-                ConfigNotConst::lastDirectionRight = false;
-                ConfigNotConst::lastDirectionLeft = false;
+                lastDir = LASTDOWN;
                 break;
             default:
                 break;
@@ -260,17 +250,17 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime) {
 
         if (!projectile_p->getActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectiles.h übergeben)
         {
-            if (ConfigNotConst::lastDirectionLeft) //sollte enum werden
+            if (lastDir == LASTLEFT) //sollte enum werden
             {
                 projectile_p->setProjectileDestination(2);
             }
-            if (ConfigNotConst::lastDirectionRight) {
+            if (lastDir == LASTRIGHT) {
                 projectile_p->setProjectileDestination(1);
             }
-            if (ConfigNotConst::lastDirectionUp) {
+            if (lastDir == LASTUP) {
                 projectile_p->setProjectileDestination(3);
             }
-            if (ConfigNotConst::lastDirectionDown) {
+            if (lastDir == LASTDOWN) {
                 projectile_p->setProjectileDestination(4);
             }
         }
@@ -308,16 +298,16 @@ void MainCharacter::attack() {
         {
             Vector2 startPosition;
             playerMana -= 1;
-            if (ConfigNotConst::lastDirectionRight) {
+            if (lastDir == LASTRIGHT) {
                 startPosition = {playerPosX + 20, playerPosY + 10};
             }
-            if (ConfigNotConst::lastDirectionLeft) {
+            if (lastDir == LASTLEFT) {
                 startPosition = {playerPosX - 1, playerPosY + 10};
             }
-            if (ConfigNotConst::lastDirectionUp) {
+            if (lastDir == LASTUP) {
                 startPosition = {playerPosX + 10, playerPosY - 5};
             }
-            if (ConfigNotConst::lastDirectionDown) {
+            if (lastDir == LASTDOWN) {
                 startPosition = {playerPosX + 10, playerPosY + 20};
             }
 
