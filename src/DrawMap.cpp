@@ -4,7 +4,7 @@
 int DrawMap::sizeDoorVec = 0;
 int DrawMap::sizeWallVec = 0;
 
-bool DrawMap::isWall(float x, float y) {
+bool DrawMap::isOpenDoor(float x, float y) {
     return (x == 992 && y == 1632) || (x == 704 && y == 1600) || (x == 1024 && y == 992) ||
            (x == 864 && y == 1632) || (x == 704 && y == 1472) || (x == 1024 && y == 1120) ||
            (x == 1344 && y == 1184) || (x == 1472 && y == 1184) || (x == 1632 && y == 1344) ||
@@ -74,14 +74,19 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
 
                     Rectangle wallRec = {(float) x * tileWidth * multiplier, (float) y * tileWidth * multiplier, tileWidth * multiplier, tileWidth * multiplier}; // Create a Rectangle for the tile and add it to the list of wall rectangles
 
-                    if (!isWall(wallRec.x,wallRec.y) && !rectangleExists(currentGameState.doorRectangles, wallRec) && isDoor(wallRec.x, wallRec.y) && sizeDoorVec <= 7)
+                    if(isOpenDoor(wallRec.x, wallRec.y) || isDoor(wallRec.x, wallRec.y)) //für projectile kollisionserkennung - damit es nicht durch offene türen fliegt
+                    {
+                        currentGameState.openDoorRectangles.push_back(wallRec);
+                    }
+
+                    if (!isOpenDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.doorRectangles, wallRec) && isDoor(wallRec.x, wallRec.y) && sizeDoorVec <= 7)
                     {
                         currentGameState.doorRectangles.push_back(wallRec); // Add to door rectangles
                         sizeDoorVec++;
 
                     } else {
 
-                        if(!isWall(wallRec.x,wallRec.y) && !rectangleExists(currentGameState.wallRectangles, wallRec) && sizeWallVec <= 465 && !isDoor(wallRec.x, wallRec.y))
+                        if(!isOpenDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.wallRectangles, wallRec) && sizeWallVec <= 465 && !isDoor(wallRec.x, wallRec.y))
                         {
                             currentGameState.wallRectangles.push_back(wallRec); // Add to wall rectangles
                             sizeWallVec++;

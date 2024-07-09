@@ -91,7 +91,7 @@ void RoomChanger::setTargetPos()
     }
     if(MainCharacter::playerPosX < 745 && MainCharacter::playerPosX > 690 &&  1500 > MainCharacter::playerPosY && MainCharacter::playerPosY > 1400)
     {
-        targetPosition = {704, 1617};
+        targetPosition = {704, 1618};
     }
 
     if(MainCharacter::playerPosX < 1060 && MainCharacter::playerPosX > 1020 &&  990 > MainCharacter::playerPosY && MainCharacter::playerPosY > 960)

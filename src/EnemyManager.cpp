@@ -26,8 +26,6 @@ bool EnemyManager::checkProjectileEnemyCollision(const std::shared_ptr<Projectil
         if (CheckCollisionRecs(projectile->getRec(), enemy->getRec())) {
             projectile->setActive(false);
             enemy->enemyGetsHit();
-            std::cout << getEnemyHits() << std::endl;
-
             return true;
         }
     }

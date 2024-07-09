@@ -19,6 +19,13 @@ void Projectile::init(Vector2 startPosition, Vector2 speed)
 
 void Projectile::collision()
 {
+    for(const Rectangle& doorRec : currentGameState.openDoorRectangles)
+    {
+        if(CheckCollisionRecs(projectileRec, doorRec))
+        {
+            isProjActive = false;
+        }
+    }
     for (const Rectangle& wallRec : currentGameState.wallRectangles)
     {
         if (CheckCollisionRecs(projectileRec, wallRec) || projectilePos.x > projectilePos.x + 200)
@@ -26,6 +33,7 @@ void Projectile::collision()
             isProjActive = false;
         }
     }
+
 }
 
 void Projectile::update(float deltaTime, int direction)

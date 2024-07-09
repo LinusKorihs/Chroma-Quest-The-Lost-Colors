@@ -303,51 +303,41 @@ void MainCharacter::receiveDamage()
 }
 
 
-void MainCharacter::attack()
-{
-    if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
-    {
-        Vector2 startPosition;
-        playerMana -= 1;
-        if (ConfigNotConst::lastDirectionRight)
+void MainCharacter::attack() {
+        if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
         {
-            startPosition = {playerPosX + 20, playerPosY + 10};
+            Vector2 startPosition;
+            playerMana -= 1;
+            if (ConfigNotConst::lastDirectionRight) {
+                startPosition = {playerPosX + 20, playerPosY + 10};
+            }
+            if (ConfigNotConst::lastDirectionLeft) {
+                startPosition = {playerPosX - 1, playerPosY + 10};
+            }
+            if (ConfigNotConst::lastDirectionUp) {
+                startPosition = {playerPosX + 10, playerPosY - 5};
+            }
+            if (ConfigNotConst::lastDirectionDown) {
+                startPosition = {playerPosX + 10, playerPosY + 20};
+            }
+
+            projectile_p->init(startPosition, {300.0f, 300.0f});
+
         }
-        if (ConfigNotConst::lastDirectionLeft)
-        {
-            startPosition = {playerPosX - 1, playerPosY + 10};
+
+        if (projectile_p->getActive()) {
+            enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
         }
-        if (ConfigNotConst::lastDirectionUp)
-        {
-            startPosition = {playerPosX + 10, playerPosY - 5};
-        }
-        if (ConfigNotConst::lastDirectionDown)
-        {
-            startPosition = {playerPosX + 10, playerPosY + 20};
-        }
+        enemyManager->deleteEnemy();
 
-        projectile_p->init(startPosition, {300.0f, 300.0f});
-
-    }
-
-    if(projectile_p->getActive())
-    {
-        enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
-    }
-    enemyManager->deleteEnemy();
-
-
-    for(const auto &enemy : enemyManager->enemies)
-    {
-        if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()))
-        {
-            if (IsKeyPressed(KEY_SPACE))
-            {
+        for (const auto &enemy: enemyManager->enemies) { //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
+            if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE)) {
                 enemy->enemyGetsHit();
+                //hier cooldown einfügen
             }
         }
     }
-}
+
 
 void MainCharacter::setSpawnPosition()
 {
