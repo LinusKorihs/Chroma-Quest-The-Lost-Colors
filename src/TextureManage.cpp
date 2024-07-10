@@ -22,12 +22,13 @@ void TextureManager::init()
     m_textures["ERROR"] = LoadTexture("assets/graphics/Tiles/MissingTexture.png");
     //m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/MainCharacter.png");
     m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/MC_animation_sheet.png");
-    m_textures["OpenWoodDoor"] = LoadTexture("assets/graphics/Tiles/OpenWoodDoor.png");
+    m_textures["OpenWoodDoor"] = LoadTexture("assets/graphics/Tiles/DoorRed2.png");
     m_textures["SlimeRed"] = LoadTexture("assets/graphics/Enemies/slimeRedAnim.png");
     m_textures["OpenWoodDoor2"] = LoadTexture("assets/graphics/Tiles/OpenWoodDoorDown.png");
     m_textures["SlimeEnemy"] = LoadTexture("assets/graphics/Enemies/TestSlime.png");
     m_textures["BossRed"] = LoadTexture("assets/graphics/Items/Frucht.png");
-    m_textures["TileSet"] = LoadTexture("assets/graphics/TileSet & TileMap/TileSet.png");
+    //m_textures["TileSet"] = LoadTexture("assets/graphics/TileSet & TileMap/TileSet.png");
+    m_textures["TileSet"] = LoadTexture("assets/graphics/newTileset&Tilemap/newTileSet.png");
     m_textures["StartGameButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonBlue.png");
     m_textures["SettingsMenuButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonYellow.png");
     m_textures["ExitGameButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonRed.png");
@@ -46,7 +47,8 @@ void TextureManager::init()
     m_textures["downKeyButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonYellow.png");
     m_textures["leftKeyButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonGreen.png");
     m_textures["rightKeyButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonRed.png");
-    m_textures["Stone"] = LoadTexture("assets/graphics/Tiles/Stone.png");
+   // m_textures["Stone"] = LoadTexture("assets/graphics/Tiles/Stone.png");
+    m_textures["Stone"] = LoadTexture("assets/graphics/Tiles/newStone.png");
     m_textures["PlateNormal"] = LoadTexture("assets/graphics/Tiles/PlateUnpressed.png");
     m_textures["PlatePressed"] = LoadTexture("assets/graphics/Tiles/PlatePressed.png");
 

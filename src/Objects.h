@@ -53,9 +53,9 @@ private:
 class Door
 {
 public:
-    Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum);
+    Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum, int step);
 
-    void draw() const;
+    void draw();
     Rectangle getRectangle() const;
     bool isOpen() const;
     void setOpened();
@@ -68,6 +68,9 @@ private:
     Texture2D doorTexture;
     float doorPositionX;
     float doorPositionY;
+    int currentStep; // Wird verwendet, um den Animationsschritt zu verfolgen
+    bool animationFinished;
+    int frameCounter;
 
 
 };

@@ -102,7 +102,7 @@ bool Stone::checkCollisionWithStones(float newX, float newY) const
 void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect)
 {
     int multiple = 32;
-    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 61, multiple, stoneTexture, stoneSourceRect);
+    /*Stone::stoneObjects.emplace_back(multiple * 32, multiple * 61, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 62, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 63, multiple, stoneTexture, stoneSourceRect);
 
@@ -123,7 +123,79 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
 
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 61, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 62, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 63, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 63, multiple, stoneTexture, stoneSourceRect);*/
+
+    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 74, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 75, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 76, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 74, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 75, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 76, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 28, multiple * 74, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 27, multiple * 73, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 25, multiple * 73, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 23, multiple * 73, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 23, multiple * 75, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 23, multiple * 77, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 25, multiple * 77, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 27, multiple * 77, multiple, stoneTexture, stoneSourceRect);
+
+    //Stone::stoneObjects.emplace_back(multiple * 38, multiple * 57, multiple, stoneTexture, stoneSourceRect); //hab ich weggemacht damit ich türen ausprobieren kann (bin nicht durchgekommen wegen hitbox)
+    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 56, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 55, multiple, stoneTexture, stoneSourceRect);
+   // Stone::stoneObjects.emplace_back(multiple * 32, multiple * 57, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 56, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 55, multiple, stoneTexture, stoneSourceRect);
+
+    Stone::stoneObjects.emplace_back(multiple * 14, multiple * 56, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 61, multiple * 56, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 51, multiple * 55, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 64, multiple * 41, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 60, multiple * 41, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 58, multiple * 41, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 54, multiple * 41, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 61, multiple * 42, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 59, multiple * 42, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 57, multiple * 42, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 60, multiple * 40, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 58, multiple * 40, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 63, multiple * 39, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 62, multiple * 39, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 56, multiple * 39, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 55, multiple * 39, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 64, multiple * 38, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 54, multiple * 38, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 62, multiple * 37, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 56, multiple * 37, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 63, multiple * 36, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 55, multiple * 36, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 59, multiple * 35, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 45, multiple * 36, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 30, multiple * 41, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 25, multiple * 41, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 20, multiple * 41, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 29, multiple * 39, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 23, multiple * 39, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 21, multiple * 39, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 16, multiple * 39, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 14, multiple * 39, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 15, multiple * 40, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 22, multiple * 40, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 17, multiple * 38, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 13, multiple * 38, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 31, multiple * 37, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 27, multiple * 37, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 24, multiple * 37, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 20, multiple * 37, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 14, multiple * 37, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 17, multiple * 36, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 15, multiple * 36, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 29, multiple * 35, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 16, multiple * 35, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 21, multiple * 34, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 22, multiple * 28, multiple, stoneTexture, stoneSourceRect);
+
+
 
 }
 
@@ -207,15 +279,42 @@ void MainCharacter::drawHitboxes() const
 }
 
 
-Door::Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum)
-        : doorOpen(doorOp), doorTexture(texture), doorPositionX(positionX), doorPositionY(positionY), doorNumber(doorNum)
+Door::Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum, int step)
+        : doorOpen(doorOp), doorTexture(texture), doorPositionX(positionX), doorPositionY(positionY), doorNumber(doorNum), currentStep(step)
 {
 }
 
-void Door::draw() const
+void Door::draw()
 {
-    DrawTextureV(doorTexture, {doorPositionX, doorPositionY}, WHITE);
-    //DrawRectangleLines(Door::getRectangle().x,Door::getRectangle().y,Door::getRectangle().width,Door::getRectangle().height, RED);
+    if (!animationFinished) {
+        frameCounter++;
+        int framesPerStep = 4; // Anzahl Frames pro Animationsschritt
+
+        if (frameCounter >= framesPerStep) {
+            currentStep++;
+            frameCounter = 0;
+
+            if (currentStep > 2) {
+                currentStep = 2;
+                animationFinished = true;
+            }
+        }
+
+        switch (currentStep) {
+            case 0:
+                DrawTextureRec(doorTexture, {32, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
+                break;
+            case 1:
+                DrawTextureRec(doorTexture, {64, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
+                break;
+            case 2:
+                DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
+                break;
+        }
+    } else {
+
+        DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE); //das bleibt dann
+    }
 }
 
 Rectangle Door::getRectangle() const
@@ -262,7 +361,7 @@ void Door::setOpened()
 std::vector<Door> Door::openDoors;
 
 void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D &doorTexture3, Texture2D &doorTexture4) {
-    openDoors.emplace_back(1, doorTexture1, 1120, 1888,1); //raum 1 tür oben
+    /*openDoors.emplace_back(1, doorTexture1, 1120, 1888,1); //raum 1 tür oben
     openDoors.emplace_back(1, doorTexture2, 1120, 1760,2); //raum 2 tür unten
     openDoors.emplace_back(0, doorTexture1, 992, 1632,3); //raum 2 tür links
     openDoors.emplace_back(0, doorTexture1, 864, 1632, 4); //raum 3 tür rechts
@@ -291,6 +390,35 @@ void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D
     openDoors.emplace_back(1, doorTexture1, 544, 992,3); //raum 4 tür links (zu)
     openDoors.emplace_back(0, doorTexture1, 448, 1184,3); //raum 4 tür links mitte
     openDoors.emplace_back(0, doorTexture1, 320, 1184,4); //raum hebel links rechts
-    openDoors.emplace_back(0, doorTexture1, 1120, 672,1); //bossraum
+    openDoors.emplace_back(0, doorTexture1, 1120, 672,1); //bossraum*/
+    int multiple = 32;
+    openDoors.emplace_back(1, doorTexture1, 35*multiple, 68*multiple,1,0); //raum 1 tür oben
+    openDoors.emplace_back(1, doorTexture2, 35*multiple, 48*multiple,1,0); //raum 2 tür oben
+
+    openDoors.emplace_back(1, doorTexture3, 41*multiple, 75*multiple,4,0); //raum 1 tür rechts
+    openDoors.emplace_back(1, doorTexture3, 45*multiple, 75*multiple,3,0); //nebenraum 1 tür links
+    openDoors.emplace_back(1, doorTexture3, 12*multiple, 38*multiple,3,0); //raum 4 tür links
+    openDoors.emplace_back(1, doorTexture3, 8*multiple, 38*multiple,4,0); //nebenraum 4 tür rechts
+    openDoors.emplace_back(1, doorTexture3, 66*multiple, 41*multiple,4,0); //raum 5 tür rechts
+    openDoors.emplace_back(1, doorTexture3, 70*multiple, 41*multiple,3,0); //nebenraum 5 tür links
+
+    openDoors.emplace_back(0, doorTexture4, 35*multiple, 82*multiple,2,0); //raum 4 tür unten
+    openDoors.emplace_back(0, doorTexture4, 35*multiple, 64*multiple,2,0); // raum 2 tür unten
+    openDoors.emplace_back(0, doorTexture4, 41*multiple, 56*multiple,4,0); // raum 2 tür rechts
+    openDoors.emplace_back(0, doorTexture4, 29*multiple, 56*multiple,3,0);//raum 2 tür links
+    openDoors.emplace_back(0, doorTexture4, 25*multiple, 56*multiple,4,0);//raum 3 tür rechts
+    openDoors.emplace_back(0, doorTexture4, 14*multiple, 51*multiple,1,0);//raum 3 tür oben
+    openDoors.emplace_back(0, doorTexture4, 14*multiple, 47*multiple,2,0); //raum 4 tür unten
+    openDoors.emplace_back(0, doorTexture4, 34*multiple, 28*multiple,4,0); //raum 4 tür rechts (oben)
+    openDoors.emplace_back(0, doorTexture4, 38*multiple, 28*multiple,3,0); //raum 4 tür links (oben)
+    openDoors.emplace_back(0, doorTexture4, 48*multiple, 36*multiple,4,0); //raum 4 tür rechts (mittig)
+    openDoors.emplace_back(0, doorTexture4, 45*multiple, 56*multiple,3,0); //raum 4 tür links (unten)
+    openDoors.emplace_back(0, doorTexture4, 61*multiple, 51*multiple,1,0); //raum 4 tür oben (unten)
+    openDoors.emplace_back(0, doorTexture4, 61*multiple, 47*multiple,2,0); //raum 5 tür unten
+    openDoors.emplace_back(0, doorTexture4, 52*multiple, 36*multiple,3,0); //raum 5 tür links
+    openDoors.emplace_back(0, doorTexture4, 35*multiple, 21*multiple,2,0);//bossraum unten
+
+
+
 
 }

@@ -33,9 +33,9 @@ void PixelGame::gameInit()
     slimeEnemyTexture = TextureManager::getTexture("SlimeRed");
     BossRed = TextureManager::getTexture("BossRed");
     MainCharacter::setEnemyManager(&enemyManager);
-    enemyManager.addEnemy({1218, 1638}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({1218, 1622}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({1028, 1658}, slimeEnemyTexture, SLIMERED, WALKVERTICL, UPEN,0,0,1610,1665);
+    enemyManager.addEnemy({40*32, 75*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+    //enemyManager.addEnemy({1218, 1622}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+    //enemyManager.addEnemy({1028, 1658}, slimeEnemyTexture, SLIMERED, WALKVERTICL, UPEN,0,0,1610,1665);
    // enemyManager.addEnemy({32*35+80, 32*65-80}, slimeEnemyTexture, SLIMERED, WALKVERTICL, UPEN);
 
     projectile_p = std::make_shared<Projectile>();
@@ -44,7 +44,8 @@ void PixelGame::gameInit()
     Texture2D doorTexture1 = TextureManager::getTexture("OpenWoodDoor");
     Texture2D doorTexture2 = TextureManager::getTexture("OpenWoodDoor2");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
-    pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
+   // pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
+    pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
     Door::initDoors(doorTexture1, doorTexture2, doorTexture1, doorTexture2);
 
     TextureManage::loadAudio();
@@ -54,7 +55,8 @@ void PixelGame::gameInit()
     MainCharacter::initPlayer(TextureManager::getTexture("MainCharacter"));
 
     tson::Tileson tileson; // tileson parse
-    auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
+   // auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
+    auto MapPtr = tileson.parse("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
     tson::Map &Map = *MapPtr;
 
     if (Map.getStatus() != tson::ParseStatus::OK)
@@ -149,15 +151,16 @@ void PixelGame::gameLoop(tson::Map &Map)
         if(pressurePlates[0].isPressed())
         {
             Door::openDoors[0].draw();
-            Door::openDoors[1].draw();
             shouldEraseDoors = true;
         }
     }
 
-    if (shouldEraseDoors)
+    if (shouldEraseDoors && !currentGameState.doorRectangles.empty())
     {
-        if(!doorsErased1) {
-            currentGameState.doorRectangles.pop_back();
+        if (!doorsErased1 && currentGameState.doorRectangles.size() > 4)
+        {
+            auto it = currentGameState.doorRectangles.begin() + 5;
+            std::swap(*it, currentGameState.doorRectangles.back());
             currentGameState.doorRectangles.pop_back();
             doorsErased1 = true;
         }
@@ -191,16 +194,11 @@ void PixelGame::gameLoop(tson::Map &Map)
         if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[0].getRectangle()) &&
             !roomChanger.isTransitioning())
         {
-            roomChanger.startTransition(1, {1120, 1742}); // neue Position und Raum anpassen
-        }
-        if(CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[1].getRectangle()) && !roomChanger.isTransitioning())
-        {
-            roomChanger.startTransition(1, {1120, 1905});
+            roomChanger.startTransition(1, {1120, 2028}); // neue Position und Raum anpassen
         }
 
         roomChanger.update();
         Door::openDoors[0].setOpened();
-        Door::openDoors[1].setOpened();
     }
 
     for (Door& doors : Door::openDoors)
