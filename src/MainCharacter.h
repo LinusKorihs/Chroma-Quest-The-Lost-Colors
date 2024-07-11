@@ -5,7 +5,12 @@
 #include "EnemyManager.h"
 #include "Projectile.h"
 
-
+enum lastDirection {
+    LASTUP,
+    LASTDOWN,
+    LASTLEFT,
+    LASTRIGHT
+};
 class MainCharacter
 {
 public:
@@ -57,4 +62,6 @@ private:
     static bool forward;
     static Rectangle frameRec;
     static Texture2D PlayerTexture;
+
+    static lastDirection lastDir;
 };

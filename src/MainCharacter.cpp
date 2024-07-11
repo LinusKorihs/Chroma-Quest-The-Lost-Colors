@@ -12,8 +12,8 @@ int MainCharacter::damagePerFrame = 2;
 bool MainCharacter::isPlayerDead = false;
 int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
-float MainCharacter::playerSpawnPositionX = 32*35; //32*35 in new, 80 in old
-float MainCharacter::playerSpawnPositionY = 32*65; //32*65 in new, 368 in old
+float MainCharacter::playerSpawnPositionX = 1120; //32*35 in new, 80 in old
+float MainCharacter::playerSpawnPositionY = 2590; //32*65 in new, 368 in old
 float MainCharacter::playerCharacterTextureScale = 0.425f;
 float MainCharacter::playerCharacterHitBoxScale = 0.425f;
 float MainCharacter::playerPosX = MainCharacter::playerSpawnPositionX;
@@ -26,6 +26,7 @@ int MainCharacter::framesSpeed;
 Rectangle MainCharacter::frameRec;
 std::shared_ptr<Enemy> MainCharacter::enemy_p;
 std::shared_ptr<EnemyManager> MainCharacter::enemyManager_p = std::make_shared<EnemyManager>();
+lastDirection MainCharacter::lastDir;
 
 
 
@@ -51,6 +52,7 @@ void MainCharacter::initPlayer(Texture myTexture)
     framesCounter = 0;
     currentFrame = 0;
     framesSpeed = 8;
+    lastDir = LASTRIGHT;
 
 }
 
@@ -80,7 +82,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         if (framesCounter >= (60 / framesSpeed))
         {
             framesCounter = 0;
-            if(!ConfigNotConst::lastDirectionDown)
+            if(lastDir != LASTDOWN)
             {
                 currentFrame = 0;
             }
@@ -96,7 +98,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         if (framesCounter >= (60 / framesSpeed))
         {
             framesCounter = 0;
-            if(!ConfigNotConst::lastDirectionRight)
+            if(lastDir != LASTRIGHT)
             {
                 currentFrame = 4;
             }
@@ -112,7 +114,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         if (framesCounter >= (60 / framesSpeed))
         {
             framesCounter = 0;
-            if(!ConfigNotConst::lastDirectionUp)
+            if(lastDir != LASTUP)
             {
                 currentFrame = 8;
             }
@@ -128,7 +130,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         if (framesCounter >= (60 / framesSpeed))
         {
             framesCounter = 0;
-            if(!ConfigNotConst::lastDirectionLeft)
+            if(lastDir != LASTLEFT)
             {
                 currentFrame = 12;
             }
@@ -175,34 +177,22 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime) {
             case KEY_RIGHT:
             case KEY_D:
                 newPositionX += ConfigConst::playerMoveSpeed;
-                ConfigNotConst::lastDirectionLeft = false;
-                ConfigNotConst::lastDirectionUp = false;
-                ConfigNotConst::lastDirectionDown = false;
-                ConfigNotConst::lastDirectionRight = true;
+                lastDir = LASTRIGHT;
                 break;
             case KEY_LEFT:
             case KEY_A:
                 newPositionX -= ConfigConst::playerMoveSpeed;
-                ConfigNotConst::lastDirectionLeft = true;
-                ConfigNotConst::lastDirectionUp = false;
-                ConfigNotConst::lastDirectionDown = false;
-                ConfigNotConst::lastDirectionRight = false;
+                lastDir = LASTLEFT;
                 break;
             case KEY_UP:
             case KEY_W:
                 newPositionY -= ConfigConst::playerMoveSpeed;
-                ConfigNotConst::lastDirectionUp = true;
-                ConfigNotConst::lastDirectionDown = false;
-                ConfigNotConst::lastDirectionRight = false;
-                ConfigNotConst::lastDirectionLeft = false;
+                lastDir = LASTUP;
                 break;
             case KEY_DOWN:
             case KEY_S:
                 newPositionY += ConfigConst::playerMoveSpeed;
-                ConfigNotConst::lastDirectionUp = false;
-                ConfigNotConst::lastDirectionDown = true;
-                ConfigNotConst::lastDirectionRight = false;
-                ConfigNotConst::lastDirectionLeft = false;
+                lastDir = LASTDOWN;
                 break;
             default:
                 break;
@@ -260,17 +250,17 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime) {
 
         if (!projectile_p->getActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectiles.h übergeben)
         {
-            if (ConfigNotConst::lastDirectionLeft) //sollte enum werden
+            if (lastDir == LASTLEFT) //sollte enum werden
             {
                 projectile_p->setProjectileDestination(2);
             }
-            if (ConfigNotConst::lastDirectionRight) {
+            if (lastDir == LASTRIGHT) {
                 projectile_p->setProjectileDestination(1);
             }
-            if (ConfigNotConst::lastDirectionUp) {
+            if (lastDir == LASTUP) {
                 projectile_p->setProjectileDestination(3);
             }
-            if (ConfigNotConst::lastDirectionDown) {
+            if (lastDir == LASTDOWN) {
                 projectile_p->setProjectileDestination(4);
             }
         }
@@ -303,51 +293,41 @@ void MainCharacter::receiveDamage()
 }
 
 
-void MainCharacter::attack()
-{
-    if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
-    {
-        Vector2 startPosition;
-        playerMana -= 1;
-        if (ConfigNotConst::lastDirectionRight)
+void MainCharacter::attack() {
+        if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
         {
-            startPosition = {playerPosX + 20, playerPosY + 10};
+            Vector2 startPosition;
+            playerMana -= 1;
+            if (lastDir == LASTRIGHT) {
+                startPosition = {playerPosX + 20, playerPosY + 10};
+            }
+            if (lastDir == LASTLEFT) {
+                startPosition = {playerPosX - 1, playerPosY + 10};
+            }
+            if (lastDir == LASTUP) {
+                startPosition = {playerPosX + 10, playerPosY - 5};
+            }
+            if (lastDir == LASTDOWN) {
+                startPosition = {playerPosX + 10, playerPosY + 20};
+            }
+
+            projectile_p->init(startPosition, {300.0f, 300.0f});
+
         }
-        if (ConfigNotConst::lastDirectionLeft)
-        {
-            startPosition = {playerPosX - 1, playerPosY + 10};
+
+        if (projectile_p->getActive()) {
+            enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
         }
-        if (ConfigNotConst::lastDirectionUp)
-        {
-            startPosition = {playerPosX + 10, playerPosY - 5};
-        }
-        if (ConfigNotConst::lastDirectionDown)
-        {
-            startPosition = {playerPosX + 10, playerPosY + 20};
-        }
+        enemyManager->deleteEnemy();
 
-        projectile_p->init(startPosition, {300.0f, 300.0f});
-
-    }
-
-    if(projectile_p->getActive())
-    {
-        enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
-    }
-    enemyManager->deleteEnemy();
-
-
-    for(const auto &enemy : enemyManager->enemies)
-    {
-        if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()))
-        {
-            if (IsKeyPressed(KEY_SPACE))
-            {
+        for (const auto &enemy: enemyManager->enemies) { //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
+            if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE)) {
                 enemy->enemyGetsHit();
+                //hier cooldown einfügen
             }
         }
     }
-}
+
 
 void MainCharacter::setSpawnPosition()
 {

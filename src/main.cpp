@@ -25,7 +25,7 @@ int main()
 #endif
 
     tson::Tileson tileson;
-    auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
+    auto MapPtr = tileson.parse("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
     tson::Map& tileMap = *MapPtr;
 
     SetExitKey(KEY_F4);

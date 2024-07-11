@@ -14,10 +14,6 @@ bool ConfigNotConst::isWaitingForKeyInput = false;
 bool ConfigNotConst::isProgramRunning = true;
 bool ConfigNotConst::shouldUnloadMeat = false;
 bool ConfigNotConst::shouldUnloadFruit = false;
-bool ConfigNotConst::lastDirectionLeft = false;
-bool ConfigNotConst::lastDirectionUp = false;
-bool ConfigNotConst::lastDirectionRight = false;
-bool ConfigNotConst::lastDirectionDown = false;
 
 Direction ConfigNotConst::selectedPlayerKey = Direction::NONE;
 

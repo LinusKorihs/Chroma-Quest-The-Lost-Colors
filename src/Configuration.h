@@ -23,10 +23,6 @@ public:
     static bool isProgramRunning;
     static bool shouldUnloadMeat;
     static bool shouldUnloadFruit;
-    static bool lastDirectionLeft;
-    static bool lastDirectionUp;
-    static bool lastDirectionRight;
-    static bool lastDirectionDown;
 
 
     static Direction selectedPlayerKey;

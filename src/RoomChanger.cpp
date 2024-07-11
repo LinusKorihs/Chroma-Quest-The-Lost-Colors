@@ -76,7 +76,8 @@ Vector2 RoomChanger::getTargetPos()
 void RoomChanger::setTargetPos()
 {
 
-    if(MainCharacter::playerPosX < 1060 && MainCharacter::playerPosX > 900 &&  1650 > MainCharacter::playerPosY && MainCharacter::playerPosY > 1610)
+    int multiple = 32;
+    /*if(MainCharacter::playerPosX < 1060 && MainCharacter::playerPosX > 900 &&  1650 > MainCharacter::playerPosY && MainCharacter::playerPosY > 1610)
     {
         targetPosition = {846, 1632};
     }
@@ -91,7 +92,7 @@ void RoomChanger::setTargetPos()
     }
     if(MainCharacter::playerPosX < 745 && MainCharacter::playerPosX > 690 &&  1500 > MainCharacter::playerPosY && MainCharacter::playerPosY > 1400)
     {
-        targetPosition = {704, 1617};
+        targetPosition = {704, 1618};
     }
 
     if(MainCharacter::playerPosX < 1060 && MainCharacter::playerPosX > 1020 &&  990 > MainCharacter::playerPosY && MainCharacter::playerPosY > 960)
@@ -160,6 +161,74 @@ void RoomChanger::setTargetPos()
     if(MainCharacter::playerPosX < 940 && MainCharacter::playerPosX > 860 &&  1400 > MainCharacter::playerPosY && MainCharacter::playerPosY > 1300)
     {
         targetPosition = {1072, 1376};
+    }*/
+    if(MainCharacter::playerPosX < 38*32 && MainCharacter::playerPosX > 33*32 &&  65*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 62*32)
+    {
+        targetPosition = {1120, 2194};
     }
+
+    if(MainCharacter::playerPosX > 39*32 && MainCharacter::playerPosX < 42*32 &&  58*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 54*32)
+    {
+        targetPosition = {45*32+18, 56*32};
+    }
+    if(MainCharacter::playerPosX > 44*32 && MainCharacter::playerPosX < 47*32 &&  57*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 55*32)
+    {
+        targetPosition = {41*32-18, 56*32};
+    }
+
+    if(MainCharacter::playerPosX > 32*32 && MainCharacter::playerPosX < 38*32 &&  50*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 47*32)
+    {
+        targetPosition = {35*32, 21*32-18};
+    }
+    if(MainCharacter::playerPosX > 33*32 && MainCharacter::playerPosX < 37*32 &&  22*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 19*32)
+    {
+        targetPosition = {35*32, 48*32+18};
+    }
+
+    if(MainCharacter::playerPosX > 28*32 && MainCharacter::playerPosX < 31*32 &&  58*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 54*32)
+    {
+        targetPosition = {25*32-18, 56*32};
+    }
+    if(MainCharacter::playerPosX > 23*32 && MainCharacter::playerPosX < 26*32 &&  57*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 55*32)
+    {
+        targetPosition = {29*32+18, 56*32};
+    }
+
+    if(MainCharacter::playerPosX > 13*32 && MainCharacter::playerPosX < 15*32 &&  53*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 50*32)
+    {
+        targetPosition = {14*32, 47*32-18};
+    }
+    if(MainCharacter::playerPosX > 13*32 && MainCharacter::playerPosX < 15*32 &&  48*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 45*32)
+    {
+        targetPosition = {14*32, 51*32+18};
+    }
+
+    if(MainCharacter::playerPosX > 32*32 && MainCharacter::playerPosX < 35*32 &&  29*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 27*32)
+    {
+        targetPosition = {38*32+18, 28*32};
+    }
+    if(MainCharacter::playerPosX > 37*32 && MainCharacter::playerPosX < 40*32 &&  30*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 27*32)
+    {
+        targetPosition = {34*32-18, 28*32};
+    }
+
+    if(MainCharacter::playerPosX > 46*32 && MainCharacter::playerPosX < 49*32 &&  37*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 35*32)
+    {
+        targetPosition = {52*32+18, 36*32};
+    }
+    if(MainCharacter::playerPosX > 51*32 && MainCharacter::playerPosX < 54*32 &&  37*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 35*32)
+    {
+        targetPosition = {48*32-18, 36*32};
+    }
+
+    if(MainCharacter::playerPosX > 60*32 && MainCharacter::playerPosX < 63*32 &&  48*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 45*32)
+    {
+        targetPosition = {61*32, 51*32+18};
+    }
+    if(MainCharacter::playerPosX > 60*32 && MainCharacter::playerPosX < 63*32 &&  53*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 50*32)
+    {
+        targetPosition = {61*32, 47*32-18};
+    }
+
 
 }

@@ -31,6 +31,7 @@ public:
     std::pair<Direction, int> lastChangedPlayerKey = {Direction::NONE, -1 };
     std::vector<Rectangle> wallRectangles;
     std::vector<Rectangle> doorRectangles;
+    std::vector<Rectangle> openDoorRectangles;
     std::stack<MenuState> gameMenuStack;
 
     MenuState currentGameMenu = MenuState::MainMenu;
