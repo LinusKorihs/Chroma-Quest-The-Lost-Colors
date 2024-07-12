@@ -22,7 +22,8 @@ void TextureManager::init()
     m_textures["ERROR"] = LoadTexture("assets/graphics/Tiles/MissingTexture.png");
     //m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/MainCharacter.png");
     m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/MC_animation_sheet.png");
-    m_textures["OpenWoodDoor"] = LoadTexture("assets/graphics/Tiles/DoorRed2.png");
+    m_textures["DoorRed2"] = LoadTexture("assets/graphics/Tiles/DoorRed2.png");
+    m_textures["StoneDoorR"] = LoadTexture("assets/graphics/Tiles/StoneDoorR.png");
     m_textures["SlimeRed"] = LoadTexture("assets/graphics/Enemies/slimeRedAnim.png");
     m_textures["OpenWoodDoor2"] = LoadTexture("assets/graphics/Tiles/OpenWoodDoorDown.png");
     m_textures["SlimeEnemy"] = LoadTexture("assets/graphics/Enemies/TestSlime.png");

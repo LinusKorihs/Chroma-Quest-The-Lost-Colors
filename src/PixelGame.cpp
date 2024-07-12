@@ -41,11 +41,12 @@ void PixelGame::gameInit()
     projectile_p = std::make_shared<Projectile>();
     MainCharacter::setProjectile(projectile_p);
 
-    Texture2D doorTexture1 = TextureManager::getTexture("OpenWoodDoor");
-    Texture2D doorTexture2 = TextureManager::getTexture("OpenWoodDoor2");
+    Texture2D doorTexture1 = TextureManager::getTexture("DoorRed2");
+    Texture2D doorTexture2 = TextureManager::getTexture("StoneDoorR");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
    // pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
     pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
+    pressurePlates.emplace_back(800, 2400, 32, plateTexture);
     Door::initDoors(doorTexture1, doorTexture2, doorTexture1, doorTexture2);
 
     TextureManage::loadAudio();
@@ -141,6 +142,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         stone.drawHitboxes();
     }
     bool shouldEraseDoors = false;
+    bool shouldEraseDoors2 = false;
 
     for (PressurePlate& plate : pressurePlates) // Draw pressure plates
     {
@@ -153,6 +155,11 @@ void PixelGame::gameLoop(tson::Map &Map)
             Door::openDoors[0].draw();
             shouldEraseDoors = true;
         }
+        if(pressurePlates[1].isPressed())
+        {
+            Door::openDoors[2].drawNormal(96); //wenn zeit ist animation + sound einfügen
+            shouldEraseDoors2 = true;
+        }
     }
 
     if (shouldEraseDoors && !currentGameState.doorRectangles.empty())
@@ -163,6 +170,17 @@ void PixelGame::gameLoop(tson::Map &Map)
             std::swap(*it, currentGameState.doorRectangles.back());
             currentGameState.doorRectangles.pop_back();
             doorsErased1 = true;
+        }
+    }
+
+    if (shouldEraseDoors2 && !currentGameState.doorRectangles.empty())
+    {
+        if (!doorsErased1)
+        {
+            auto it = currentGameState.doorRectangles.begin() + 6;
+            std::swap(*it, currentGameState.doorRectangles.back());
+            currentGameState.doorRectangles.pop_back();
+            doorsErased2 = true;
         }
     }
 
