@@ -1,14 +1,12 @@
 #include "Configuration.h"
-#include "TextureManage.h"
 #include "MainCharacter.h"
 #include "Projectile.h"
 #include "Objects.h"
 #include "PixelGame.h"
 #include "Enemy.h"
 
-
 int MainCharacter::playerHealth = 100;
-int MainCharacter::damagePerFrame = 2;
+//int MainCharacter::damagePerFrame = 2;
 bool MainCharacter::isPlayerDead = false;
 int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
@@ -27,9 +25,6 @@ Rectangle MainCharacter::frameRec;
 std::shared_ptr<Enemy> MainCharacter::enemy_p;
 std::shared_ptr<EnemyManager> MainCharacter::enemyManager_p = std::make_shared<EnemyManager>();
 lastDirection MainCharacter::lastDir;
-
-
-
 
 void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
 {
@@ -53,23 +48,28 @@ void MainCharacter::initPlayer(Texture myTexture)
     currentFrame = 0;
     framesSpeed = 8;
     lastDir = LASTRIGHT;
-
 }
 
-void MainCharacter::updateRec() {
-    //rec für kollision des chars
+void MainCharacter::updateRec()
+{
+    float xPos = playerPosX + 5; // Adjusted X Position
+    float yPos = playerPosY + 4; // Adjusted Y Position
+    float width = 20; // Hitbox Width
+    float height = 28; // Hitbox Height
+
+    //Rec für kollision des chars
     playerRec = {
-            playerPosX+4,
-            playerPosY,
-            24,//static_cast<float>(myTexture.width)* playerCharacterTextureScale,
-            32//static_cast<float>(myTexture.height)* playerCharacterTextureScale
+            xPos,
+            yPos,
+            width,
+            height
     };
     //Rec zum hitten von enemies
     HitRec = {
-            playerPosX, //+ (myTexture.width * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
-            playerPosY ,//+ (myTexture.height * (playerCharacterTextureScale - playerCharacterHitBoxScale)) / 2.0f,
-            32,//*playerCharacterHitBoxScale,
-            32//static_cast<float>(myTexture.height)* playerCharacterHitBoxScale
+            playerPosX,
+            playerPosY,
+            32,
+            32
     };
 }
 
@@ -157,7 +157,7 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
             playerRec.y,
             playerRec.width,
             playerRec.height,
-            GREEN
+            PURPLE
     );
 }
 
@@ -166,107 +166,107 @@ float calculateSquaredDistance(float x1, float y1, float x2, float y2)
     return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
 }
 
-void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime) {
+void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
+{
+    float newPositionX = MainCharacter::playerPosX;
+    float newPositionY = MainCharacter::playerPosY;
 
-    bool collision = false;
-
-        float newPositionX = MainCharacter::playerPosX;
-        float newPositionY = MainCharacter::playerPosY;
-
-        switch (moveDirection) {
-            case KEY_RIGHT:
-            case KEY_D:
-                newPositionX += ConfigConst::playerMoveSpeed;
-                lastDir = LASTRIGHT;
-                break;
-            case KEY_LEFT:
-            case KEY_A:
-                newPositionX -= ConfigConst::playerMoveSpeed;
-                lastDir = LASTLEFT;
-                break;
-            case KEY_UP:
-            case KEY_W:
-                newPositionY -= ConfigConst::playerMoveSpeed;
-                lastDir = LASTUP;
-                break;
-            case KEY_DOWN:
-            case KEY_S:
-                newPositionY += ConfigConst::playerMoveSpeed;
-                lastDir = LASTDOWN;
-                break;
-            default:
-                break;
-        }
-        Stone *nearestStone = nullptr;
-        float nearestDistanceSquared = std::numeric_limits<float>::max();
-        //Rectangle newRec = {newPositionX, newPositionY, static_cast<float>(TextureManager::getTexture("MainCharacter").width / 32) /* * playerCharacterHitBoxScale*/, static_cast<float>(TextureManager::m_textures["MainCharacter"].height) /* * playerCharacterHitBoxScale */};
-        //Rectangle newRec = {newPositionX, newPositionY, 30, 30};
-        Rectangle newRec = {newPositionX +4, newPositionY, playerRec.width, playerRec.height};
-
-
-        for (const Rectangle &wallRec: currentGameState.wallRectangles) {
-            if (CheckCollisionRecs(newRec, wallRec)) {
-                collision = true;
-                break;
-            }
-        }
-
-        for (const Rectangle &doorRec: currentGameState.doorRectangles) {
-            if (CheckCollisionRecs(newRec, doorRec)) {
-                collision = true;
-                break;
-            }
-        }
-
-        if (collision) {
-            return;
-        }
-
-        for (Stone &stone: Stone::stoneObjects) {
-            float stoneCenterX = stone.getRectangle().x + stone.getRectangle().width / 2.0f;
-            float stoneCenterY = stone.getRectangle().y + stone.getRectangle().height / 2.0f;
-            /*float playerCenterX = newPositionX + (TextureManager::getTexture("MainCharacter").width / 32 * playerCharacterHitBoxScale) / 2.0f;
-            float playerCenterY = newPositionY + (TextureManager::getTexture("MainCharacter").height  * playerCharacterHitBoxScale) / 2.0f;*/
-            float playerCenterX = newPositionX + 30 / 2.0f;
-            float playerCenterY = newPositionY + 30 / 2.0f;
-
-            float distanceSquared = calculateSquaredDistance(playerCenterX, playerCenterY, stoneCenterX, stoneCenterY);
-
-            if (distanceSquared < nearestDistanceSquared) {
-                nearestDistanceSquared = distanceSquared;
-                nearestStone = &stone;
-            }
-        }
-
-        // Attempt to move the nearest stone if one was found within a reasonable distance
-        if (nearestStone && nearestDistanceSquared < 1000.0f) // Adjust threshold as needed
-        {
-            nearestStone->move(moveDirection, currentGameState.wallRectangles);
-        } else {
-            // If no stone is close enough, update player position
-            playerPosX = newPositionX;
-            playerPosY = newPositionY;
-        }
-
-        if (!projectile_p->getActive()) //Richtung der Projektile basierend auf Player movement (wird in Projectiles.h übergeben)
-        {
-            if (lastDir == LASTLEFT) //sollte enum werden
-            {
-                projectile_p->setProjectileDestination(2);
-            }
-            if (lastDir == LASTRIGHT) {
-                projectile_p->setProjectileDestination(1);
-            }
-            if (lastDir == LASTUP) {
-                projectile_p->setProjectileDestination(3);
-            }
-            if (lastDir == LASTDOWN) {
-                projectile_p->setProjectileDestination(4);
-            }
-        }
-
+    switch (moveDirection)
+    {
+        case KEY_RIGHT:
+        case KEY_D:
+            newPositionX += ConfigConst::playerMoveSpeed;
+            lastDir = LASTRIGHT;
+            break;
+        case KEY_LEFT:
+        case KEY_A:
+            newPositionX -= ConfigConst::playerMoveSpeed;
+            lastDir = LASTLEFT;
+            break;
+        case KEY_UP:
+        case KEY_W:
+            newPositionY -= ConfigConst::playerMoveSpeed;
+            lastDir = LASTUP;
+            break;
+        case KEY_DOWN:
+        case KEY_S:
+            newPositionY += ConfigConst::playerMoveSpeed;
+            lastDir = LASTDOWN;
+            break;
+        default:
+            break;
     }
 
+    Rectangle newRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height};
+
+    for (const Rectangle &doorRec : currentGameState.doorRectangles)
+    {
+        if (CheckCollisionRecs(newRec, doorRec))
+        {
+            return;
+        }
+    }
+
+    for (const Rectangle &wallRec : currentGameState.wallRectangles)
+    {
+        if (CheckCollisionRecs(newRec, wallRec))
+        {
+            return;
+        }
+    }
+
+    Stone* nearestStone = nullptr;
+    float nearestDistanceSquared = std::numeric_limits<float>::max();
+
+    for (Stone &stone : Stone::stoneObjects)
+    {
+        if (CheckCollisionRecs(newRec, stone.getRectangle()))
+        {
+            nearestStone = &stone;
+            break;
+        }
+    }
+
+    if (nearestStone)
+    {
+        nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles);
+    }
+    else
+    {
+        // If no stone is to be moved, update player position
+        playerPosX = newPositionX;
+        playerPosY = newPositionY;
+    }
+
+    // Update all stones
+    for (Stone &stone : Stone::stoneObjects)
+    {
+        stone.update(deltaTime);
+    }
+
+    if (!projectile_p->getActive())
+    {
+        if (lastDir == LASTLEFT)
+        {
+            projectile_p->setProjectileDestination(2);
+        }
+
+        if (lastDir == LASTRIGHT)
+        {
+            projectile_p->setProjectileDestination(1);
+        }
+
+        if (lastDir == LASTUP)
+        {
+            projectile_p->setProjectileDestination(3);
+        }
+
+        if (lastDir == LASTDOWN)
+        {
+            projectile_p->setProjectileDestination(4);
+        }
+    }
+}
 
 void MainCharacter::playerDeath()
 {
@@ -292,42 +292,44 @@ void MainCharacter::receiveDamage()
     }*/
 }
 
-
-void MainCharacter::attack() {
-        if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
+void MainCharacter::attack()
+{
+    if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
+    {
+        Vector2 startPosition;
+        playerMana -= 1;
+        if (lastDir == LASTRIGHT)
         {
-            Vector2 startPosition;
-            playerMana -= 1;
-            if (lastDir == LASTRIGHT) {
-                startPosition = {playerPosX + 20, playerPosY + 10};
-            }
-            if (lastDir == LASTLEFT) {
-                startPosition = {playerPosX - 1, playerPosY + 10};
-            }
-            if (lastDir == LASTUP) {
-                startPosition = {playerPosX + 10, playerPosY - 5};
-            }
-            if (lastDir == LASTDOWN) {
-                startPosition = {playerPosX + 10, playerPosY + 20};
-            }
-
-            projectile_p->init(startPosition, {300.0f, 300.0f});
-
+            startPosition = {playerPosX + 20, playerPosY + 10};
         }
-
-        if (projectile_p->getActive()) {
-            enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
+        if (lastDir == LASTLEFT)
+        {
+            startPosition = {playerPosX - 1, playerPosY + 10};
         }
-        enemyManager->deleteEnemy();
-
-        for (const auto &enemy: enemyManager->enemies) { //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
-            if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE)) {
-                enemy->enemyGetsHit();
-                //hier cooldown einfügen
-            }
+        if (lastDir == LASTUP)
+        {
+            startPosition = {playerPosX + 10, playerPosY - 5};
         }
+        if (lastDir == LASTDOWN)
+        {
+            startPosition = {playerPosX + 10, playerPosY + 20};
+        }
+        projectile_p->init(startPosition, {300.0f, 300.0f});
     }
 
+    if (projectile_p->getActive())
+    {
+        enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
+    }
+    enemyManager->deleteEnemy();
+
+    for (const auto &enemy: enemyManager->enemies) { //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
+        if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE)) {
+            enemy->enemyGetsHit();
+            //hier cooldown einfügen
+        }
+    }
+}
 
 void MainCharacter::setSpawnPosition()
 {
@@ -338,10 +340,10 @@ void MainCharacter::setSpawnPosition()
 Rectangle MainCharacter::getRectangle() const
 {
     Rectangle rect;
-    rect.x = HitRec.x;
-    rect.y = HitRec.y;
-    rect.width = HitRec.width;
-    rect.height = HitRec.height;
+    rect.x = HitRec.x + 4.5;
+    rect.y = HitRec.y + 2;
+    rect.width = HitRec.width - 10;
+    rect.height = HitRec.height - 4.5;
     return rect;
 }
 

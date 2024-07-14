@@ -8,15 +8,17 @@ class Stone
 public:
     Stone(float stoneX, float stoneY, float stoneSize, Texture2D& stoneTexture, Rectangle& sourceRectangle);
 
-    void draw() const;
-    void move(int moveDirection, const std::vector<Rectangle>& wallRectangles);
-    static void initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect);
+    void draw();
     Rectangle getRectangle() const;
+    void moveOneTile(int moveDirection, const std::vector<Rectangle> &wallRectangles);
+    void update(float deltaTime);
+
+    static void initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect);
+    static std::vector<Stone> stoneObjects;
+
+    static bool stoneCollision;
     static int drawStone;
     void drawHitboxes() const;
-
-    static std::vector<Stone> stoneObjects;
-    static bool stoneCollision;
 
 private:
     float stonePositionX;
@@ -25,11 +27,18 @@ private:
     float velocityX, velocityY;
     Texture2D& stoneTexture;
     Rectangle &sourceRectangle;
+    bool isMoving;
+    float targetX;
+    float targetY;
+    float startX;
+    float startY;
+    float startTime;
+    float duration;
 
     bool checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle> &wallRecs) const;
     bool checkCollisionWithStones(float newX, float newY) const;
-
-};
+    float lerp(float start, float end, float t) const;
+}; 
 
 class PressurePlate
 {
@@ -72,6 +81,4 @@ private:
     int currentStep; // Wird verwendet, um den Animationsschritt zu verfolgen
     bool animationFinished;
     int frameCounter;
-
-
 };

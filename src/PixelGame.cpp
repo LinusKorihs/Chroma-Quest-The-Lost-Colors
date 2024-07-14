@@ -45,9 +45,12 @@ void PixelGame::gameInit()
     Texture2D doorTexture2 = TextureManager::getTexture("StoneDoorR");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
     pressurePlates.emplace_back(32 * 42, 32 * 62, 32, plateTexture);
-   // pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
+   /*pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
     pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
     pressurePlates.emplace_back(800, 2400, 32, plateTexture);
+    pressurePlates.emplace_back(32 * 22, 32 * 33, 32, plateTexture);
+    pressurePlates.emplace_back(32 * 28, 32 * 13, 32, plateTexture);
+    pressurePlates.emplace_back(32 * 42, 32 * 13, 32, plateTexture); */
     Door::initDoors(doorTexture1, doorTexture2, doorTexture1, doorTexture2);
 
     TextureManage::loadAudio();
@@ -68,7 +71,6 @@ void PixelGame::gameInit()
                                                          "Fehler beim Parsen der Karte, Fehler: ")
                 << Map.getStatusMessage() << std::endl;
     }
-
 
     playerCamera();
 
@@ -138,7 +140,7 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     DrawMap::drawTiles(Map, TextureManager::m_textures["TileSet"]);
 
-    for (const Stone &stone: Stone::stoneObjects)
+    for (Stone stone: Stone::stoneObjects)
     {
         stone.draw();
         stone.drawHitboxes();
@@ -200,6 +202,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     MainCharacter character;
     Texture texture = TextureManager::getTexture("MainCharacter");
     MainCharacter::drawMainCharacter(texture, character);
+    character.drawHitboxes();
     MainCharacter::isPlayerDead = false;
 
     enemyManager.updateEnemies(GetFrameTime());
@@ -231,7 +234,8 @@ void PixelGame::gameLoop(tson::Map &Map)
         if(doors.isOpen())
         {
            if (!roomChanger.isTransitioning() &&
-                CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle())) {
+                CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle()))
+           {
                 roomChanger.setTargetPos();
                 Vector2 newPos = roomChanger.getTargetPos();
                 roomChanger.startTransition(newPos); // neue Position und Raum anpassen
@@ -239,7 +243,6 @@ void PixelGame::gameLoop(tson::Map &Map)
             }
         }
     }
-
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
@@ -249,26 +252,33 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     bool isMoving = false; //movement sollte noch separiert werden
 
-    if(!roomChanger.isTransitioning()) {
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
+    if(!roomChanger.isTransitioning())
+    {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP]))
+        {
             MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
             isMoving = true;
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN]))
+        {
             MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
             isMoving = true;
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT]))
+        {
             MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
             isMoving = true;
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT]))
+        {
             MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
             isMoving = true;
         }
-        if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+        if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound))
+        {
             PlaySound(ConfigNotConst::playerWalkingSound);
-        } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+        } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound))
+        {
             StopSound(ConfigNotConst::playerWalkingSound);
         }
     }
