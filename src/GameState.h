@@ -6,8 +6,19 @@
 #include "thread"
 #include <vector>
 
-enum class VolumeType { Global, BGMusic, SFX }; // Enums are capitalized
-enum class Direction { NONE = -1, UP, DOWN, LEFT, RIGHT };
+enum class VolumeType {
+    Global,
+    BGMusic,
+    SFX
+}; // Enums are capitalized
+
+enum class Direction {
+    NONE = -1,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
 
 enum class MenuState
 {

@@ -123,43 +123,6 @@ void Enemy::updateEnemy(float deltaTime)
         }
     }
 
-    /*for (const Rectangle &wallRec: currentGameState.wallRectangles) {
-        if (enemyBehaviour == WALKHORIZONTAL && CheckCollisionRecs(enemyRec, wallRec)) {
-            if (direction == RIGHTEN) {
-                posEnemy.x -= 2;
-                direction = LEFTEN;
-            } else {
-                posEnemy.x += 2;
-                direction = RIGHTEN;
-            }
-        }
-    }
-
-    if (enemyBehaviour == WALKVERTICL) {
-        if(posEnemy.y <= upLimit)
-        {
-            posEnemy.y = upLimit;
-            direction = DOWNEN;
-        }
-        if(posEnemy.y >= downLimit)
-        {
-            posEnemy.y = downLimit;
-            direction = UPEN;
-        }
-        /*for (const Rectangle &wallRec: currentGameState.wallRectangles) {
-            if (CheckCollisionRecs(enemyRec, wallRec)) {
-                if (direction == UPEN) {
-                    posEnemy.y += 2;
-                    direction = DOWNEN;
-                } else {
-                    posEnemy.y -= 2;
-                    direction = UPEN;
-                }
-            }
-        }*/
-
-
-
     if(getEnemyHits() == 3 && enemyType == ENEMYBLUE) //wie viele hits ein enemy aushält
     {
         enemyDeath = true;
@@ -176,30 +139,6 @@ void Enemy::updateEnemy(float deltaTime)
     {
         enemyDeath = true;
     }
-
-    /*if(enemyBehaviour == WALKHORIZONTAL)
-    {
-        if (direction == RIGHTEN)
-        {
-            posEnemy.x += 0.5;
-        }
-        else
-        {
-            posEnemy.x -= 0.5;
-        }
-    }
-    if(enemyBehaviour == WALKVERTICL)
-    {
-        if (direction == UPEN)
-        {
-            posEnemy.y -= 0.5;
-        }
-        else
-        {
-            posEnemy.y += 0.5;
-        }
-    }*/
-
 }
 
 void Enemy::drawEnemy()
