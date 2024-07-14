@@ -56,6 +56,7 @@ public:
     Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum, int step);
 
     void draw();
+    void drawNormal(float sourceX);
     Rectangle getRectangle() const;
     bool isOpen() const;
     void setOpened();

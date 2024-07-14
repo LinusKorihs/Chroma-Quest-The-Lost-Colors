@@ -317,6 +317,11 @@ void Door::draw()
     }
 }
 
+void Door::drawNormal(float sourceX)
+{
+    DrawTextureRec(doorTexture, {sourceX, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
+}
+
 Rectangle Door::getRectangle() const
 {
     if(doorOpen == 0 && doorNumber == 1)
@@ -395,7 +400,7 @@ void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D
     openDoors.emplace_back(1, doorTexture1, 35*multiple, 68*multiple,1,0); //raum 1 tür oben
     openDoors.emplace_back(1, doorTexture2, 35*multiple, 48*multiple,1,0); //raum 2 tür oben
 
-    openDoors.emplace_back(1, doorTexture3, 41*multiple, 75*multiple,4,0); //raum 1 tür rechts
+    openDoors.emplace_back(1, doorTexture2, 41*multiple, 75*multiple,4,0); //raum 1 tür rechts
     openDoors.emplace_back(1, doorTexture3, 45*multiple, 75*multiple,3,0); //nebenraum 1 tür links
     openDoors.emplace_back(1, doorTexture3, 12*multiple, 38*multiple,3,0); //raum 4 tür links
     openDoors.emplace_back(1, doorTexture3, 8*multiple, 38*multiple,4,0); //nebenraum 4 tür rechts
