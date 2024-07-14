@@ -24,5 +24,4 @@ private:
     Rectangle enemyRec;
 };
 
-
 #endif //RAYLIBSTARTER_ENEMYMANAGER_H
