@@ -35,7 +35,7 @@ void PixelGame::gameInit()
     MainCharacter::setEnemyManager(&enemyManager);
     enemyManager.addEnemy({40*32, 75*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
     //enemyManager.addEnemy({1218, 1622}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    //enemyManager.addEnemy({1028, 1658}, slimeEnemyTexture, SLIMERED, WALKVERTICL, UPEN,0,0,1610,1665);
+    //enemyManager.addEnemy({38*32, 75*32}, slimeEnemyTexture, SLIMERED, WALKVERTICL, Direction::UP,0,0,2380,2430);
    // enemyManager.addEnemy({32*35+80, 32*65-80}, slimeEnemyTexture, SLIMERED, WALKVERTICL, UPEN);
 
     projectile_p = std::make_shared<Projectile>();
@@ -212,7 +212,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[0].getRectangle()) &&
             !roomChanger.isTransitioning())
         {
-            roomChanger.startTransition(1, {1120, 2028}); // neue Position und Raum anpassen
+            roomChanger.startTransition({1120, 2028}); // neue Position und Raum anpassen
         }
 
         roomChanger.update();
@@ -221,14 +221,13 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     for (Door& doors : Door::openDoors)
     {
-
         if(doors.isOpen())
         {
            if (!roomChanger.isTransitioning() &&
                 CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle())) {
                 roomChanger.setTargetPos();
                 Vector2 newPos = roomChanger.getTargetPos();
-                roomChanger.startTransition(0, newPos); // neue Position und Raum anpassen
+                roomChanger.startTransition(newPos); // neue Position und Raum anpassen
                 roomChanger.update();
             }
         }

@@ -16,10 +16,6 @@ public:
     void updateEnemies(float deltaTime);
     void drawEnemies();
     void deleteEnemy();
-    Rectangle getEnemyRec();
-    Vector2 getEnemies();
-    void EnemyHits();
-    int getEnemyHits();
     bool checkProjectileEnemyCollision(const std::shared_ptr<Projectile>& projectile, const std::shared_ptr<Enemy>& enemy);
     std::vector<std::shared_ptr<Enemy>> enemies;
 

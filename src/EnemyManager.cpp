@@ -32,30 +32,6 @@ bool EnemyManager::checkProjectileEnemyCollision(const std::shared_ptr<Projectil
     return false;
 }
 
-Rectangle EnemyManager::getEnemyRec() {
-    for (auto& enemy : enemies) {
-return enemy->getRec();
-}
-return Rectangle();
-}
-Vector2 EnemyManager::getEnemies() {
-    for (auto& enemy : enemies) {
-        return enemy->getPosition();
-    }
-    return Vector2();
-}
-void EnemyManager::EnemyHits() {
-    for (auto& enemy : enemies) {
-        enemy->enemyGetsHit();
-    }
-}
-int EnemyManager::getEnemyHits() {
-    for (auto& enemy : enemies) {
-        return enemy->getEnemyHits();
-    }
-    return 0;
-}
-
 void EnemyManager::deleteEnemy() {
     for (auto it = enemies.begin(); it != enemies.end();) {
         if ((*it)->getUnload()) {
