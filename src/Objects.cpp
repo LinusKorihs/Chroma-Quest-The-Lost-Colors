@@ -242,7 +242,7 @@ void PressurePlate::update()
             8,//TextureManager::getTexture("MainCharacter").width * MainCharacter::playerCharacterHitBoxScale,
             5//TextureManager::getTexture("MainCharacter").height * MainCharacter::playerCharacterHitBoxScale
     };
-    DrawRectangleLines(playerRect.x, playerRect.y, playerRect.width, playerRect.height, PINK);
+    //DrawRectangleLines(playerRect.x, playerRect.y, playerRect.width, playerRect.height, PINK);
 
     Rectangle plateRect = getRectangle();
 
