@@ -36,7 +36,7 @@ void PixelGame::gameInit()
     MainCharacter::setEnemyManager(&enemyManager);
     enemyManager.addEnemy({40*32, 75*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
     //enemyManager.addEnemy({1218, 1622}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    //enemyManager.addEnemy({38*32, 75*32}, slimeEnemyTexture, SLIMERED, WALKVERTICL, Direction::UP,0,0,2380,2430);
+    enemyManager.addEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICL, DOWNEN,0,0,2358,2440);
    // enemyManager.addEnemy({32*35+80, 32*65-80}, slimeEnemyTexture, SLIMERED, WALKVERTICL, UPEN);
 
     projectile_p = std::make_shared<Projectile>();
