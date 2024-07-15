@@ -131,28 +131,6 @@ bool Stone::checkCollisionWithStones(float newX, float newY) const
 void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect)
 {
     int multiple = 32;
-    /*Stone::stoneObjects.emplace_back(multiple * 32, multiple * 61, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 62, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 63, multiple, stoneTexture, stoneSourceRect);
-
-    Stone::stoneObjects.emplace_back(multiple * 30, multiple * 63, multiple, stoneTexture, stoneSourceRect);
-
-    Stone::stoneObjects.emplace_back(multiple * 29, multiple * 62, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 29, multiple * 64, multiple, stoneTexture, stoneSourceRect);
-
-    Stone::stoneObjects.emplace_back(multiple * 28, multiple * 61, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 28, multiple * 63, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 28, multiple * 65, multiple, stoneTexture, stoneSourceRect);
-
-    Stone::stoneObjects.emplace_back(multiple * 27, multiple * 62, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 27, multiple * 64, multiple, stoneTexture, stoneSourceRect);
-
-    Stone::stoneObjects.emplace_back(multiple * 26, multiple * 61, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 26, multiple * 63, multiple, stoneTexture, stoneSourceRect);
-
-    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 61, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 62, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 63, multiple, stoneTexture, stoneSourceRect);*/
 
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 74, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 75, multiple, stoneTexture, stoneSourceRect);
@@ -169,10 +147,10 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 25, multiple * 77, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 27, multiple * 77, multiple, stoneTexture, stoneSourceRect);
 
-    //Stone::stoneObjects.emplace_back(multiple * 38, multiple * 57, multiple, stoneTexture, stoneSourceRect); //hab ich weggemacht damit ich türen ausprobieren kann (bin nicht durchgekommen wegen hitbox)
+    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 57, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 56, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 55, multiple, stoneTexture, stoneSourceRect);
-   // Stone::stoneObjects.emplace_back(multiple * 32, multiple * 57, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 57, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 56, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 55, multiple, stoneTexture, stoneSourceRect);
 
@@ -461,8 +439,10 @@ Machine::Machine(float posX, float posY, float oposX, float oposY, Texture2D tex
     machineRec = {machinePositionX, machinePositionY, 34, 34};
 }
 
-void Machine::draw() { //kann mit door zusammengeführt werden
-    if (filled) {
+void Machine::draw()
+{ //kann mit door zusammengeführt werden
+    if (filled)
+    {
         std::cout << "Machine is filled!" << std::endl;
         frameCounter++;
         int framesPerStep = 11; // Anzahl Frames pro Animationsschritt
@@ -476,7 +456,8 @@ void Machine::draw() { //kann mit door zusammengeführt werden
             currentStep = 0;
         }
 
-        switch (currentStep) {
+        switch (currentStep)
+        {
             case 0:
                 DrawTextureRec(machineTexture, {0, 0, 32, 32}, {machinePositionX, machinePositionY}, WHITE);
                 break;

@@ -25,6 +25,8 @@ Rectangle MainCharacter::frameRec;
 std::shared_ptr<Enemy> MainCharacter::enemy_p;
 std::shared_ptr<EnemyManager> MainCharacter::enemyManager_p = std::make_shared<EnemyManager>();
 lastDirection MainCharacter::lastDir;
+punchDir MainCharacter::punch = none;
+bool MainCharacter::animationFinished = false;
 
 void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
 {
@@ -77,7 +79,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 {
     framesCounter++;
 
-    if(IsKeyDown(KEY_S))
+    if(IsKeyDown(KEY_S) && punch == none)
     {
         if (framesCounter >= (60 / framesSpeed))
         {
@@ -93,7 +95,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             frameRec.x = (float) currentFrame * 32;
         }
     }
-    else if(IsKeyDown(KEY_D))
+    else if(IsKeyDown(KEY_D) && punch == none)
     {
         if (framesCounter >= (60 / framesSpeed))
         {
@@ -109,7 +111,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             frameRec.x = (float) currentFrame * 32;
         }
     }
-    else if(IsKeyDown(KEY_W))
+    else if(IsKeyDown(KEY_W) && punch == none)
     {
         if (framesCounter >= (60 / framesSpeed))
         {
@@ -125,7 +127,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             frameRec.x = (float) currentFrame * 32;
         }
     }
-    else if(IsKeyDown(KEY_A))
+    else if(IsKeyDown(KEY_A) && punch == none)
     {
         if (framesCounter >= (60 / framesSpeed))
         {
@@ -142,6 +144,78 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
 
             frameRec.x = (float) currentFrame * 32;
+        }
+    }
+    else if(punch == down) {
+        animationFinished = false;
+        if (!animationFinished) {
+            if (framesCounter >= (60 / framesSpeed)) {
+                framesCounter = 0;
+                currentFrame++;
+                if (currentFrame > 19 || currentFrame < 16) {
+                    currentFrame = 16;
+                }
+                if(currentFrame == 19)
+                {
+                    animationFinished = true;
+                    punch = none;
+                }
+                frameRec.x = (float) currentFrame * 32;
+            }
+        }
+    }
+    else if(punch == right){
+        animationFinished = false;
+        if(!animationFinished) {
+            if (framesCounter >= (60 / framesSpeed)) {
+                framesCounter = 0;
+                currentFrame++;
+                if (currentFrame > 23 || currentFrame < 20) {
+                    currentFrame = 20;
+                }
+                if(currentFrame == 23)
+                {
+                    animationFinished = true;
+                    punch = none;
+                }
+                frameRec.x = (float) currentFrame * 32;
+            }
+        }
+    }
+    else if(punch == up) {
+        animationFinished = false;
+        if (!animationFinished) {
+            if (framesCounter >= (60 / framesSpeed)) {
+                framesCounter = 0;
+                currentFrame++;
+                if (currentFrame > 27 || currentFrame < 24) {
+                    currentFrame = 24;
+                }
+                if(currentFrame == 27)
+                {
+                    animationFinished = true;
+                    punch = none;
+                }
+                frameRec.x = (float) currentFrame * 32;
+            }
+        }
+    }
+    else if(punch == left){
+        animationFinished = false;
+        if(!animationFinished) {
+            if (framesCounter >= (60 / framesSpeed)) {
+                framesCounter = 0;
+                currentFrame++;
+                if (currentFrame > 31 || currentFrame < 28) {
+                    currentFrame = 28;
+                }
+                if(currentFrame == 31)
+                {
+                    animationFinished = true;
+                    punch = none;
+                }
+                frameRec.x = (float) currentFrame * 32;
+            }
         }
     }
 
@@ -322,6 +396,22 @@ void MainCharacter::attack()
         enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
     }
     enemyManager->deleteEnemy();
+
+    if(IsKeyPressed(KEY_SPACE) && punch == none)
+    {
+        if (lastDir == LASTRIGHT) {
+            punch = right;
+        }
+        if (lastDir == LASTLEFT) {
+            punch = left;
+        }
+        if (lastDir == LASTUP) {
+            punch = up;
+        }
+        if (lastDir == LASTDOWN) {
+            punch = down;
+        }
+    }
 
     for (const auto &enemy: enemyManager->enemies) { //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
         if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE)) {

@@ -11,6 +11,14 @@ enum lastDirection {
     LASTLEFT,
     LASTRIGHT
 };
+
+enum punchDir {
+    left,
+    right,
+    down,
+    up,
+    none
+};
 class MainCharacter
 {
 public:
@@ -26,6 +34,7 @@ public:
     static float playerSpawnPositionY;
 
     static bool isPlayerDead;
+    static bool animationFinished;
 
     static void drawMainCharacter(Texture texture, MainCharacter& character);
     static void moveMainCharacter(int moveDirection, float deltaTime);
@@ -62,6 +71,10 @@ private:
     static bool forward;
     static Rectangle frameRec;
     static Texture2D PlayerTexture;
+
+    static bool isPushing;
+
+    static punchDir punch;
 
     static lastDirection lastDir;
 };

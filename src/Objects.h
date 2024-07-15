@@ -35,6 +35,8 @@ private:
     float startTime;
     float duration;
 
+
+
     bool checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle> &wallRecs) const;
     bool checkCollisionWithStones(float newX, float newY) const;
     float lerp(float start, float end, float t) const;
