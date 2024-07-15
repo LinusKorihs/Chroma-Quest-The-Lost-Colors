@@ -22,7 +22,6 @@ std::vector<PressurePlate> pressurePlates;
 std::vector<Machine> machines;
 //std::vector<Door> openDoors;
 RoomChanger roomChanger;
-//Machine machine(32 * 36, 32 * 69, 32 * 47, 32 * 75, TextureManager::getTexture("Machine"), 0);
 
 bool PixelGame::isPlayerKnocked = false;
 bool PixelGame::doorsErased1 = false;
@@ -118,7 +117,8 @@ void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
 void PixelGame::gameLoop(tson::Map &Map)
 {
     static bool isBossInitialized = false;
-    if (!isBossInitialized) {
+    if (!isBossInitialized)
+    {
         miniBoss_p = std::make_shared<MiniBoss>(BossRedPosition, BossRed, BOSSRED);
         isBossInitialized = true;
     }
@@ -141,7 +141,7 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     DrawMap::drawTiles(Map, TextureManager::m_textures["TileSet"]);
 
-    for (const Stone &stone: Stone::stoneObjects)
+    for (Stone stone: Stone::stoneObjects)
     {
         stone.draw();
         stone.drawHitboxes();
@@ -209,13 +209,15 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     drawObjects();
 
-    if(!roomChanger.isTransitioning()) {
+    if(!roomChanger.isTransitioning())
+    {
         MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
     }
     MainCharacter::updateRec();
     MainCharacter character;
     Texture texture = TextureManager::getTexture("MainCharacter");
     MainCharacter::drawMainCharacter(texture, character);
+    character.drawHitboxes();
     MainCharacter::isPlayerDead = false;
 
     enemyManager.updateEnemies(GetFrameTime());

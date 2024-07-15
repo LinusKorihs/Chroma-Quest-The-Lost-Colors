@@ -7,11 +7,11 @@ int Stone::drawStone = 0;
 std::vector<Stone> Stone::stoneObjects;
 
 Stone::Stone(float stoneX, float stoneY, float stoneSize, Texture2D& stoneTexture, Rectangle& sourceRectangle)
-        : stonePositionX(stoneX), stonePositionY(stoneY), stoneSize(stoneSize), stoneTexture(stoneTexture), sourceRectangle(sourceRectangle), velocityX(0), velocityY(0)
-{
-}
+        : stonePositionX(stoneX), stonePositionY(stoneY), stoneSize(stoneSize), stoneTexture(stoneTexture),
+          sourceRectangle(sourceRectangle), isMoving(false), targetX(stoneX), targetY(stoneY), startTime(0), duration(0.5f)
+          {}
 
-void Stone::draw() const
+void Stone::draw()
 {
     if (!IsTextureReady(TextureManager::getTexture("Stone")))
     {
@@ -28,49 +28,78 @@ Rectangle Stone::getRectangle() const
     return {stonePositionX, stonePositionY, stoneSize, stoneSize};
 }
 
-void Stone::move(int moveDirection, const std::vector<Rectangle>& wallRectangles)
+void Stone::moveOneTile(int moveDirection, const std::vector<Rectangle>& wallRectangles)
 {
-    float speed = 2.0f; // Adjust speed as necessary
+    if (isMoving) return; // Do not initiate another move while already moving
+
+    float tileSize = 32.0f; // Assuming the tile size is 32 units
+
+    startX = stonePositionX;
+    startY = stonePositionY;
 
     switch (moveDirection)
     {
         case KEY_RIGHT:
         case KEY_D:
-            velocityX = speed;
-            velocityY = 0;
+            targetX = stonePositionX + tileSize;
+            targetY = stonePositionY;
             break;
         case KEY_LEFT:
         case KEY_A:
-            velocityX = -speed;
-            velocityY = 0;
+            targetX = stonePositionX - tileSize;
+            targetY = stonePositionY;
             break;
         case KEY_UP:
         case KEY_W:
-            velocityX = 0;
-            velocityY = -speed;
+            targetX = stonePositionX;
+            targetY = stonePositionY - tileSize;
             break;
         case KEY_DOWN:
         case KEY_S:
-            velocityX = 0;
-            velocityY = speed;
+            targetX = stonePositionX;
+            targetY = stonePositionY + tileSize;
             break;
         default:
-            break;
+            return;
     }
 
-    float newX = stonePositionX + velocityX;
-    float newY = stonePositionY + velocityY;
-
-    if (!checkCollisionWithWalls(newX, newY, wallRectangles) && !checkCollisionWithStones(newX, newY))
+    if (!checkCollisionWithWalls(targetX, targetY, wallRectangles) && !checkCollisionWithStones(targetX, targetY))
     {
-        stonePositionX = newX;
-        stonePositionY = newY;
+        isMoving = true;
+        startTime = GetTime(); // Record the start time of the move
     }
     else
     {
-        velocityX = 0; // Stop the stone if there's a collision
-        velocityY = 0;
+        targetX = stonePositionX;
+        targetY = stonePositionY;
     }
+}
+
+void Stone::update(float deltaTime)
+{
+    if (isMoving)
+    {
+        float currentTime = GetTime();
+        float elapsedTime = currentTime - startTime;
+
+        if (elapsedTime >= duration)
+        {
+            stonePositionX = targetX;
+            stonePositionY = targetY;
+            isMoving = false;
+        }
+        else
+        {
+            float t = elapsedTime / duration;
+            stonePositionX = lerp(startX, targetX, t);
+            stonePositionY = lerp(startY, targetY, t);
+        }
+    }
+}
+
+float Stone::lerp(float start, float end, float t) const
+{
+    return start + t * (end - start);
 }
 
 bool Stone::checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle>& wallRecs) const
@@ -127,7 +156,7 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
 
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 74, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 75, multiple, stoneTexture, stoneSourceRect);
-   // Stone::stoneObjects.emplace_back(multiple * 38, multiple * 76, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 76, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 74, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 75, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 76, multiple, stoneTexture, stoneSourceRect);
@@ -424,7 +453,6 @@ void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D
     openDoors.emplace_back(0, doorTexture4, 35*multiple, 21*multiple,2,0);//bossraum unten
 
 }
-
 std::vector<Machine> Machine::machines;
 
 Machine::Machine(float posX, float posY, float oposX, float oposY, Texture2D texture, int step)
@@ -498,5 +526,3 @@ bool Machine::isPickedUp()
 {
     return pickedUp;
 }
-
-
