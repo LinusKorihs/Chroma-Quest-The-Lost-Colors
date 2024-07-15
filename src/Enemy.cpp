@@ -146,7 +146,7 @@ void Enemy::drawEnemy()
    if(!unload)
    {
        DrawTextureRec(enTexture, frameRec, posEnemy, WHITE);
-       DrawRectangleLines(enemyRec.x, enemyRec.y, enemyRec.width, enemyRec.height, RED);
+       //DrawRectangleLines(enemyRec.x, enemyRec.y, enemyRec.width, enemyRec.height, RED);
    }
 }
 
