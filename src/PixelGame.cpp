@@ -7,7 +7,7 @@
 #include "MainCharacter.h"
 #include "UnloadResources.h"
 #include "RoomChanger.h"
-//hallo
+
 GameState currentGameState;
 
 std::shared_ptr<Projectile> PixelGame::projectile_p;
@@ -37,7 +37,7 @@ void PixelGame::gameInit()
     enemyManager.addEnemy({40*32, 75*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
     //enemyManager.addEnemy({1218, 1622}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
     enemyManager.addEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICL, DOWNEN,0,0,2358,2440);
-   // enemyManager.addEnemy({32*35+80, 32*65-80}, slimeEnemyTexture, SLIMERED, WALKVERTICL, UPEN);
+    //enemyManager.addEnemy({32*35+80, 32*65-80}, slimeEnemyTexture, SLIMERED, WALKVERTICL, UPEN);
 
     projectile_p = std::make_shared<Projectile>();
     MainCharacter::setProjectile(projectile_p);
@@ -46,7 +46,7 @@ void PixelGame::gameInit()
     Texture2D doorTexture2 = TextureManager::getTexture("StoneDoorR");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
     Texture2D machineTexture = TextureManager::getTexture("Machine");
-   // pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
+    //pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
     //pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
     pressurePlates.emplace_back(800, 2400, 32, plateTexture);
     machines.emplace_back(32 * 36, 32 * 69, 32 * 47, 32 * 75, machineTexture, 0);

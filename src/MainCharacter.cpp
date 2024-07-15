@@ -146,13 +146,17 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             frameRec.x = (float) currentFrame * 32;
         }
     }
-    else if(punch == down) {
+    else if(punch == down)
+    {
         animationFinished = false;
-        if (!animationFinished) {
-            if (framesCounter >= (60 / framesSpeed)) {
+        if (!animationFinished)
+        {
+            if (framesCounter >= (60 / framesSpeed))
+            {
                 framesCounter = 0;
                 currentFrame++;
-                if (currentFrame > 19 || currentFrame < 16) {
+                if (currentFrame > 19 || currentFrame < 16)
+                {
                     currentFrame = 16;
                 }
                 if(currentFrame == 19)
@@ -164,13 +168,17 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
         }
     }
-    else if(punch == right){
+    else if(punch == right)
+    {
         animationFinished = false;
-        if(!animationFinished) {
-            if (framesCounter >= (60 / framesSpeed)) {
+        if(!animationFinished)
+        {
+            if (framesCounter >= (60 / framesSpeed))
+            {
                 framesCounter = 0;
                 currentFrame++;
-                if (currentFrame > 23 || currentFrame < 20) {
+                if (currentFrame > 23 || currentFrame < 20)
+                {
                     currentFrame = 20;
                 }
                 if(currentFrame == 23)
@@ -182,13 +190,17 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
         }
     }
-    else if(punch == up) {
+    else if(punch == up)
+    {
         animationFinished = false;
-        if (!animationFinished) {
-            if (framesCounter >= (60 / framesSpeed)) {
+        if (!animationFinished)
+        {
+            if (framesCounter >= (60 / framesSpeed))
+            {
                 framesCounter = 0;
                 currentFrame++;
-                if (currentFrame > 27 || currentFrame < 24) {
+                if (currentFrame > 27 || currentFrame < 24)
+                {
                     currentFrame = 24;
                 }
                 if(currentFrame == 27)
@@ -200,13 +212,16 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
         }
     }
-    else if(punch == left){
+    else if(punch == left)
+    {
         animationFinished = false;
         if(!animationFinished) {
-            if (framesCounter >= (60 / framesSpeed)) {
+            if (framesCounter >= (60 / framesSpeed))
+            {
                 framesCounter = 0;
                 currentFrame++;
-                if (currentFrame > 31 || currentFrame < 28) {
+                if (currentFrame > 31 || currentFrame < 28)
+                {
                     currentFrame = 28;
                 }
                 if(currentFrame == 31)
@@ -399,22 +414,28 @@ void MainCharacter::attack()
 
     if(IsKeyPressed(KEY_SPACE) && punch == none)
     {
-        if (lastDir == LASTRIGHT) {
+        if (lastDir == LASTRIGHT)
+        {
             punch = right;
         }
-        if (lastDir == LASTLEFT) {
+        if (lastDir == LASTLEFT)
+        {
             punch = left;
         }
-        if (lastDir == LASTUP) {
+        if (lastDir == LASTUP)
+        {
             punch = up;
         }
-        if (lastDir == LASTDOWN) {
+        if (lastDir == LASTDOWN)
+        {
             punch = down;
         }
     }
 
-    for (const auto &enemy: enemyManager->enemies) { //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
-        if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE)) {
+    for (const auto &enemy: enemyManager->enemies)  //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
+    {
+        if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE))
+        {
             enemy->enemyGetsHit();
             //hier cooldown einfügen
         }
