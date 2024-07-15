@@ -1,11 +1,13 @@
 #include "InGameHud.h"
 #include <iostream>
 #include "MainCharacter.h"
+#include "TextureManage.h"
 
 std::vector<HudImageButton> InGameHud::hudImagebuttons;
 
 InGameHud::InGameHud()
 {
+
 }
 
 InGameHud::~InGameHud()
@@ -14,9 +16,9 @@ InGameHud::~InGameHud()
 
 void InGameHud::drawHealthBarTexture()
 {
-    DrawRectangle(1700, 110, 100, 20, RED);
-    DrawRectangle(1700, 110, MainCharacter::playerHealth, 20, GRAY);
-    DrawText( LanguageManager::getLocalizedGameText("Healthbar:", "Lebensbalken"), 1700, 90, 20, BLACK);
+    Texture2D heart = TextureManager::getTexture("Heart");
+    Texture2D heartEmpty = TextureManager::getTexture("HeartEmpty");
+    DrawTexture(heart, 10, 10, WHITE);
 }
 
 void InGameHud::drawRGBBarTexture()

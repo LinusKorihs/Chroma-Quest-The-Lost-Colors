@@ -55,6 +55,8 @@ void TextureManager::init()
     m_textures["Orb"] = LoadTexture("assets/graphics/Tiles/orb.png");
     m_textures["PlateNormal"] = LoadTexture("assets/graphics/Tiles/PlateUnpressed.png");
     m_textures["PlatePressed"] = LoadTexture("assets/graphics/Tiles/PlatePressed.png");
+    m_textures["Heart"] = LoadTexture("assets/graphics/HUD/Heart.png");
+    m_textures["HeartEmpty"] = LoadTexture("assets/graphics/HUD/Heart_empty.png");
 
     for (auto &texture : m_textures)
     {

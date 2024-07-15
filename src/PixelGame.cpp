@@ -41,7 +41,7 @@ void PixelGame::gameInit()
 
     projectile_p = std::make_shared<Projectile>();
     MainCharacter::setProjectile(projectile_p);
-
+    InGameHud::drawHealthBarTexture();
     Texture2D doorTexture1 = TextureManager::getTexture("DoorRed2");
     Texture2D doorTexture2 = TextureManager::getTexture("StoneDoorR");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
