@@ -53,8 +53,8 @@ void TextureManager::init()
    // m_textures["Stone"] = LoadTexture("assets/graphics/Tiles/Stone.png");
     m_textures["Stone"] = LoadTexture("assets/graphics/Tiles/newStone.png");
     m_textures["Orb"] = LoadTexture("assets/graphics/Tiles/orb.png");
-    m_textures["PlateNormal"] = LoadTexture("assets/graphics/Tiles/PlateUnpressed.png");
-    m_textures["PlatePressed"] = LoadTexture("assets/graphics/Tiles/PlatePressed.png");
+    m_textures["PlateNormal"] = LoadTexture("assets/graphics/Tiles/druckN.png");
+    m_textures["PlatePressed"] = LoadTexture("assets/graphics/Tiles/druck.png");
     m_textures["Heart"] = LoadTexture("assets/graphics/HUD/Heart.png");
     m_textures["HeartEmpty"] = LoadTexture("assets/graphics/HUD/Heart_empty.png");
 
