@@ -182,7 +182,7 @@ void PixelGame::gameLoop(tson::Map &Map)
             shouldEraseDoors = true;
         }
     }
-    std::cout << "sizedoorvec" << currentGameState.doorRectangles.size() << std::endl;
+    //std::cout << "sizedoorvec" << currentGameState.doorRectangles.size() << std::endl;
 
     if (shouldEraseDoors && !currentGameState.doorRectangles.empty())
     {

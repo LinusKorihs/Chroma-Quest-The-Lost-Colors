@@ -269,8 +269,8 @@ void PressurePlate::update()
     Rectangle plateRect = getRectangle();
 
     // Debugging prints to check the rectangles
-    std::cout << "Player Rectangle: " << playerRect.x << ", " << playerRect.y << ", " << playerRect.width << ", " << playerRect.height << std::endl;
-    std::cout << "Plate Rectangle: " << plateRect.x << ", " << plateRect.y << ", " << plateRect.width << ", " << plateRect.height << std::endl;
+    //std::cout << "Player Rectangle: " << playerRect.x << ", " << playerRect.y << ", " << playerRect.width << ", " << playerRect.height << std::endl;
+    //std::cout << "Plate Rectangle: " << plateRect.x << ", " << plateRect.y << ", " << plateRect.width << ", " << plateRect.height << std::endl;
 
     if(CheckCollisionRecs(playerRect, plateRect)) //füße und richtige plate größe werden gecheckt
     {
