@@ -34,12 +34,12 @@ private:
 
     static std::shared_ptr<Projectile> projectile_p;
     static std::shared_ptr<Projectile> projectileEnemy_p;
-    static std::shared_ptr<MiniBoss> miniBoss_p;
+    //static std::shared_ptr<MiniBoss> miniBoss_p;
     //static std::shared_ptr<Enemy> enemy_p;
     static EnemyManager enemyManager;
-    static Texture2D BossRed;
+    //static Texture2D BossRed;
     static Texture2D slimeEnemyTextureRed;
-    static Vector2 BossRedPosition;
+   // static Vector2 BossRedPosition;
     static Door door;
 
     static bool doorsErased1;

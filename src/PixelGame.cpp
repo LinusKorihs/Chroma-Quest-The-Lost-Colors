@@ -12,11 +12,11 @@ GameState currentGameState;
 
 std::shared_ptr<Projectile> PixelGame::projectile_p;
 std::shared_ptr<Projectile> PixelGame::projectileEnemy_p;
-std::shared_ptr<MiniBoss> PixelGame::miniBoss_p;
+//std::shared_ptr<MiniBoss> PixelGame::miniBoss_p;
 EnemyManager PixelGame::enemyManager;
 Texture2D PixelGame::slimeEnemyTexture;
-Texture2D PixelGame::BossRed;
-Vector2 PixelGame::BossRedPosition = {1120, 252};
+//Texture2D PixelGame::BossRed;
+//Vector2 PixelGame::BossRedPosition = {1120, 252};
 
 std::vector<PressurePlate> pressurePlates;
 std::vector<Machine> machines;
@@ -32,7 +32,7 @@ Rectangle MainCharacter::HitRec;
 void PixelGame::gameInit()
 {
     slimeEnemyTexture = TextureManager::getTexture("SlimeRed");
-    BossRed = TextureManager::getTexture("BossRed");
+    //BossRed = TextureManager::getTexture("BossRed");
     MainCharacter::setEnemyManager(&enemyManager);
     enemyManager.addEnemy({40*32, 75*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
     //enemyManager.addEnemy({1218, 1622}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
@@ -116,12 +116,12 @@ void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
 
 void PixelGame::gameLoop(tson::Map &Map)
 {
-    static bool isBossInitialized = false;
+    /*static bool isBossInitialized = false;
     if (!isBossInitialized)
     {
         miniBoss_p = std::make_shared<MiniBoss>(BossRedPosition, BossRed, BOSSRED);
         isBossInitialized = true;
-    }
+    }*/
     //enemy_p = std::make_shared<Enemy>(Vector2{250, 280}, slimeEnemyTexture, 2, 5.0f, SLIMERED);
 
     if (IsKeyPressed(KEY_ESCAPE))
@@ -222,8 +222,8 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     enemyManager.updateEnemies(GetFrameTime());
     enemyManager.drawEnemies();
-    miniBoss_p->updateBoss(GetFrameTime());
-    miniBoss_p->drawBoss();
+    /*miniBoss_p->updateBoss(GetFrameTime());
+    miniBoss_p->drawBoss();*/
 
     //projectileEnemy_p->update(GetFrameTime(), 2);
     //projectileEnemy_p->draw();
