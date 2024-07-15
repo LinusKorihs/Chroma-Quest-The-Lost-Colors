@@ -24,6 +24,7 @@ void TextureManager::init()
     m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/MC_animation_sheet.png");
     m_textures["DoorRed2"] = LoadTexture("assets/graphics/Tiles/DoorRed2.png");
     m_textures["StoneDoorR"] = LoadTexture("assets/graphics/Tiles/StoneDoorR.png");
+    m_textures["StoneDoorL"] = LoadTexture("assets/graphics/Tiles/StoneDoorL.png");
     m_textures["SlimeRed"] = LoadTexture("assets/graphics/Enemies/slimeRedAnim.png");
     m_textures["OpenWoodDoor2"] = LoadTexture("assets/graphics/Tiles/OpenWoodDoorDown.png");
     m_textures["SlimeEnemy"] = LoadTexture("assets/graphics/Enemies/TestSlime.png");
@@ -48,8 +49,10 @@ void TextureManager::init()
     m_textures["downKeyButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonYellow.png");
     m_textures["leftKeyButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonGreen.png");
     m_textures["rightKeyButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonRed.png");
+    m_textures["Machine"] = LoadTexture("assets/graphics/Tiles/machine.png");
    // m_textures["Stone"] = LoadTexture("assets/graphics/Tiles/Stone.png");
     m_textures["Stone"] = LoadTexture("assets/graphics/Tiles/newStone.png");
+    m_textures["Orb"] = LoadTexture("assets/graphics/Tiles/orb.png");
     m_textures["PlateNormal"] = LoadTexture("assets/graphics/Tiles/PlateUnpressed.png");
     m_textures["PlatePressed"] = LoadTexture("assets/graphics/Tiles/PlatePressed.png");
 

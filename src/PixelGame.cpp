@@ -19,8 +19,10 @@ Texture2D PixelGame::BossRed;
 Vector2 PixelGame::BossRedPosition = {1120, 252};
 
 std::vector<PressurePlate> pressurePlates;
+std::vector<Machine> machines;
 //std::vector<Door> openDoors;
 RoomChanger roomChanger;
+//Machine machine(32 * 36, 32 * 69, 32 * 47, 32 * 75, TextureManager::getTexture("Machine"), 0);
 
 bool PixelGame::isPlayerKnocked = false;
 bool PixelGame::doorsErased1 = false;
@@ -44,10 +46,11 @@ void PixelGame::gameInit()
     Texture2D doorTexture1 = TextureManager::getTexture("DoorRed2");
     Texture2D doorTexture2 = TextureManager::getTexture("StoneDoorR");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
+    Texture2D machineTexture = TextureManager::getTexture("Machine");
    // pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
-    pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
+    //pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
     pressurePlates.emplace_back(800, 2400, 32, plateTexture);
-    Door::initDoors(doorTexture1, doorTexture2, doorTexture1, doorTexture2);
+    machines.emplace_back(32 * 36, 32 * 69, 32 * 47, 32 * 75, machineTexture, 0);
 
     TextureManage::loadAudio();
     MainCharacter::playerHealth = 100;
@@ -73,6 +76,8 @@ void PixelGame::gameInit()
 
     Texture2D stoneTexture = TextureManager::getTexture("Stone");
     Rectangle stoneSourceRect = {0, 0, (float)stoneTexture.width, (float)stoneTexture.height};
+    Texture2D doorTexture3 = TextureManager::getTexture("StoneDoorL");
+    Door::initDoors(doorTexture1, doorTexture2, doorTexture3, doorTexture2);
 
     if (!IsTextureReady(stoneTexture))
     {
@@ -150,17 +155,34 @@ void PixelGame::gameLoop(tson::Map &Map)
         plate.draw();
         plate.drawHitboxes();
 
+        /*if(pressurePlates[0].isPressed())
+        {
+            Door::openDoors[0].draw();
+            shouldEraseDoors = true;
+        }*/
         if(pressurePlates[0].isPressed())
+        {
+            Door::openDoors[2].drawNormal(96); //wenn zeit ist animation + sound einfügen
+            Door::openDoors[3].drawNormal(96);
+            //Door::openDoors[2].setOpened();
+            //Door::openDoors[3].setOpened();
+            shouldEraseDoors2 = true;
+        }
+    }
+
+    for (Machine& machine : machines)
+    {
+        machine.draw();
+        machine.update();
+        machine.drawOrb();
+
+        if(machines[0].isFilled())
         {
             Door::openDoors[0].draw();
             shouldEraseDoors = true;
         }
-        if(pressurePlates[1].isPressed())
-        {
-            Door::openDoors[2].drawNormal(96); //wenn zeit ist animation + sound einfügen
-            shouldEraseDoors2 = true;
-        }
     }
+    std::cout << "sizedoorvec" << currentGameState.doorRectangles.size() << std::endl;
 
     if (shouldEraseDoors && !currentGameState.doorRectangles.empty())
     {
@@ -175,10 +197,11 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     if (shouldEraseDoors2 && !currentGameState.doorRectangles.empty())
     {
-        if (!doorsErased1)
+        if (!doorsErased2)
         {
             auto it = currentGameState.doorRectangles.begin() + 6;
             std::swap(*it, currentGameState.doorRectangles.back());
+            currentGameState.doorRectangles.pop_back();
             currentGameState.doorRectangles.pop_back();
             doorsErased2 = true;
         }
@@ -207,7 +230,7 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     MainCharacter::attack();
 
-    if(pressurePlates[0].isPressed())
+    if(machines[0].isFilled())
     {
         if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[0].getRectangle()) &&
             !roomChanger.isTransitioning())
@@ -217,6 +240,18 @@ void PixelGame::gameLoop(tson::Map &Map)
 
         roomChanger.update();
         Door::openDoors[0].setOpened();
+    }
+    if(pressurePlates[0].isPressed())
+    {
+        if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[2].getRectangle()) &&
+            !roomChanger.isTransitioning())
+        {
+            roomChanger.startTransition({45*32+18, 75*32}); // neue Position und Raum anpassen
+        }
+
+        roomChanger.update();
+        Door::openDoors[2].setOpened();
+        Door::openDoors[3].setOpened();
     }
 
     for (Door& doors : Door::openDoors)

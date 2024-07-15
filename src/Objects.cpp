@@ -127,7 +127,7 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
 
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 74, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 75, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 76, multiple, stoneTexture, stoneSourceRect);
+   // Stone::stoneObjects.emplace_back(multiple * 38, multiple * 76, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 74, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 75, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 76, multiple, stoneTexture, stoneSourceRect);
@@ -423,7 +423,80 @@ void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D
     openDoors.emplace_back(0, doorTexture4, 52*multiple, 36*multiple,3,0); //raum 5 tür links
     openDoors.emplace_back(0, doorTexture4, 35*multiple, 21*multiple,2,0);//bossraum unten
 
-
-
-
 }
+
+std::vector<Machine> Machine::machines;
+
+Machine::Machine(float posX, float posY, float oposX, float oposY, Texture2D texture, int step)
+        : machinePositionX(posX), machinePositionY(posY), machineTexture(texture), filled(false), pickedUp(false), orbPositionX(oposX), orbPositionY(oposY), currentStep(step), animationFinished(false), frameCounter(0)
+{
+    machineRec = {machinePositionX, machinePositionY, 34, 34};
+}
+
+void Machine::draw() { //kann mit door zusammengeführt werden
+    if (filled) {
+        std::cout << "Machine is filled!" << std::endl;
+        frameCounter++;
+        int framesPerStep = 11; // Anzahl Frames pro Animationsschritt
+
+        if (frameCounter >= framesPerStep) {
+            currentStep++;
+            frameCounter = 0;
+        }
+
+        if(currentStep > 3){
+            currentStep = 0;
+        }
+
+        switch (currentStep) {
+            case 0:
+                DrawTextureRec(machineTexture, {0, 0, 32, 32}, {machinePositionX, machinePositionY}, WHITE);
+                break;
+            case 1:
+                DrawTextureRec(machineTexture, {32, 0, 32, 32}, {machinePositionX, machinePositionY}, WHITE);
+                break;
+            case 2:
+                DrawTextureRec(machineTexture, {64, 0, 32, 32}, {machinePositionX, machinePositionY}, WHITE);
+                break;
+            case 3:
+                DrawTextureRec(machineTexture, {96, 0, 32, 32}, {machinePositionX, machinePositionY}, WHITE);
+                break;
+        }
+    }
+}
+
+void Machine::drawOrb()
+{
+    orbRec = {orbPositionX +8, orbPositionY, 16, 16};
+    if (CheckCollisionRecs(orbRec, MainCharacter::playerRec))
+    {
+        pickedUp = true;
+    }
+
+    if(!pickedUp)
+    {
+        Rectangle orbSourceRec = {0, 0, 32, 32};
+        DrawTextureRec(TextureManager::getTexture("Orb"),orbSourceRec, {orbPositionX, orbPositionY}, WHITE);
+    }
+}
+
+void Machine::update()
+{
+    if(CheckCollisionRecs(machineRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E) && pickedUp)
+    {
+        filled = true;
+        pickedUp = false;
+    }
+}
+
+bool Machine::isFilled()
+{
+    return filled;
+}
+
+bool Machine::isPickedUp()
+{
+    return pickedUp;
+}
+
+

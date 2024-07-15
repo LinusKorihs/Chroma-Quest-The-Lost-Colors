@@ -72,6 +72,33 @@ private:
     int currentStep; // Wird verwendet, um den Animationsschritt zu verfolgen
     bool animationFinished;
     int frameCounter;
+};
 
+class Machine
+{
+public:
+    Machine(float mposX, float mposY,float oposX, float oposY, Texture2D texture, int step);
 
+    void draw();
+    void drawOrb();
+    void update();
+    bool isFilled();
+    bool isPickedUp();
+    static std::vector<Machine> machines;
+
+private:
+    float machinePositionX;
+    float machinePositionY;
+    float orbPositionX;
+    float orbPositionY;
+    Texture2D machineTexture;
+    bool filled;
+    bool pickedUp;
+
+    Rectangle machineRec;
+    Rectangle orbRec;
+
+    int currentStep;
+    bool animationFinished;
+    int frameCounter;
 };
