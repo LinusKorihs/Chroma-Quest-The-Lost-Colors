@@ -101,13 +101,13 @@ void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
         for (Stone &stone : Stone::stoneObjects)
         {
             stone.draw();
-            stone.drawHitboxes();
+            //stone.drawHitboxes();
         }
 
         for (const PressurePlate& plate : pressurePlates) // Draw pressure plates
         {
             plate.draw();
-            plate.drawHitboxes();
+            //plate.drawHitboxes();
         }
 
         Stone::drawStone = 1;
@@ -144,7 +144,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     for (Stone stone: Stone::stoneObjects)
     {
         stone.draw();
-        stone.drawHitboxes();
+        //stone.drawHitboxes();
     }
     bool shouldEraseDoors = false;
     bool shouldEraseDoors2 = false;
@@ -153,7 +153,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     {
         plate.update();
         plate.draw();
-        plate.drawHitboxes();
+        //plate.drawHitboxes();
 
         /*if(pressurePlates[0].isPressed())
         {
@@ -217,7 +217,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     MainCharacter character;
     Texture texture = TextureManager::getTexture("MainCharacter");
     MainCharacter::drawMainCharacter(texture, character);
-    character.drawHitboxes();
+    //character.drawHitboxes();
     MainCharacter::isPlayerDead = false;
 
     enemyManager.updateEnemies(GetFrameTime());

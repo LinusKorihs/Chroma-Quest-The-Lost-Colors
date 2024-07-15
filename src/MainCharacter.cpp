@@ -152,13 +152,13 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
     // Draw the player sprite
     DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
-    DrawRectangleLines(
+    /*DrawRectangleLines(
             playerRec.x,
             playerRec.y,
             playerRec.width,
             playerRec.height,
             PURPLE
-    );
+    ); */
 }
 
 float calculateSquaredDistance(float x1, float y1, float x2, float y2)

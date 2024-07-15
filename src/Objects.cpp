@@ -284,7 +284,7 @@ void PressurePlate::update()
     {
         pressed = false;
     }*/
-    drawHitboxes();
+    //drawHitboxes();
 }
 
 
