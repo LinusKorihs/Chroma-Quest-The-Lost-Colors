@@ -52,6 +52,8 @@ public:
     bool isPressed() const;
     void update();
     void drawHitboxes() const;
+    static void initPlates(Texture2D& plateTexture);
+    static std::vector<PressurePlate> pressurePlates;
 
 private:
     float platePositionX;
@@ -105,6 +107,7 @@ private:
     Texture2D machineTexture;
     bool filled;
     bool pickedUp;
+    bool inInventory;
 
     Rectangle machineRec;
     Rectangle orbRec;

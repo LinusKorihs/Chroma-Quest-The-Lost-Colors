@@ -18,7 +18,7 @@ Texture2D PixelGame::slimeEnemyTexture;
 //Texture2D PixelGame::BossRed;
 //Vector2 PixelGame::BossRedPosition = {1120, 252};
 
-std::vector<PressurePlate> pressurePlates;
+//std::vector<PressurePlate> pressurePlates;
 std::vector<Machine> machines;
 //std::vector<Door> openDoors;
 RoomChanger roomChanger;
@@ -48,7 +48,6 @@ void PixelGame::gameInit()
     Texture2D machineTexture = TextureManager::getTexture("Machine");
     //pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
     //pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
-    pressurePlates.emplace_back(800, 2400, 32, plateTexture);
     machines.emplace_back(32 * 36, 32 * 69, 32 * 47, 32 * 75, machineTexture, 0);
 
     TextureManage::loadAudio();
@@ -85,6 +84,7 @@ void PixelGame::gameInit()
     }
 
     Stone::initializeStones(stoneTexture, stoneSourceRect);
+    PressurePlate::initPlates(plateTexture);
 }
 
 void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
@@ -101,13 +101,11 @@ void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
         for (Stone &stone : Stone::stoneObjects)
         {
             stone.draw();
-            //stone.drawHitboxes();
         }
 
-        for (const PressurePlate& plate : pressurePlates) // Draw pressure plates
+        for (const PressurePlate& plate : PressurePlate::pressurePlates) // Draw pressure plates - warum steht das hier drinnen? also in dem drawStone ding und nicht separat?
         {
             plate.draw();
-            //plate.drawHitboxes();
         }
 
         Stone::drawStone = 1;
@@ -149,7 +147,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     bool shouldEraseDoors = false;
     bool shouldEraseDoors2 = false;
 
-    for (PressurePlate& plate : pressurePlates) // Draw pressure plates
+    for (PressurePlate& plate : PressurePlate::pressurePlates) // Draw pressure plates
     {
         plate.update();
         plate.draw();
@@ -160,7 +158,7 @@ void PixelGame::gameLoop(tson::Map &Map)
             Door::openDoors[0].draw();
             shouldEraseDoors = true;
         }*/
-        if(pressurePlates[0].isPressed())
+        if(PressurePlate::pressurePlates[0].isPressed())
         {
             Door::openDoors[2].drawNormal(96); //wenn zeit ist animation + sound einfügen
             Door::openDoors[3].drawNormal(96);
@@ -243,7 +241,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         roomChanger.update();
         Door::openDoors[0].setOpened();
     }
-    if(pressurePlates[0].isPressed())
+    if(PressurePlate::pressurePlates[0].isPressed())
     {
         if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[2].getRectangle()) &&
             !roomChanger.isTransitioning())
