@@ -16,6 +16,7 @@ float MainCharacter::playerCharacterTextureScale = 0.425f;
 float MainCharacter::playerCharacterHitBoxScale = 0.425f;
 float MainCharacter::playerPosX = MainCharacter::playerSpawnPositionX;
 float MainCharacter::playerPosY = MainCharacter::playerSpawnPositionY;
+
 std::shared_ptr<Projectile> MainCharacter::projectile_p = std::make_shared<Projectile>();
 EnemyManager* MainCharacter::enemyManager = nullptr;
 int MainCharacter::currentFrame;
@@ -53,18 +54,13 @@ void MainCharacter::initPlayer(Texture myTexture)
 }
 
 void MainCharacter::updateRec()
-{
-    float xPos = playerPosX + 5; // Adjusted X Position
-    float yPos = playerPosY + 4; // Adjusted Y Position
-    float width = 20; // Hitbox Width
-    float height = 28; // Hitbox Height
-
+{/*
     //Rec für kollision des chars
     playerRec = {
-            xPos,
-            yPos,
-            width,
-            height
+            playerPosX,
+            playerPosY,
+            32,
+            32
     };
     //Rec zum hitten von enemies
     HitRec = {
@@ -72,7 +68,7 @@ void MainCharacter::updateRec()
             playerPosY,
             32,
             32
-    };
+    }; */
 }
 
 void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
@@ -241,13 +237,13 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
     // Draw the player sprite
     DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
-    /*DrawRectangleLines(
+    DrawRectangleLines(
             playerRec.x,
             playerRec.y,
             playerRec.width,
             playerRec.height,
             PURPLE
-    ); */
+    );
 }
 
 float calculateSquaredDistance(float x1, float y1, float x2, float y2)
@@ -286,7 +282,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
             break;
     }
 
-    Rectangle newRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height};
+    Rectangle newRec = {static_cast<float>(newPositionX + 5.5), newPositionY, playerRec.width, playerRec.height};
 
     for (const Rectangle &doorRec : currentGameState.doorRectangles)
     {
@@ -450,12 +446,7 @@ void MainCharacter::setSpawnPosition()
 
 Rectangle MainCharacter::getRectangle() const
 {
-    Rectangle rect;
-    rect.x = HitRec.x + 4.5;
-    rect.y = HitRec.y + 2;
-    rect.width = HitRec.width - 10;
-    rect.height = HitRec.height - 4.5;
-    return rect;
+    return playerRec;
 }
 
 void MainCharacter::setPosition(Vector2 pos)

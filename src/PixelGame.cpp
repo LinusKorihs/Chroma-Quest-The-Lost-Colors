@@ -87,15 +87,22 @@ void PixelGame::gameInit()
     PressurePlate::initPlates(plateTexture);
 }
 
+void PixelGame::rectangle()
+{
+    float x = MainCharacter::playerPosX + 5;
+    float y = MainCharacter::playerPosY + 2.5;
+    float width = TextureManager::getTexture("MainCharacter").width - 875;
+    float height = TextureManager::getTexture("MainCharacter").height + 170;
+    float playerScale = 0.15f;
+    float hitScale = 0.18f;
+
+    MainCharacter::playerRec = {x, y, width * playerScale, height * playerScale};
+
+    MainCharacter::HitRec = {x, y, width * hitScale, height * hitScale};
+}
+
 void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
 {
-    MainCharacter::playerRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
-                                               TextureManager::getTexture("MainCharacter").width * 0.15f,
-                                               TextureManager::getTexture("MainCharacter").height * 0.15f};
-    MainCharacter::HitRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
-                                                  TextureManager::getTexture("MainCharacter").width * 0.18f,
-                                                  TextureManager::getTexture("MainCharacter").height * 0.18f};
-
     if (Stone::drawStone == 0)
     {
         for (Stone &stone : Stone::stoneObjects)
@@ -121,6 +128,8 @@ void PixelGame::gameLoop(tson::Map &Map)
         isBossInitialized = true;
     }*/
     //enemy_p = std::make_shared<Enemy>(Vector2{250, 280}, slimeEnemyTexture, 2, 5.0f, SLIMERED);
+
+    rectangle();
 
     if (IsKeyPressed(KEY_ESCAPE))
     {
@@ -211,11 +220,12 @@ void PixelGame::gameLoop(tson::Map &Map)
     {
         MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
     }
+
     MainCharacter::updateRec();
     MainCharacter character;
     Texture texture = TextureManager::getTexture("MainCharacter");
     MainCharacter::drawMainCharacter(texture, character);
-    //character.drawHitboxes();
+    character.drawHitboxes();
     MainCharacter::isPlayerDead = false;
 
     enemyManager.updateEnemies(GetFrameTime());
@@ -241,6 +251,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         roomChanger.update();
         Door::openDoors[0].setOpened();
     }
+
     if(PressurePlate::pressurePlates[0].isPressed())
     {
         if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[2].getRectangle()) &&
@@ -277,26 +288,34 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     bool isMoving = false; //movement sollte noch separiert werden
 
-    if(!roomChanger.isTransitioning()) {
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
+    if(!roomChanger.isTransitioning())
+    {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP]))
+        {
             MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
             isMoving = true;
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN]))
+        {
             MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
             isMoving = true;
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT]))
+        {
             MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
             isMoving = true;
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT]))
+        {
             MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
             isMoving = true;
         }
-        if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+        if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound))
+        {
             PlaySound(ConfigNotConst::playerWalkingSound);
-        } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+        }
+        else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound))
+        {
             StopSound(ConfigNotConst::playerWalkingSound);
         }
     }

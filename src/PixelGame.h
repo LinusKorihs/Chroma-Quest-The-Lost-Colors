@@ -27,6 +27,8 @@ public:
 
     static void runGameOnce(tson::Map &Map);
 
+    static void rectangle();
+
 private:
     static void drawObjects();
     static void drawHud();
