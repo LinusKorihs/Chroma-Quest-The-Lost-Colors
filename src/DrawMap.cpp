@@ -15,7 +15,7 @@ bool DrawMap::isOpenDoor(float x, float y) {
            (x == 448 && y == 1184) || (x == 320 && y == 1184) || (x == 1120 && y == 672) || (x == 1376 && y == 1632);*/
     (x == 1120 && y == 2624) || (x == 1120 && y == 2048) || (x == 1312 && y == 1792) || (x == 928 && y == 1792) || (x == 800 && y == 1792) ||
     (x == 448 && y == 1632) || (x == 448 && y == 1504) || (x == 1088 && y == 896) || (x == 1216 && y == 896) || (x == 1536 && y == 1152) ||
-    (x == 1440 && y == 1792) || (x == 1952 && y == 1632) || (x == 1952 && y == 1504) || (x== 1664 && y == 1152) || (x== 1120 && y == 672);
+    (x == 1440 && y == 1792) || (x == 1952 && y == 1632) || (x == 1952 && y == 1504) || (x== 1664 && y == 1152) || (x== 1120 && y == 672) || (x == 256 && y == 1216);
 }
 
 bool DrawMap::isDoor(float x, float y) {
@@ -23,7 +23,7 @@ bool DrawMap::isDoor(float x, float y) {
            (x == 1152 && y == 1216) || (x == 576 && y == 992) || (x == 544 && y == 992) ||
            (x == 1120 && y == 1536) || (x == 1152 && y == 1248) || (x == 1440 && y == 1568);*/
     (x == 1120 && y == 2176)  || (x == 1312 && y == 2400) || (x == 1440 && y == 2400) ||
-    (x == 384 && y == 1216) || (x == 256 && y == 1216) || (x == 2112 && y == 1312) || (x == 2240 && y == 1312) || (x == 1120 && y == 1536);
+    (x == 384 && y == 1216) || (x == 2112 && y == 1312) || (x == 2240 && y == 1312) || (x == 1120 && y == 1536);
 }
 
 bool rectangleExists(const std::vector<Rectangle>& rectangles, const Rectangle& rect) {
@@ -89,13 +89,13 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
 
                     Rectangle wallRec = {(float) x * tileWidth * multiplier, (float) y * tileWidth * multiplier, tileWidth * multiplier, tileWidth * multiplier}; // Create a Rectangle for the tile and add it to the list of wall rectangles
 
-                    if(isOpenDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 22 || isDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 22) //für projectile kollisionserkennung - damit es nicht durch offene türen fliegt
+                    if(isOpenDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 22 || isDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 23) //für projectile kollisionserkennung - damit es nicht durch offene türen fliegt
                     {
                         currentGameState.openDoorRectangles.push_back(wallRec);
                         sizeOpenDoorVec++;
                     }
 
-                    else if (!isOpenDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.doorRectangles, wallRec) && isDoor(wallRec.x, wallRec.y) && sizeDoorVec <= 7)
+                    else if (!isOpenDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.doorRectangles, wallRec) && isDoor(wallRec.x, wallRec.y) && sizeDoorVec <= 6)
                     {
                         currentGameState.doorRectangles.push_back(wallRec);
                         sizeDoorVec++;

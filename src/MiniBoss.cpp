@@ -1,9 +1,9 @@
 
 #include "MiniBoss.h"
 
-MiniBoss::MiniBoss(Vector2 position, Texture2D &enemTexture, MiniBossType type) {
+MiniBoss::MiniBoss(Vector2 position, Texture2D &enemTexture, MiniBossType type, Pathfinder &pathfinder) : posEnemy(position), enemyTexture(enemTexture), enemyType(type), pathfinder(pathfinder), pathIndex(0) {
     std::srand(std::time(nullptr)); // Initialisiere Zufallsgenerator
-    direction = getRandomDirection();
+    //direction = getRandomDirection();
     enemyDeath = false;
     unload = false;
     posEnemy = position;
@@ -12,118 +12,256 @@ MiniBoss::MiniBoss(Vector2 position, Texture2D &enemTexture, MiniBossType type) 
     enemyTexture = enemTexture;
     direction = 1;
     speed = 100.0f;
-    leftLimit = 1050.0f;
-    rightLimit = 1180.0f;
-    upLimit = 1580.0f;
-    downLimit = 1700.0f;
+    leftLimit = 31*32;
+    rightLimit = 38*32;
+    upLimit = 74*32;
+    downLimit = 76*32;
     moveDelay = 2.0f;
+    hasShield = true;
+    shieldHits = 0;
+    proj_p = std::make_shared<Projectile>();
+    canMove = true;
+    state = BossState::Idle;
+    frameRec = {0, 0, (float)enemyTexture.width / 48, (float)enemyTexture.height};
+    currentFrame = 0;
+    framesCounter = 0;
+    framesSpeed = 8;
+    plate1Pressed = false;
+    plate2Pressed = false;
+    if(enemyType == BOSSRED)
+    {
+        barHits = 15;
+    }
+
+}
+float Vector2Distance(Vector2 v1, Vector2 v2) {
+    return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
 }
 
-MiniBossDirection MiniBoss::getRandomDirection() {
-    return static_cast<MiniBossDirection>(std::rand() % 4);
+
+void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition) {
+    enemyRec = {posEnemy.x, posEnemy.y+10, 64,
+                54};
+    float newPosX = posEnemy.x;
+    float newPosY = posEnemy.y;
+
+    static int diagonalSteps = 0; // Zähler für Schritte in diagonalen Richtungen
+    Vector2 direction; // Bewegungsrichtung
+
+    switch (state) {
+        case BossState::Idle:
+            if (isPlayerInRange(playerPosition, 200)) {
+                std::cout << "Idle" << std::endl;
+                stateTimer += deltaTime;
+                if (stateTimer >= idleTime) {
+                    state = BossState::Attacking;
+                    stateTimer = 0;
+                }
+            }
+            break;
+
+        case BossState::Attacking:
+            if (isPlayerInRange(playerPosition, 200)) {
+                if (Vector2Distance(posEnemy, playerPosition) > 1.0f) {
+                    direction = { playerPosition.x - posEnemy.x, playerPosition.y - posEnemy.y };
+
+                    // Normalisiere die Richtung
+                    float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+                    if (length > 0.0f) {
+                        direction.x /= length;
+                        direction.y /= length;
+                    }
+
+                    // Bewege den Boss in beide Achsen
+                    newPosX += direction.x * speed * deltaTime;
+                    newPosY += direction.y * speed * deltaTime;
+
+                    // Berechne den Winkel in Grad
+                    float angle = atan2(direction.y, direction.x) * (180.0f / PI); // PI ist die Konstante für π
+
+                    // Setze die Richtung basierend auf der Bewegungsrichtung
+                    if (fabs(direction.x) > fabs(direction.y)) {
+                        currentDirection = (direction.x > 0) ? RIGHTEN : LEFTEN;
+                    } else if (fabs(direction.y) > fabs(direction.x)) {
+                        currentDirection = (direction.y > 0) ? DOWNEN : UPEN;
+                    } else {
+                        // Bei diagonaler Bewegung, überprüfe den Winkel
+                        if (angle >= 30.0f && angle <= 60.0f) {
+                            currentDirection = UP_RIGHT; // Animation für oben rechts
+                        } else if (angle <= -30.0f && angle >= -60.0f) {
+                            currentDirection = DOWN_LEFT; // Animation für unten links
+                        } else if (angle < 30.0f && angle > 0) {
+                            currentDirection = UP_RIGHT; // Animation für oben rechts
+                        } else if (angle > -30.0f && angle < 0) {
+                            currentDirection = DOWN_LEFT; // Animation für unten links
+                        }
+                    }
+                } else {
+                    state = BossState::Idle;
+                    stateTimer = 0;
+                }
+            }
+            break;
+
+        case BossState::Returning:
+            if (isPlayerInRange(playerPosition, 200)) {
+                if (Vector2Distance(posEnemy, {35 * 32, 11 * 32}) > 1.0f) {
+                    direction = { 35 * 32 - posEnemy.x, 11 * 32 - posEnemy.y };
+
+                    // Normalisiere die Richtung
+                    float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+                    if (length > 0.0f) {
+                        direction.x /= length;
+                        direction.y /= length;
+                    }
+
+                    // Bewege den Boss in beide Achsen
+                    newPosX += direction.x * speed * deltaTime;
+                    newPosY += direction.y * speed * deltaTime;
+
+                    // Berechne den Winkel in Grad
+                    float angle = atan2(direction.y, direction.x) * (180.0f / PI);
+
+                    // Setze die Richtung basierend auf der Bewegungsrichtung
+                    if (fabs(direction.x) > fabs(direction.y)) {
+                        currentDirection = (direction.x > 0) ? RIGHTEN : LEFTEN;
+                    } else if (fabs(direction.y) > fabs(direction.x)) {
+                        currentDirection = (direction.y > 0) ? DOWNEN : UPEN;
+                    } else {
+                        // Bei diagonaler Bewegung, überprüfe den Winkel
+                        if (angle >= 30.0f && angle <= 60.0f) {
+                            currentDirection = UP_RIGHT; // Animation für oben rechts
+                        } else if (angle <= -30.0f && angle >= -60.0f) {
+                            currentDirection = DOWN_LEFT; // Animation für unten links
+                        } else if (angle < 30.0f && angle > 0) {
+                            currentDirection = UP_RIGHT; // Animation für oben rechts
+                        } else if (angle > -30.0f && angle < 0) {
+                            currentDirection = DOWN_LEFT; // Animation für unten links
+                        }
+                    }
+                } else {
+                    state = BossState::Idle;
+                    stateTimer = 0;
+                }
+            }
+            break;
+    }
+
+            Rectangle newRec = {newPosX, newPosY, static_cast<float>(enemyTexture.width / 48),
+                                static_cast<float>(enemyTexture.height)};
+            for (const Rectangle &wallRec: currentGameState.wallRectangles) {
+                if (CheckCollisionRecs(newRec, wallRec)) {
+                    state = BossState::Returning; // Bei Kollision mit einer Wand zurückkehren
+                    break;
+                }
+            }
+            for (const Rectangle &doorRec: currentGameState.doorRectangles) {
+                if (CheckCollisionRecs(newRec, doorRec)) {
+                    state = BossState::Returning;
+                    break;
+                }
+            }
+            for (Stone &stone: Stone::stoneObjects) {
+                if (CheckCollisionRecs(newRec, stone.getRectangle())) {
+                    state = BossState::Returning;
+                    break;
+                }
+            }
+
+            if (!enemyDeath) {
+                posEnemy.x = newPosX;
+                posEnemy.y = newPosY;
+            }
+
+            // Animation update
+            framesCounter++; // Update counter
+
+            if (framesCounter >= (60 / framesSpeed)) {
+                framesCounter = 0;
+
+                if (enemyDeath) {
+                    if (currentFrame < 32) {
+                        currentFrame = 32;
+                    }
+                    currentFrame++;
+
+                    if (currentFrame > 34) {
+                        unload = true; // Ende der Death-Animation
+                    }
+                } else {
+                    currentFrame++;
+                    if (state == BossState::Idle) {
+                        if (currentFrame > 3) { // Reset bei 4 für Idle-Animation
+                            currentFrame = 0;
+                        }
+                    }
+                    if (state == BossState::Attacking || state == BossState::Returning) {
+                        if (currentDirection == RIGHTEN) {
+                            if (currentFrame > 27 || currentFrame < 24) {
+                                currentFrame = 24;
+                            }
+                        }
+                        if (currentDirection == LEFTEN) {
+                            if (currentFrame > 31 || currentFrame < 28) {
+                                currentFrame = 28;
+                            }
+                        }
+                        if (currentDirection == DOWNEN || currentDirection == DOWN_LEFT || currentDirection == DOWN_RIGHT) {
+                            if (currentFrame > 19 || currentFrame < 16) {
+                                currentFrame = 16;
+                            }
+                        }
+                        if (currentDirection == UPEN || currentDirection == UP_LEFT || currentDirection == UP_RIGHT) {
+                            if (currentFrame > 23 || currentFrame < 20) {
+                                currentFrame = 20;
+                            }
+                        }
+                    }
+                }
+            }
+
+            frameRec.x = (float) currentFrame * 64; // Update frame rectangle
+
+            if (getBossHits() == 15 && enemyType == BOSSRED) //wie viele hits ein enemy aushält
+            {
+                enemyDeath = true;
+            }
+            if (getBossHits() == 20 && enemyType == BOSSBLUE) {
+                enemyDeath = true;
+            }
+            if (enemyHits == 25 && enemyType == BOSSYELLOW) {
+                enemyDeath = true;
+            }
+
+
+            if (CheckCollisionRecs(MainCharacter::HitRec, enemyRec) && IsKeyPressed(KEY_SPACE)) {
+                bossGetsHit();
+                //hier cooldown einfügen
+            }
+
+            updateShield();
+
+    }
+
+
+void MiniBoss::findPath(Vector2 playerPosition) {
+    int playerX = static_cast<int>(playerPosition.x);
+    int playerY = static_cast<int>(playerPosition.y);
+    int bossX = static_cast<int>(posEnemy.x);
+    int bossY = static_cast<int>(posEnemy.y);
+    path = pathfinder.findPath(bossX, bossY, playerX, playerY);
+    pathIndex = 0;
 }
 
-
-void MiniBoss::updateBoss(float deltaTime)
-{
-    enemyRec = {posEnemy.x, posEnemy.y, (float)enemyTexture.width, (float)enemyTexture.height};
-
-    if (canMove) {
-        switch (direction) {
-            case LEFT:
-                posEnemy.x -= speed * deltaTime;
-                break;
-            case RIGHT:
-                posEnemy.x += speed * deltaTime;
-                break;
-            case UP:
-                posEnemy.y -= speed * deltaTime;
-                break;
-            case DOWN:
-                posEnemy.y += speed * deltaTime;
-                break;
-                case DIAGONALUPLEFT:
-                posEnemy.x -= speed * deltaTime;
-                posEnemy.y -= speed * deltaTime;
-                break;
-                case DIAGONALUPRIGHT:
-                posEnemy.x += speed * deltaTime;
-                posEnemy.y -= speed * deltaTime;
-                break;
-                case DIAGONALDOWNLEFT:
-                posEnemy.x -= speed * deltaTime;
-                posEnemy.y += speed * deltaTime;
-                break;
-                case DIAGONALDOWNRIGHT:
-                posEnemy.x += speed * deltaTime;
-                posEnemy.y += speed * deltaTime;
-                break;
-        }
-
-        if (posEnemy.x <= leftLimit) {
-            posEnemy.x = leftLimit;
-            direction = getRandomDirection();
-        } else if (posEnemy.x >= rightLimit) {
-            posEnemy.x = rightLimit;
-            direction = getRandomDirection();
-        } else if (posEnemy.y <= upLimit) {
-            posEnemy.y = upLimit;
-            direction = getRandomDirection();
-        } else if (posEnemy.y >= downLimit) {
-            posEnemy.y = downLimit;
-            direction = getRandomDirection();
-        }else if (posEnemy.x <= leftLimit && posEnemy.y <= upLimit) {
-            posEnemy.x = leftLimit;
-            posEnemy.y = upLimit;
-            direction = getRandomDirection();
-        }else if (posEnemy.x >= rightLimit && posEnemy.y <= upLimit) {
-            posEnemy.x = rightLimit;
-            posEnemy.y = upLimit;
-            direction = getRandomDirection();
-        }else if (posEnemy.x <= leftLimit && posEnemy.y >= downLimit) {
-            posEnemy.x = leftLimit;
-            posEnemy.y = downLimit;
-            direction = getRandomDirection();
-        }else if (posEnemy.x >= rightLimit && posEnemy.y >= downLimit) {
-            posEnemy.x = rightLimit;
-            posEnemy.y = downLimit;
-            direction = getRandomDirection();
-        }
-        moveTimer += deltaTime;
-        if (moveTimer >= moveDelay) {
-            canMove = false;
-            moveTimer = 0.0f; // Zurücksetzen des Timers für die nächste Bewegung
-        }
-    } else {
-        // Boss bleibt stehen
-        moveTimer += deltaTime;
-        if (moveTimer >= moveDelay) {
-            canMove = true;
-            moveTimer = 0.0f; // Zurücksetzen des Timers für die nächste Bewegung
-            direction = getRandomDirection(); // Neue Richtung nach der Pause wählen
-        }
-    }
-
-    if(getBossHits() == 15 && enemyType == BOSSRED) //wie viele hits ein enemy aushält
-    {
-        enemyDeath = true;
-    }
-    if(getBossHits() == 20 && enemyType == BOSSBLUE)
-    {
-        enemyDeath = true;
-    }
-    if(enemyHits == 25 && enemyType == BOSSYELLOW)
-    {
-        enemyDeath = true;
-    }
-
-
+bool MiniBoss::isPlayerInRange(Vector2 playerPosition, float range) {
+    return Vector2Distance(posEnemy, playerPosition) <= range;
 }
 
 void MiniBoss::drawBoss()
 {
-    DrawTextureV(enemyTexture, posEnemy, WHITE);
-    DrawRectangleLines(posEnemy.x, posEnemy.y, enemyTexture.width, enemyTexture.height, RED);
+    DrawTextureRec(enemyTexture, frameRec, posEnemy, WHITE);
+    DrawRectangleLines(enemyRec.x, enemyRec.y, enemyRec.width, enemyRec.height, RED);
+
 }
 
 Rectangle MiniBoss::getBossRec()
@@ -147,7 +285,12 @@ bool MiniBoss::getUnload()
 
 void MiniBoss::bossGetsHit()
 {
-    enemyHits++;
+    if(!hasShield)
+    {
+        enemyHits++;
+        barHits--;
+        std::cout << "Enemy hits: " << enemyHits << std::endl;
+    }
 }
 int MiniBoss::getBossHits()
 {
@@ -158,3 +301,48 @@ Vector2 MiniBoss::getPosition()
 {
     return posEnemy;
 }
+
+void MiniBoss::updateShield()
+{
+    if(hasShield && PressurePlate::pressurePlates[3].isPressed() && !plate1Pressed)
+    {
+        shieldHits += 1;
+        plate1Pressed = true;
+        std::cout << "Shield hits: " << shieldHits << std::endl;
+    }
+    if(hasShield && PressurePlate::pressurePlates[4].isPressed() && !plate2Pressed)
+    {
+        shieldHits += 1;
+        plate2Pressed = true;
+        std::cout << "Shield hits: " << shieldHits << std::endl;
+    }
+    if(shieldHits >= 2)
+    {
+        hasShield = false;
+    }
+}
+
+int MiniBoss::getShieldHits()
+{
+    return shieldHits;
+}
+
+void MiniBoss::drawShieldBar()
+{
+    if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400))
+    {
+        if(shieldHits == 1)
+        {
+            DrawRectangle(150, 20, 100, 10, DARKGRAY);
+        }
+        if(shieldHits == 0)
+        {
+            DrawRectangle(260, 20, 100, 10, DARKGRAY);
+            DrawRectangle(150, 20, 100, 10, DARKGRAY);
+        }
+
+        DrawRectangle(173, 40, 165, 10, DARKGRAY);
+        DrawRectangle(173, 40, barHits * 11, 10, RED);
+    }
+}
+
