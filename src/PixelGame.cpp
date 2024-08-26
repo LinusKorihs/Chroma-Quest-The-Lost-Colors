@@ -181,7 +181,7 @@ void PixelGame::openDoors()
             eraseDoor(35*32,68*32);
         }
 
-        if(machines[1].isFilled() && machines[2].isFilled() || PressurePlate::pressurePlates[5].isPressed())
+        if(machines[1].isFilled() && machines[2].isFilled())
         {
             Door::openDoors[1].draw();
             eraseDoor(35*32,48*32);
@@ -211,6 +211,32 @@ void PixelGame::drawObjects()
         }
 
         Stone::drawStone = 1;
+    }
+    if(PressurePlate::pressurePlates[5].isPressed()){
+        Stone::roomOne = true;
+        Stone::resetStones();
+        Stone::roomOne = false;
+        PressurePlate::pressurePlates[5].setPressed(false);
+    }
+    if(PressurePlate::pressurePlates[6].isPressed()){
+        Stone::roomTwo = true;
+        Stone::resetStones();
+        Stone::roomTwo = false;
+        PressurePlate::pressurePlates[6].setPressed(false);
+    }
+    if(PressurePlate::pressurePlates[7].isPressed() || PressurePlate::pressurePlates[8].isPressed()){
+        Stone::roomThree = true;
+        Stone::resetStones();
+        Stone::roomThree = false;
+        PressurePlate::pressurePlates[7].setPressed(false);
+        PressurePlate::pressurePlates[8].setPressed(false);
+    }
+    if(PressurePlate::pressurePlates[9].isPressed() || PressurePlate::pressurePlates[10].isPressed()){
+        Stone::roomFour = true;
+        Stone::resetStones();
+        Stone::roomFour = false;
+        PressurePlate::pressurePlates[9].setPressed(false);
+        PressurePlate::pressurePlates[10].setPressed(false);
     }
 }
 

@@ -5,6 +5,10 @@
 int Stone::drawStone = 0;
 
 std::vector<Stone> Stone::stoneObjects;
+bool Stone::roomOne = false;
+bool Stone::roomTwo = false;
+bool Stone::roomThree = false;
+bool Stone::roomFour = false;
 
 Stone::Stone(float stoneX, float stoneY, float stoneSize, Texture2D& stoneTexture, Rectangle& sourceRectangle)
         : stonePositionX(stoneX), stonePositionY(stoneY), stoneSize(stoneSize), stoneTexture(stoneTexture),
@@ -128,6 +132,150 @@ bool Stone::checkCollisionWithStones(float newX, float newY) const
     return false;
 }
 
+void Stone::resetStones() {
+    if(roomOne)
+    {
+        Stone::stoneObjects[0].stonePositionX = 38*32;
+        Stone::stoneObjects[0].stonePositionY = 74*32;
+        Stone::stoneObjects[1].stonePositionX = 38*32;
+        Stone::stoneObjects[1].stonePositionY = 75*32;
+        Stone::stoneObjects[2].stonePositionX = 38*32;
+        Stone::stoneObjects[2].stonePositionY = 76*32;
+        Stone::stoneObjects[3].stonePositionX = 32*32;
+        Stone::stoneObjects[3].stonePositionY = 74*32;
+        Stone::stoneObjects[4].stonePositionX = 32*32;
+        Stone::stoneObjects[4].stonePositionY = 75*32;
+        Stone::stoneObjects[5].stonePositionX = 32*32;
+        Stone::stoneObjects[5].stonePositionY = 76*32;
+        Stone::stoneObjects[6].stonePositionX = 28*32;
+        Stone::stoneObjects[6].stonePositionY = 74*32;
+        Stone::stoneObjects[7].stonePositionX = 28*32;
+        Stone::stoneObjects[7].stonePositionY = 76*32;
+        Stone::stoneObjects[8].stonePositionX = 27*32;
+        Stone::stoneObjects[8].stonePositionY = 73*32;
+        Stone::stoneObjects[9].stonePositionX = 25*32;
+        Stone::stoneObjects[9].stonePositionY = 73*32;
+        Stone::stoneObjects[10].stonePositionX = 23*32;
+        Stone::stoneObjects[10].stonePositionY = 73*32;
+        Stone::stoneObjects[11].stonePositionX = 23*32;
+        Stone::stoneObjects[11].stonePositionY = 75*32;
+        Stone::stoneObjects[12].stonePositionX = 23*32;
+        Stone::stoneObjects[12].stonePositionY = 77*32;
+        Stone::stoneObjects[13].stonePositionX = 25*32;
+        Stone::stoneObjects[13].stonePositionY = 77*32;
+        Stone::stoneObjects[14].stonePositionX = 27*32;
+        Stone::stoneObjects[14].stonePositionY = 77*32;
+
+    }
+    if(roomTwo)
+    {
+        Stone::stoneObjects[15].stonePositionX = 38*32;
+        Stone::stoneObjects[15].stonePositionY = 57*32;
+        Stone::stoneObjects[16].stonePositionX = 38*32;
+        Stone::stoneObjects[16].stonePositionY = 56*32;
+        Stone::stoneObjects[17].stonePositionX = 38*32;
+        Stone::stoneObjects[17].stonePositionY = 55*32;
+        Stone::stoneObjects[18].stonePositionX = 32*32;
+        Stone::stoneObjects[18].stonePositionY = 57*32;
+        Stone::stoneObjects[19].stonePositionX = 32*32;
+        Stone::stoneObjects[19].stonePositionY = 56*32;
+        Stone::stoneObjects[20].stonePositionX = 32*32;
+        Stone::stoneObjects[20].stonePositionY = 55*32;
+
+    }
+    if(roomThree)
+    {
+        Stone::stoneObjects[45].stonePositionX = 30*32;
+        Stone::stoneObjects[45].stonePositionY = 41*32;
+        Stone::stoneObjects[46].stonePositionX = 25*32;
+        Stone::stoneObjects[46].stonePositionY = 41*32;
+        Stone::stoneObjects[47].stonePositionX = 20*32;
+        Stone::stoneObjects[47].stonePositionY = 41*32;
+        Stone::stoneObjects[48].stonePositionX = 29*32;
+        Stone::stoneObjects[48].stonePositionY = 39*32;
+        Stone::stoneObjects[49].stonePositionX = 23*32;
+        Stone::stoneObjects[49].stonePositionY = 39*32;
+        Stone::stoneObjects[50].stonePositionX = 21*32;
+        Stone::stoneObjects[50].stonePositionY = 39*32;
+        Stone::stoneObjects[51].stonePositionX = 16*32;
+        Stone::stoneObjects[51].stonePositionY = 39*32;
+        Stone::stoneObjects[52].stonePositionX = 14*32;
+        Stone::stoneObjects[52].stonePositionY = 39*32;
+        Stone::stoneObjects[53].stonePositionX = 15*32;
+        Stone::stoneObjects[53].stonePositionY = 40*32;
+        Stone::stoneObjects[54].stonePositionX = 22*32;
+        Stone::stoneObjects[54].stonePositionY = 40*32;
+        Stone::stoneObjects[55].stonePositionX = 17*32;
+        Stone::stoneObjects[55].stonePositionY = 38*32;
+        Stone::stoneObjects[56].stonePositionX = 13*32;
+        Stone::stoneObjects[56].stonePositionY = 38*32;
+        Stone::stoneObjects[57].stonePositionX = 31*32;
+        Stone::stoneObjects[57].stonePositionY = 37*32;
+        Stone::stoneObjects[58].stonePositionX = 27*32;
+        Stone::stoneObjects[58].stonePositionY = 37*32;
+        Stone::stoneObjects[59].stonePositionX = 24*32;
+        Stone::stoneObjects[59].stonePositionY = 37*32;
+        Stone::stoneObjects[60].stonePositionX = 20*32;
+        Stone::stoneObjects[60].stonePositionY = 37*32;
+        Stone::stoneObjects[61].stonePositionX = 14*32;
+        Stone::stoneObjects[61].stonePositionY = 37*32;
+        Stone::stoneObjects[62].stonePositionX = 17*32;
+        Stone::stoneObjects[62].stonePositionY = 36*32;
+        Stone::stoneObjects[63].stonePositionX = 15*32;
+        Stone::stoneObjects[63].stonePositionY = 36*32;
+        Stone::stoneObjects[64].stonePositionX = 29*32;
+        Stone::stoneObjects[64].stonePositionY = 35*32;
+        Stone::stoneObjects[65].stonePositionX = 16*32;
+        Stone::stoneObjects[65].stonePositionY = 35*32;
+        Stone::stoneObjects[66].stonePositionX = 21*32;
+        Stone::stoneObjects[66].stonePositionY = 34*32;
+    }
+
+    if(roomFour)
+    {
+        Stone::stoneObjects[24].stonePositionX = 64*32;
+        Stone::stoneObjects[24].stonePositionY = 41*32;
+        Stone::stoneObjects[25].stonePositionX = 60*32;
+        Stone::stoneObjects[25].stonePositionY = 41*32;
+        Stone::stoneObjects[26].stonePositionX = 58*32;
+        Stone::stoneObjects[26].stonePositionY = 41*32;
+        Stone::stoneObjects[27].stonePositionX = 54*32;
+        Stone::stoneObjects[27].stonePositionY = 41*32;
+        Stone::stoneObjects[28].stonePositionX = 61*32;
+        Stone::stoneObjects[28].stonePositionY = 42*32;
+        Stone::stoneObjects[29].stonePositionX = 59*32;
+        Stone::stoneObjects[29].stonePositionY = 42*32;
+        Stone::stoneObjects[30].stonePositionX = 57*32;
+        Stone::stoneObjects[30].stonePositionY = 42*32;
+        Stone::stoneObjects[31].stonePositionX = 60*32;
+        Stone::stoneObjects[31].stonePositionY = 40*32;
+        Stone::stoneObjects[32].stonePositionX = 58*32;
+        Stone::stoneObjects[32].stonePositionY = 40*32;
+        Stone::stoneObjects[33].stonePositionX = 63*32;
+        Stone::stoneObjects[33].stonePositionY = 39*32;
+        Stone::stoneObjects[34].stonePositionX = 62*32;
+        Stone::stoneObjects[34].stonePositionY = 39*32;
+        Stone::stoneObjects[35].stonePositionX = 56*32;
+        Stone::stoneObjects[35].stonePositionY = 39*32;
+        Stone::stoneObjects[36].stonePositionX = 55*32;
+        Stone::stoneObjects[36].stonePositionY = 39*32;
+        Stone::stoneObjects[37].stonePositionX = 64*32;
+        Stone::stoneObjects[37].stonePositionY = 38*32;
+        Stone::stoneObjects[38].stonePositionX = 54*32;
+        Stone::stoneObjects[38].stonePositionY = 38*32;
+        Stone::stoneObjects[39].stonePositionX = 62*32;
+        Stone::stoneObjects[39].stonePositionY = 37*32;
+        Stone::stoneObjects[40].stonePositionX = 56*32;
+        Stone::stoneObjects[40].stonePositionY = 37*32;
+        Stone::stoneObjects[41].stonePositionX = 63*32;
+        Stone::stoneObjects[41].stonePositionY = 36*32;
+        Stone::stoneObjects[42].stonePositionX = 55*32;
+        Stone::stoneObjects[42].stonePositionY = 36*32;
+        Stone::stoneObjects[43].stonePositionX = 59*32;
+        Stone::stoneObjects[43].stonePositionY = 35*32;
+    }
+}
+
 void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect)
 {
     int multiple = 32;
@@ -139,6 +287,7 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 75, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 76, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 28, multiple * 74, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 28, multiple * 76, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 27, multiple * 73, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 25, multiple * 73, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 23, multiple * 73, multiple, stoneTexture, stoneSourceRect);
@@ -157,6 +306,7 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 14, multiple * 56, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 61, multiple * 56, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 51, multiple * 55, multiple, stoneTexture, stoneSourceRect);
+
     Stone::stoneObjects.emplace_back(multiple * 64, multiple * 41, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 60, multiple * 41, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 58, multiple * 41, multiple, stoneTexture, stoneSourceRect);
@@ -177,7 +327,9 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 63, multiple * 36, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 55, multiple * 36, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 59, multiple * 35, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 45, multiple * 36, multiple, stoneTexture, stoneSourceRect);
+
+    Stone::stoneObjects.emplace_back(multiple * 45, multiple * 37, multiple, stoneTexture, stoneSourceRect);
+
     Stone::stoneObjects.emplace_back(multiple * 30, multiple * 41, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 25, multiple * 41, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 20, multiple * 41, multiple, stoneTexture, stoneSourceRect);
@@ -200,6 +352,7 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 29, multiple * 35, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 16, multiple * 35, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 21, multiple * 34, multiple, stoneTexture, stoneSourceRect);
+
     Stone::stoneObjects.emplace_back(multiple * 22, multiple * 28, multiple, stoneTexture, stoneSourceRect);
 
     Stone::stoneObjects.emplace_back(multiple * 29, multiple * 10, multiple, stoneTexture, stoneSourceRect);
@@ -311,6 +464,14 @@ void PressurePlate::initPlates(Texture2D &plateTexture)
 
     pressurePlates.emplace_back(28*32, 10*32, 32, plateTexture); //boss links
     pressurePlates.emplace_back(40*32, 14*32, 32, plateTexture); // boss rechts
+
+    pressurePlates.emplace_back(34*32, 79*32, 32, plateTexture); //reset 1. raum
+    pressurePlates.emplace_back(34*32, 63*32, 32, plateTexture); //reset 2. raum
+    pressurePlates.emplace_back(13*32, 41*32, 32, plateTexture); //reset 3. raum
+    pressurePlates.emplace_back(32*32, 40*32, 32, plateTexture); //reset 4. raum
+    pressurePlates.emplace_back(53*32, 36*32, 32, plateTexture); //reset 5. raum
+    pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture); //reset 5. raum
+
 
 }
 

@@ -19,6 +19,12 @@ public:
     static bool stoneCollision;
     static int drawStone;
     void drawHitboxes() const;
+    static void resetStones();
+
+    static bool roomOne;
+    static bool roomTwo;
+    static bool roomThree;
+    static bool roomFour;
 
 private:
     float stonePositionX;
@@ -34,6 +40,7 @@ private:
     float startY;
     float startTime;
     float duration;
+
 
 
 

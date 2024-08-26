@@ -13,6 +13,7 @@
 #include "MiniBoss.h"
 #include "Pathfinder.h"
 #include "Comments.h"
+
 class MiniBoss;
 
 class PixelGame

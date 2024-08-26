@@ -252,12 +252,12 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
     DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
     /*DrawRectangleLines(
-            playerRec.x,
-            playerRec.y,
-            playerRec.width,
-            playerRec.height,
+            HitRec.x,
+            HitRec.y,
+            HitRec.width,
+            HitRec.height,
             PURPLE
-    ); */
+    );*/
 }
 
 float calculateSquaredDistance(float x1, float y1, float x2, float y2)
