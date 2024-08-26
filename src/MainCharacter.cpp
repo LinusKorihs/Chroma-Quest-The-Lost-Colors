@@ -63,12 +63,31 @@ void MainCharacter::updateRec()
             32
     };
     //Rec zum hitten von enemies
+
     HitRec = {
             playerPosX,
             playerPosY,
             32,
             32
     }; */
+
+    if(lastDir == LASTRIGHT || lastDir == LASTLEFT) {
+        HitRec = {
+                playerPosX - 4,
+                playerPosY + 12,
+                40,
+                18
+        };
+    }
+    if(lastDir == LASTUP || lastDir == LASTDOWN){
+        HitRec = {
+                playerPosX+4,
+                playerPosY-4,
+                25,
+                40
+        };
+    }
+
 }
 
 void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)

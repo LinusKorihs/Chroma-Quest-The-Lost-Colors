@@ -85,7 +85,7 @@ void Enemy::updateEnemy(float deltaTime)
             }
         }
 
-        frameRec.x = (float) currentFrame * (float) enTexture.width / 24; //weil 8 pro Zeile
+        frameRec.x = (float) currentFrame * (float) enTexture.width / 24;
     }
 
     switch (direction) {

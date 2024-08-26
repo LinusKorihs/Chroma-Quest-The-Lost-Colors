@@ -4,6 +4,7 @@
 #include "PixelGame.h"
 #include "EnemyManager.h"
 #include "Projectile.h"
+#include "MiniBoss.h"
 
 enum lastDirection {
     LASTUP,
@@ -77,4 +78,5 @@ private:
     static punchDir punch;
 
     static lastDirection lastDir;
+
 };

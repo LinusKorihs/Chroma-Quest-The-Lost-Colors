@@ -27,6 +27,15 @@ public:
 
     static void runGameOnce(tson::Map &Map);
 
+    static void eraseDoor(int targetX, int targetY);
+    static void openDoors();
+    static void closedDoorTransition();
+    static void checkPressurePlates();
+
+
+    static Pathfinder* pathfinder;
+    static MiniBoss* miniboss;
+
     static void rectangle();
 
 private:

@@ -28,7 +28,8 @@ void TextureManager::init()
     m_textures["SlimeRed"] = LoadTexture("assets/graphics/Enemies/slimeRedAnim.png");
     m_textures["OpenWoodDoor2"] = LoadTexture("assets/graphics/Tiles/OpenWoodDoorDown.png");
     m_textures["SlimeEnemy"] = LoadTexture("assets/graphics/Enemies/TestSlime.png");
-    m_textures["BossRed"] = LoadTexture("assets/graphics/Items/Frucht.png");
+    m_textures["BossRed"] = LoadTexture("assets/graphics/Enemies/redBoss.png");
+    m_textures["speechBubble"] = LoadTexture("assets/graphics/HUD/speechBubble.png");
     //m_textures["TileSet"] = LoadTexture("assets/graphics/TileSet & TileMap/TileSet.png");
     m_textures["TileSet"] = LoadTexture("assets/graphics/newTileset&Tilemap/newTileSet.png");
     m_textures["StartGameButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonBlue.png");

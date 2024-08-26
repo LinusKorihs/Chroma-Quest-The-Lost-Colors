@@ -48,6 +48,7 @@ public:
     PressurePlate(float x, float y, float size, Texture2D& texture);
 
     void draw() const;
+    void setPressed(bool pressed);
     Rectangle getRectangle() const;
     bool isPressed() const;
     void update();

@@ -142,5 +142,19 @@ void RoomChanger::setTargetPos()
         targetPosition = {41*32-18, 75*32};
     }
 
+    if(MainCharacter::playerPosX > 6*32 && MainCharacter::playerPosX < 9*32 &&  40*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 36*32)
+    {
+        targetPosition = {12*32+18, 38*32};
+    }
+
+    if(MainCharacter::playerPosX > 69*32 && MainCharacter::playerPosX < 72*32 &&  43*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 39*32)
+    {
+        targetPosition = {66*32-18, 41*32};
+    }
+
+    if(MainCharacter::playerPosX > 34*32 && MainCharacter::playerPosX < 37*32 &&  22*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 19*32)
+    {
+        targetPosition = {35*32, 48*32+18};
+    }
 
 }

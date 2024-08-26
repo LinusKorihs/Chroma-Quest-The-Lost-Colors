@@ -1,6 +1,9 @@
 #include "GameState.h"
 
 LanguageManager::Language LanguageManager::currentLanguage = LanguageManager::Language::English;
+/*std::vector<Rectangle> GameState::wallRectangles;
+std::vector<Rectangle> GameState::doorRectangles;*/
+
 
 void GameState::changeGameState(MenuState newState)
 {

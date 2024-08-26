@@ -202,6 +202,23 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 21, multiple * 34, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 22, multiple * 28, multiple, stoneTexture, stoneSourceRect);
 
+    Stone::stoneObjects.emplace_back(multiple * 29, multiple * 10, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 27, multiple * 10, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 25, multiple * 10, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 41, multiple * 10, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 43, multiple * 10, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 45, multiple * 10, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 27, multiple * 11, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 43, multiple * 11, multiple, stoneTexture, stoneSourceRect);
+
+    //test steine für bossraum
+    Stone::stoneObjects.emplace_back(multiple * 40, multiple * 14, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 30, multiple * 14, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 32, multiple * 15, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 38, multiple * 15, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 28, multiple * 12, multiple, stoneTexture, stoneSourceRect);
+    Stone::stoneObjects.emplace_back(multiple * 42, multiple * 12, multiple, stoneTexture, stoneSourceRect);
+
 
 
 }
@@ -288,7 +305,18 @@ void MainCharacter::drawHitboxes() const
 
 void PressurePlate::initPlates(Texture2D &plateTexture)
 {
-    pressurePlates.emplace_back(800, 2400, 32, plateTexture);
+    pressurePlates.emplace_back(800, 2400, 32, plateTexture);//1. raum
+    pressurePlates.emplace_back(22*32, 37*32, 32, plateTexture);//raum links
+    pressurePlates.emplace_back(59*32, 37*32, 32, plateTexture);//raum rechts
+
+    pressurePlates.emplace_back(28*32, 10*32, 32, plateTexture); //boss links
+    pressurePlates.emplace_back(40*32, 14*32, 32, plateTexture); // boss rechts
+
+}
+
+void PressurePlate::setPressed(bool pressed) {
+    this->pressed = pressed;
+
 }
 
 
@@ -301,7 +329,13 @@ void Door::draw()
 {
     if (!animationFinished) {
         frameCounter++;
-        int framesPerStep = 4; // Anzahl Frames pro Animationsschritt
+        int framesPerStep;
+        if(doorNumber == 1){
+            framesPerStep = 8;
+        }
+        else {
+            framesPerStep = 20; // Anzahl Frames pro Animationsschritt
+        }
 
         if (frameCounter >= framesPerStep) {
             currentStep++;
@@ -382,14 +416,16 @@ void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D
 
     int multiple = 32;
     openDoors.emplace_back(1, doorTexture1, 35*multiple, 68*multiple,1,0); //raum 1 tür oben
-    openDoors.emplace_back(1, doorTexture2, 35*multiple, 48*multiple,1,0); //raum 2 tür oben
+    openDoors.emplace_back(1, doorTexture1, 35*multiple, 48*multiple,1,0); //raum 2 tür oben
 
     openDoors.emplace_back(1, doorTexture2, 41*multiple, 75*multiple,4,0); //raum 1 tür rechts
     openDoors.emplace_back(1, doorTexture3, 45*multiple, 75*multiple,3,0); //nebenraum 1 tür links
     openDoors.emplace_back(1, doorTexture3, 12*multiple, 38*multiple,3,0); //raum 4 tür links
     openDoors.emplace_back(1, doorTexture3, 8*multiple, 38*multiple,4,0); //nebenraum 4 tür rechts
-    openDoors.emplace_back(1, doorTexture3, 66*multiple, 41*multiple,4,0); //raum 5 tür rechts
-    openDoors.emplace_back(1, doorTexture3, 70*multiple, 41*multiple,3,0); //nebenraum 5 tür links
+    openDoors.emplace_back(1, doorTexture2, 66*multiple, 41*multiple,4,0); //raum 5 tür rechts
+    openDoors.emplace_back(0, doorTexture3, 70*multiple, 41*multiple,3,0); //nebenraum 5 tür links
+    openDoors.emplace_back(1, doorTexture3, 12*multiple, 38*multiple,3,0); //nebenraum 5 tür links
+    openDoors.emplace_back(0, doorTexture2, 8*multiple, 38*multiple,4,0); //nebenraum 5 tür links
 
     openDoors.emplace_back(0, doorTexture4, 35*multiple, 82*multiple,2,0); //raum 4 tür unten
     openDoors.emplace_back(0, doorTexture4, 35*multiple, 64*multiple,2,0); // raum 2 tür unten
