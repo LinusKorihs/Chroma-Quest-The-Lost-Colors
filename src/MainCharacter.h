@@ -60,6 +60,7 @@ public:
     Rectangle getRectangle() const;
     static Vector2 getPosition();
     static void updateRec();
+    static void checkCollisions();
 
 private:
     static std::shared_ptr<Projectile> projectile_p;
@@ -81,5 +82,5 @@ private:
 
     static bool canReceiveDamage;
     static bool canGiveDamage;
-
+    static Rectangle playerEnemyRec;
 };

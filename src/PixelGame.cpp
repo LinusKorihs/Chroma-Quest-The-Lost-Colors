@@ -55,6 +55,7 @@ void PixelGame::gameInit()
     Texture2D doorTexture2 = TextureManager::getTexture("StoneDoorR");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
     Texture2D machineTexture = TextureManager::getTexture("Machine");
+    Texture2D chestTexture = TextureManager::getTexture("Chest");
     //pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
     //pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
     machines.emplace_back(32 * 36, 32 * 69, 32 * 47, 32 * 75, machineTexture, 0);
@@ -100,6 +101,7 @@ void PixelGame::gameInit()
 
     Stone::initializeStones(stoneTexture, stoneSourceRect);
     PressurePlate::initPlates(plateTexture);
+    Chest::init(chestTexture);
 }
 
 void PixelGame::checkPressurePlates()
@@ -238,6 +240,10 @@ void PixelGame::drawObjects()
         PressurePlate::pressurePlates[9].setPressed(false);
         PressurePlate::pressurePlates[10].setPressed(false);
     }
+    for(Chest& chest : Chest::chests)
+    {
+        chest.draw();
+    }
 }
 
 void PixelGame::eraseDoor(int targetX, int targetY)
@@ -272,6 +278,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     DrawMap::drawTiles(Map, TextureManager::m_textures["TileSet"]);
 
     openDoors();
+
 
     for (Stone stone: Stone::stoneObjects)
     {
@@ -313,6 +320,10 @@ void PixelGame::gameLoop(tson::Map &Map)
     MainCharacter::receiveDamage();
 
     closedDoorTransition();
+    for(Chest& chest : Chest::chests)
+    {
+        chest.update();
+    }
 
     for (Door& doors : Door::openDoors)
     {

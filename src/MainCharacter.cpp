@@ -29,6 +29,7 @@ lastDirection MainCharacter::lastDir;
 punchDir MainCharacter::punch = none;
 bool MainCharacter::animationFinished = false;
 bool MainCharacter::canGiveDamage = true;
+Rectangle MainCharacter::playerEnemyRec;
 
 void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
 {
@@ -85,6 +86,12 @@ void MainCharacter::updateRec()
                 40
         };
     }
+    playerEnemyRec = {
+            playerPosX,
+            playerPosY,
+            32,
+            32
+    };
 }
 
 void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
@@ -245,6 +252,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
         }
     }
+    checkCollisions();
 
 }
 
@@ -254,10 +262,10 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
     DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
     /*DrawRectangleLines(
-            HitRec.x,
-            HitRec.y,
-            HitRec.width,
-            HitRec.height,
+            playerRec.x,
+            playerRec.y,
+            playerRec.width,
+            playerRec.height,
             PURPLE
     );*/
 }
@@ -315,10 +323,9 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
             return;
         }
     }
-
     for (const auto &enemy: enemyManager->enemies)
     {
-        if (CheckCollisionRecs(newRec, enemy->getHitRec()))
+        if (CheckCollisionRecs(newRec, {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,enemy->getHitRec().height - 10}))
         {
             return;
         }
@@ -336,6 +343,8 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         }
     }
 
+    checkCollisions();
+
     if (nearestStone)
     {
         nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles);
@@ -347,23 +356,6 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         playerPosY = newPositionY;
     }
 
-    for (const auto &enemy: enemyManager->enemies)
-    {
-        if (CheckCollisionRecs(playerRec, enemy->getHitRec()))
-        {
-            if(playerPosY > enemy->getPosition().y && enemy->getDirection() == DOWNEN && playerPosX >= enemy->getPosition().x && playerPosX < enemy->getPosition().x+14)
-
-            {
-                enemy->setPos({enemy->getPosition().x, playerPosY -16});
-                enemy->setDirection(UPEN);
-            }
-            if(playerPosY < enemy->getPosition().y && enemy->getDirection() == UPEN && playerPosX >= enemy->getPosition().x && playerPosX < enemy->getPosition().x+14)
-            {
-                enemy->setPos({enemy->getPosition().x, playerPosY+22});
-                enemy->setDirection(DOWNEN);
-            }
-        }
-    }
     // Update all stones
     for (Stone &stone : Stone::stoneObjects)
     {
@@ -393,6 +385,28 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         }
     }
 }
+
+void MainCharacter::checkCollisions()
+{
+    for (const auto &enemy: enemyManager->enemies)
+    {
+        if (CheckCollisionRecs(playerEnemyRec, enemy->getRec()))
+        {
+            std::cout << "collision" << std::endl;
+            if(playerPosY > enemy->getPosition().y +16 && enemy->getDirection() == DOWNEN && playerPosX >= enemy->getPosition().x -16  && playerPosX <= enemy->getPosition().x+14)
+            {
+                enemy->setPos({enemy->getPosition().x, playerPosY -32});
+                enemy->setDirection(UPEN);
+            }
+            if(playerPosY < enemy->getPosition().y-16 && enemy->getDirection() == UPEN && playerPosX >= enemy->getPosition().x -16 && playerPosX < enemy->getPosition().x+14)
+            {
+                enemy->setPos({enemy->getPosition().x, playerPosY+22});
+                enemy->setDirection(DOWNEN);
+            }
+        }
+    }
+}
+
 
 void MainCharacter::playerDeath()
 {

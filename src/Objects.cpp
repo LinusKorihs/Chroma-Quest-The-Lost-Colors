@@ -377,15 +377,25 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
 }
 std::vector<PressurePlate> PressurePlate::pressurePlates;
 
-PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture)
-        : platePositionX(x), platePositionY(y), plateSize(size), plateTexture(texture), pressed(false)
+PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture, bool color)
+        : platePositionX(x), platePositionY(y), plateSize(size), plateTexture(texture), pressed(false), color(color)
 {
 }
 
 void PressurePlate::draw() const
 {
-    Texture2D plateTexture = pressed ? TextureManager::getTexture("PlatePressed") : TextureManager::getTexture("PlateNormal");
-    DrawTexture(plateTexture, platePositionX, platePositionY, WHITE);
+    if(!color) {
+        Texture2D plateTexture = pressed ? TextureManager::getTexture("PlatePressed") : TextureManager::getTexture(
+                "PlateNormal");
+        DrawTexture(plateTexture, platePositionX, platePositionY, WHITE);
+    }else{
+        Texture2D plateTexture = TextureManager::getTexture("RedButton");
+        if(!pressed){
+            DrawTextureRec(plateTexture, {0,0,32,32},{platePositionX, platePositionY}, WHITE);
+        }else{
+            DrawTextureRec(plateTexture, {32,0,32,32},{platePositionX, platePositionY}, WHITE);
+        }
+    }
 }
 
 Rectangle PressurePlate::getRectangle() const
@@ -458,19 +468,19 @@ void MainCharacter::drawHitboxes() const
 
 void PressurePlate::initPlates(Texture2D &plateTexture)
 {
-    pressurePlates.emplace_back(800, 2400, 32, plateTexture);//1. raum
-    pressurePlates.emplace_back(22*32, 37*32, 32, plateTexture);//raum links
-    pressurePlates.emplace_back(59*32, 37*32, 32, plateTexture);//raum rechts
+    pressurePlates.emplace_back(800, 2400, 32, plateTexture,false);//1. raum
+    pressurePlates.emplace_back(22*32, 37*32, 32, plateTexture,false);//raum links
+    pressurePlates.emplace_back(59*32, 37*32, 32, plateTexture,false);//raum rechts
 
-    pressurePlates.emplace_back(28*32, 10*32, 32, plateTexture); //boss links
-    pressurePlates.emplace_back(40*32, 14*32, 32, plateTexture); // boss rechts
+    pressurePlates.emplace_back(28*32, 10*32, 32, plateTexture,false); //boss links
+    pressurePlates.emplace_back(40*32, 14*32, 32, plateTexture,false); // boss rechts
 
-    pressurePlates.emplace_back(34*32, 79*32, 32, plateTexture); //reset 1. raum
-    pressurePlates.emplace_back(34*32, 63*32, 32, plateTexture); //reset 2. raum
-    pressurePlates.emplace_back(13*32, 41*32, 32, plateTexture); //reset 3. raum
-    pressurePlates.emplace_back(32*32, 40*32, 32, plateTexture); //reset 4. raum
-    pressurePlates.emplace_back(53*32, 36*32, 32, plateTexture); //reset 5. raum
-    pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture); //reset 5. raum
+    pressurePlates.emplace_back(35*32, 79*32, 32, plateTexture,true); //reset 1. raum
+    pressurePlates.emplace_back(35*32, 61*32, 32, plateTexture,true); //reset 2. raum
+    pressurePlates.emplace_back(13*32, 41*32, 32, plateTexture,true); //reset 3. raum
+    pressurePlates.emplace_back(32*32, 40*32, 32, plateTexture,true); //reset 4. raum
+    pressurePlates.emplace_back(53*32, 36*32, 32, plateTexture,true); //reset 5. raum
+    pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture,true); //reset 5. raum
 
 
 }
@@ -659,7 +669,7 @@ void Machine::drawOrb()
 
 void Machine::update()
 {
-    if(CheckCollisionRecs(machineRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E) && pickedUp)
+    if(CheckCollisionRecs(machineRec, MainCharacter::HitRec) && IsKeyPressed(KEY_E) && pickedUp)
     {
         filled = true;
     }
@@ -679,4 +689,57 @@ bool Machine::isFilled()
 bool Machine::isPickedUp()
 {
     return pickedUp;
+}
+
+std::vector<Chest> Chest::chests;
+
+Chest::Chest(float cposX, float cposY, Texture2D texture)
+{
+    chestPositionX = cposX;
+    chestPositionY = cposY;
+    chestTexture = texture;
+    opened = false;
+    chestRec = {chestPositionX-4, chestPositionY-8, 40, 48};
+}
+
+void Chest::init(Texture2D chestTexture)
+{
+    chests.emplace_back(20*32, 75*32, chestTexture);
+    chests.emplace_back(16*32, 42*32, chestTexture);
+    chests.emplace_back(29*32, 37*32, chestTexture);
+    chests.emplace_back(45*32, 48*32, chestTexture);
+    chests.emplace_back(25*32, 14*32, chestTexture);
+    chests.emplace_back(45*32, 14*32, chestTexture);
+    chests.emplace_back(59*32, 34*32, chestTexture);
+}
+
+void Chest::draw()
+{
+    if(opened)
+    {
+        DrawTextureRec(chestTexture, {32, 0, 32, 32}, {chestPositionX, chestPositionY}, WHITE);
+    }
+    else
+    {
+        DrawRectangleLines(chestRec.x,chestRec.y,chestRec.width,chestRec.height, RED);
+        DrawTextureRec(chestTexture, {0, 0, 32, 32}, {chestPositionX, chestPositionY}, WHITE);
+    }
+}
+
+void Chest::update()
+{
+    if(CheckCollisionRecs(chestRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E))
+    {
+        std::cout << "Chest collision" << std::endl;
+        opened = true;
+        if(InGameHud::health < 4.5)
+        {
+            InGameHud::health += 1;
+            return;
+        }
+        if(InGameHud::health == 4.5)
+        {
+            InGameHud::health += 0.5;
+        }
+    }
 }
