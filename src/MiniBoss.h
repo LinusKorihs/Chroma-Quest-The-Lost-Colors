@@ -10,6 +10,7 @@
 #include "Objects.h"
 #include "MainCharacter.h"
 #include "Pathfinder.h"
+#include "InGameHud.h"
 
 // Diese KLasse wird am Ende Kindklasse von enemy, die jetzige Enemy Klasse wird bsp "normalEnemy" und auch Kindklasse von enemy
 

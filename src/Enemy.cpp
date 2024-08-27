@@ -22,6 +22,7 @@ Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type, EnemyBeh
     upLimit = uLimit;
     downLimit = dLimit;
     frameRec = {0, 0, (float)enTexture.width / 24, (float)enTexture.height};
+
 }
 
 void Enemy::updateEnemy(float deltaTime)
@@ -30,6 +31,7 @@ void Enemy::updateEnemy(float deltaTime)
     if(enemyType == SLIMERED)
     {
         enemyRec = {posEnemy.x + 8, posEnemy.y +12, 16, 12};
+        hitRec = {posEnemy.x + 9, posEnemy.y + 14, 14, 12};
     }
     if(enemyType == ENEMYBLUE)
     {
@@ -146,7 +148,7 @@ void Enemy::drawEnemy()
    if(!unload)
    {
        DrawTextureRec(enTexture, frameRec, posEnemy, WHITE);
-       //DrawRectangleLines(enemyRec.x, enemyRec.y, enemyRec.width, enemyRec.height, RED);
+       //DrawRectangleLines(hitRec.x, hitRec.y, hitRec.width, hitRec.height, GREEN);
    }
 }
 
@@ -181,4 +183,29 @@ int Enemy::getEnemyHits()
 Vector2 Enemy::getPosition()
 {
     return posEnemy;
+}
+
+Rectangle Enemy::getHitRec()
+{
+    return hitRec;
+}
+
+bool Enemy::setMcCollision(bool collision)
+{
+    MCCollision = collision;
+}
+
+void Enemy::setPos(Vector2 pos)
+{
+    posEnemy = pos;
+}
+
+int Enemy::getDirection()
+{
+    return direction;
+}
+
+void Enemy::setDirection(EnemyDirection dir)
+{
+    direction = dir;
 }

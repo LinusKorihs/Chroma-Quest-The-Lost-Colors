@@ -20,4 +20,6 @@ public:
     static void drawRGBBarTexture();
     static void drawImageButton(HudImageButton& button);
     static std::vector<HudImageButton> hudImagebuttons;
+    static float health;
+    static void init();
 };

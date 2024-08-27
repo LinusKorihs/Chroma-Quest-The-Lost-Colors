@@ -8,6 +8,7 @@
 int MainCharacter::playerHealth = 100;
 //int MainCharacter::damagePerFrame = 2;
 bool MainCharacter::isPlayerDead = false;
+bool MainCharacter::canReceiveDamage = true;
 int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
 float MainCharacter::playerSpawnPositionX = 1120; //32*35 in new, 80 in old
@@ -27,6 +28,7 @@ std::shared_ptr<EnemyManager> MainCharacter::enemyManager_p = std::make_shared<E
 lastDirection MainCharacter::lastDir;
 punchDir MainCharacter::punch = none;
 bool MainCharacter::animationFinished = false;
+bool MainCharacter::canGiveDamage = true;
 
 void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
 {
@@ -314,6 +316,14 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         }
     }
 
+    for (const auto &enemy: enemyManager->enemies)
+    {
+        if (CheckCollisionRecs(newRec, enemy->getHitRec()))
+        {
+            return;
+        }
+    }
+
     Stone* nearestStone = nullptr;
     float nearestDistanceSquared = std::numeric_limits<float>::max();
 
@@ -337,6 +347,23 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         playerPosY = newPositionY;
     }
 
+    for (const auto &enemy: enemyManager->enemies)
+    {
+        if (CheckCollisionRecs(playerRec, enemy->getHitRec()))
+        {
+            if(playerPosY > enemy->getPosition().y && enemy->getDirection() == DOWNEN && playerPosX >= enemy->getPosition().x && playerPosX < enemy->getPosition().x+14)
+
+            {
+                enemy->setPos({enemy->getPosition().x, playerPosY -16});
+                enemy->setDirection(UPEN);
+            }
+            if(playerPosY < enemy->getPosition().y && enemy->getDirection() == UPEN && playerPosX >= enemy->getPosition().x && playerPosX < enemy->getPosition().x+14)
+            {
+                enemy->setPos({enemy->getPosition().x, playerPosY+22});
+                enemy->setDirection(DOWNEN);
+            }
+        }
+    }
     // Update all stones
     for (Stone &stone : Stone::stoneObjects)
     {
@@ -379,20 +406,40 @@ void MainCharacter::playerDeath()
     }
 }
 
+
 void MainCharacter::receiveDamage()
 {
-    /*if (CheckCollisionRecs(MainCharacter::playerRec, PixelGame::lavaTileRectangle))
+    static double lastDamageTime = 0.0;
+    double currentTime = GetTime();
+
+    if (currentTime - lastDamageTime >= 0.5) {
+        canReceiveDamage = true;
+    }
+
+    for (const auto &enemy : enemyManager->enemies)
     {
-        MainCharacter::playerHealth -= MainCharacter::damagePerFrame;
-        if (MainCharacter::playerHealth <= 0)
+        if (CheckCollisionRecs(MainCharacter::playerRec, enemy->getRec()))
         {
-            playerDeath();
+            if (canReceiveDamage) {
+                InGameHud::health -= 0.5;
+                canReceiveDamage = false;
+                lastDamageTime = currentTime;
+            }
+            break;
         }
-    }*/
+    }
 }
+
 
 void MainCharacter::attack()
 {
+
+    static double lastDamageTime = 0.0;
+    double currentTime = GetTime();
+    if(currentTime - lastDamageTime >= 0.3){
+        canGiveDamage = true;
+    }
+
     if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
     {
         Vector2 startPosition;
@@ -444,10 +491,16 @@ void MainCharacter::attack()
 
     for (const auto &enemy: enemyManager->enemies)  //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
     {
+
         if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE))
         {
-            enemy->enemyGetsHit();
-            //hier cooldown einfügen
+            if(canGiveDamage)
+            {
+                enemy->enemyGetsHit();
+            }
+            canGiveDamage = false;
+            lastDamageTime = currentTime;
+            break;
         }
     }
 }

@@ -238,6 +238,9 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition) {
                 bossGetsHit();
                 //hier cooldown einfügen
             }
+            if (CheckCollisionRecs(MainCharacter::playerRec, enemyRec)) {
+                InGameHud::health -= 1;
+            }
 
             updateShield();
 

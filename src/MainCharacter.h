@@ -79,4 +79,7 @@ private:
 
     static lastDirection lastDir;
 
+    static bool canReceiveDamage;
+    static bool canGiveDamage;
+
 };

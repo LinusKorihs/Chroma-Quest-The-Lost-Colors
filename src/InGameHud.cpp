@@ -3,6 +3,7 @@
 #include "MainCharacter.h"
 #include "TextureManage.h"
 
+float InGameHud::health;
 std::vector<HudImageButton> InGameHud::hudImagebuttons;
 
 InGameHud::InGameHud()
@@ -14,11 +15,103 @@ InGameHud::~InGameHud()
 {
 }
 
+void InGameHud::init() {
+    health = 5;
+}
 void InGameHud::drawHealthBarTexture()
 {
     Texture2D heart = TextureManager::getTexture("Heart");
     Texture2D heartEmpty = TextureManager::getTexture("HeartEmpty");
-    DrawTexture(heart, 10, 10, WHITE);
+    Texture2D heartHalf = TextureManager::getTexture("HeartHalf");
+
+    if(health == 5){
+        DrawTexture(heart, 10, 10, WHITE);
+        DrawTexture(heart, 25, 10, WHITE);
+        DrawTexture(heart, 40, 10, WHITE);
+        DrawTexture(heart, 55, 10, WHITE);
+        DrawTexture(heart, 70, 10, WHITE);
+    }
+
+    if(health == 4.5){
+        DrawTexture(heart, 10, 10, WHITE);
+        DrawTexture(heart, 25, 10, WHITE);
+        DrawTexture(heart, 40, 10, WHITE);
+        DrawTexture(heart, 55, 10, WHITE);
+        DrawTexture(heartHalf, 70, 10, WHITE);
+    }
+
+    if(health == 4){
+        DrawTexture(heart, 10, 10, WHITE);
+        DrawTexture(heart, 25, 10, WHITE);
+        DrawTexture(heart, 40, 10, WHITE);
+        DrawTexture(heart, 55, 10, WHITE);
+        DrawTexture(heartEmpty, 70, 10, WHITE);
+    }
+
+    if(health == 3.5){
+        DrawTexture(heart, 10, 10, WHITE);
+        DrawTexture(heart, 25, 10, WHITE);
+        DrawTexture(heart, 40, 10, WHITE);
+        DrawTexture(heartHalf, 55, 10, WHITE);
+        DrawTexture(heartEmpty, 70, 10, WHITE);
+    }
+
+    if(health == 3){
+        DrawTexture(heart, 10, 10, WHITE);
+        DrawTexture(heart, 25, 10, WHITE);
+        DrawTexture(heart, 40, 10, WHITE);
+        DrawTexture(heartEmpty, 55, 10, WHITE);
+        DrawTexture(heartEmpty, 70, 10, WHITE);
+    }
+
+    if(health == 2.5){
+        DrawTexture(heart, 10, 10, WHITE);
+        DrawTexture(heart, 25, 10, WHITE);
+        DrawTexture(heartHalf, 40, 10, WHITE);
+        DrawTexture(heartEmpty, 55, 10, WHITE);
+        DrawTexture(heartEmpty, 70, 10, WHITE);
+    }
+
+    if(health == 2){
+        DrawTexture(heart, 10, 10, WHITE);
+        DrawTexture(heart, 25, 10, WHITE);
+        DrawTexture(heartEmpty, 40, 10, WHITE);
+        DrawTexture(heartEmpty, 55, 10, WHITE);
+        DrawTexture(heartEmpty, 70, 10, WHITE);
+    }
+
+    if(health == 1.5){
+        DrawTexture(heart, 10, 10, WHITE);
+        DrawTexture(heartHalf, 25, 10, WHITE);
+        DrawTexture(heartEmpty, 40, 10, WHITE);
+        DrawTexture(heartEmpty, 55, 10, WHITE);
+        DrawTexture(heartEmpty, 70, 10, WHITE);
+    }
+
+    if(health == 1){
+        DrawTexture(heart, 10, 10, WHITE);
+        DrawTexture(heartEmpty, 25, 10, WHITE);
+        DrawTexture(heartEmpty, 40, 10, WHITE);
+        DrawTexture(heartEmpty, 55, 10, WHITE);
+        DrawTexture(heartEmpty, 70, 10, WHITE);
+    }
+
+    if(health == 0.5){
+        DrawTexture(heartHalf, 10, 10, WHITE);
+        DrawTexture(heartEmpty, 25, 10, WHITE);
+        DrawTexture(heartEmpty, 40, 10, WHITE);
+        DrawTexture(heartEmpty, 55, 10, WHITE);
+        DrawTexture(heartEmpty, 70, 10, WHITE);
+    }
+
+    if(health <= 0){
+        DrawTexture(heartEmpty, 10, 10, WHITE);
+        DrawTexture(heartEmpty, 25, 10, WHITE);
+        DrawTexture(heartEmpty, 40, 10, WHITE);
+        DrawTexture(heartEmpty, 55, 10, WHITE);
+        DrawTexture(heartEmpty, 70, 10, WHITE);
+    }
+
 }
 
 void InGameHud::drawRGBBarTexture()
