@@ -13,6 +13,9 @@
 
 GameState currentGameState;
 
+Music PixelGame::music;
+bool PixelGame::track1Played = false;
+Music PixelGame::dungeonMusic2;
 std::shared_ptr<Projectile> PixelGame::projectile_p;
 std::shared_ptr<Projectile> PixelGame::projectileEnemy_p;
 //std::shared_ptr<MiniBoss> PixelGame::miniBoss_p;
@@ -42,6 +45,9 @@ tson::Map& PixelGame::getMap()
 
 void PixelGame::gameInit()
 {
+    music = LoadMusicStream("assets/audio/tracks/dungeon1.mp3");
+    dungeonMusic2 = LoadMusicStream("assets/audio/tracks/dungeon1-1.mp3");
+
     slimeEnemyTexture = TextureManager::getTexture("SlimeRed");
     BossRed = TextureManager::getTexture("BossRed");
     MainCharacter::setEnemyManager(&enemyManager);
@@ -311,6 +317,7 @@ void PixelGame::gameLoop(tson::Map &Map) {
         drawObjects();
         InGameHud::drawHealthBarTexture();
 
+
         if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
             MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
         }
@@ -395,7 +402,7 @@ void PixelGame::gameLoop(tson::Map &Map) {
                 StopSound(ConfigNotConst::playerWalkingSound);
             }
         }
-        UpdateMusicStream(ConfigNotConst::gameBackgroundMusic);
+        updateAudio();
         playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
 
         if (WindowShouldClose()) {
@@ -543,4 +550,29 @@ void PixelGame::unloadMap(tson::Map &map)
     map.getLayers().clear();
     map.getTilesets().clear();
     std::cout << "Map unloaded successfully" << std::endl;
+}
+
+void PixelGame::updateAudio()
+{
+    if (!track1Played)
+    {
+        // Nur einmal den Track starten, nicht in jedem Frame
+        if (GetMusicTimePlayed(music) == 0)
+        {
+            PlayMusicStream(music);
+        }
+        UpdateMusicStream(music);
+
+        if (GetMusicTimePlayed(music) >= 104.34)
+        {
+            StopMusicStream(music);
+            track1Played = true;  // Mark that Track 1 has finished
+            std::cout << "Music stopped, switching to track 2" << std::endl;
+            PlayMusicStream(dungeonMusic2);
+        }
+    }
+    else
+    {
+        UpdateMusicStream(dungeonMusic2);
+    }
 }

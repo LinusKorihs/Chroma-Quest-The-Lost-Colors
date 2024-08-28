@@ -48,6 +48,7 @@ public:
     static void loadMap(const std::string &mapPath);
     static void unloadMap(tson::Map &map);
     static tson::Map& getMap();
+    static void updateAudio();
 
     static tson::Map currentMap;
 private:
@@ -68,6 +69,11 @@ private:
     static bool doorsErased1;
     static bool doorsErased2;
     static bool hasAnimated[3];
+
+    static Music music;
+    static Music dungeonMusic2;
+
+    static bool track1Played;
 
 
 };
