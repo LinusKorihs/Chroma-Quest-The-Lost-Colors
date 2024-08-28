@@ -12,7 +12,6 @@
 #include "EnemyManager.h"
 #include "MiniBoss.h"
 #include "Pathfinder.h"
-#include "Comments.h"
 
 class MiniBoss;
 
@@ -35,15 +34,15 @@ public:
     static void closedDoorTransition();
     static void checkPressurePlates();
 
-
     static Pathfinder* pathfinder;
     static MiniBoss* miniboss;
+
+    static void rectangle();
 
 private:
     static void drawObjects();
     static void drawHud();
     static void unloadAll();
-    static bool hasAnimated[3];
 
     static std::shared_ptr<Projectile> projectile_p;
     static std::shared_ptr<Projectile> projectileEnemy_p;
@@ -55,7 +54,8 @@ private:
     static Vector2 BossRedPosition;
     static Door door;
 
-
-
+    static bool doorsErased1;
+    static bool doorsErased2;
+    static bool hasAnimated[3];
 };
 

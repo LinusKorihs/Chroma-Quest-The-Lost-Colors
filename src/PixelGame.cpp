@@ -70,7 +70,7 @@ void PixelGame::gameInit()
     MainCharacter::initPlayer(TextureManager::getTexture("MainCharacter"));
 
     tson::Tileson tileson; // tileson parse
-   // auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
+    // auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
     auto MapPtr = tileson.parse("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
     tson::Map &Map = *MapPtr;
 
@@ -118,7 +118,6 @@ void PixelGame::rectangle()
     MainCharacter::HitRec = {x, y, width * hitScale, height * hitScale};
 }
 
-void PixelGame::drawObjects() //unload sieht noch bisschen weird aus
 void PixelGame::checkPressurePlates()
 {
     Vector2 doorPositions[3] = {
@@ -182,7 +181,7 @@ void PixelGame::openDoors()
                 Door::openDoors[6].drawNormal(96);
                 Door::openDoors[7].drawNormal(96);
             }
-           // eraseDoor(66*32,41*32);
+            // eraseDoor(66*32,41*32);
             eraseDoor(70*32,41*32);
         }
     }
@@ -209,11 +208,11 @@ void PixelGame::openDoors()
 void PixelGame::drawObjects()
 {
     MainCharacter::playerRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
-                                               TextureManager::getTexture("MainCharacter").width * 0.15f,
-                                               TextureManager::getTexture("MainCharacter").height * 0.15f};
+                                TextureManager::getTexture("MainCharacter").width * 0.15f,
+                                TextureManager::getTexture("MainCharacter").height * 0.15f};
     MainCharacter::HitRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
-                                                  TextureManager::getTexture("MainCharacter").width * 0.18f,
-                                                  TextureManager::getTexture("MainCharacter").height * 0.18f};
+                             TextureManager::getTexture("MainCharacter").width * 0.18f,
+                             TextureManager::getTexture("MainCharacter").height * 0.18f};
 
     if (Stone::drawStone == 0)
     {
@@ -344,7 +343,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     {
         if(doors.isOpen())
         {
-           if (!roomChanger.isTransitioning() &&
+            if (!roomChanger.isTransitioning() &&
                 CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle())) {
                 roomChanger.setTargetPos();
                 Vector2 newPos = roomChanger.getTargetPos();
@@ -392,8 +391,8 @@ void PixelGame::gameLoop(tson::Map &Map)
             StopSound(ConfigNotConst::playerWalkingSound);
         }
     }
-        UpdateMusicStream(ConfigNotConst::gameBackgroundMusic);
-        playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
+    UpdateMusicStream(ConfigNotConst::gameBackgroundMusic);
+    playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
 
 
     if (WindowShouldClose())
