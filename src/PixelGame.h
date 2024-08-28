@@ -31,6 +31,7 @@ public:
 
     static void eraseDoor(int targetX, int targetY);
     static void openDoors();
+    static void openBottomDoorRoom1();
     static void closedDoorTransition();
     static void checkPressurePlates();
 
@@ -39,6 +40,11 @@ public:
 
     static void rectangle();
 
+    static void loadMap(const std::string &mapPath);
+    static void unloadMap(tson::Map &map);
+    static tson::Map& getMap();
+
+    static tson::Map currentMap;
 private:
     static void drawObjects();
     static void drawHud();
@@ -57,5 +63,6 @@ private:
     static bool doorsErased1;
     static bool doorsErased2;
     static bool hasAnimated[3];
+
 };
 

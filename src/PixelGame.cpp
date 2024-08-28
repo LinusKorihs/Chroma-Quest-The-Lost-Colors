@@ -9,6 +9,7 @@
 #include "RoomChanger.h"
 #include "MiniBoss.h"
 #include "Pathfinder.h"
+#include "tileson.h"
 
 GameState currentGameState;
 
@@ -32,6 +33,12 @@ MiniBoss* PixelGame::miniboss;
 Pathfinder* PixelGame::pathfinder;
 bool PixelGame::hasAnimated[3] = {false, false, false};
 
+tson::Map PixelGame::currentMap;
+
+tson::Map& PixelGame::getMap()
+{
+    return currentMap;
+}
 
 void PixelGame::gameInit()
 {
@@ -69,17 +76,12 @@ void PixelGame::gameInit()
     projectile_p->load();
     MainCharacter::initPlayer(TextureManager::getTexture("MainCharacter"));
 
-    tson::Tileson tileson; // tileson parse
-    // auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
-    auto MapPtr = tileson.parse("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
-    tson::Map &Map = *MapPtr;
-
-    if (Map.getStatus() != tson::ParseStatus::OK)
+    if (currentMap.getStatus() != tson::ParseStatus::OK)
     {
         std::cout
                 << LanguageManager::getLocalizedGameText("Failed to parse map, error: ",
                                                          "Fehler beim Parsen der Karte, Fehler: ")
-                << Map.getStatusMessage() << std::endl;
+                << currentMap.getStatusMessage() << std::endl;
     }
 
     pathfinder = new Pathfinder();
@@ -269,9 +271,14 @@ void PixelGame::eraseDoor(int targetX, int targetY)
     currentGameState.doorRectangles.erase(it, currentGameState.doorRectangles.end());
 }
 
-
 void PixelGame::gameLoop(tson::Map &Map)
 {
+    if (Map.getLayers().empty() || Map.getTilesets().empty())
+    {
+        std::cerr << "Invalid map data" << std::endl;
+        return;
+    }
+
     if (IsKeyPressed(KEY_ESCAPE))
     {
         ConfigNotConst::isGamePaused = true;
@@ -292,7 +299,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     DrawMap::drawTiles(Map, TextureManager::m_textures["TileSet"]);
 
     openDoors();
-
+    openBottomDoorRoom1();
 
     for (Stone stone: Stone::stoneObjects)
     {
@@ -324,11 +331,11 @@ void PixelGame::gameLoop(tson::Map &Map)
     projectile_p->update(GetFrameTime(), projectile_p->getProjectileDestination());
     projectile_p->draw();
 
-    if(!miniboss->getUnload()) {
+    if(!miniboss->getUnload())
+    {
         miniboss->updateBoss(GetFrameTime(), MainCharacter::getPosition());
         miniboss->drawBoss();
     }
-
 
     MainCharacter::attack();
     MainCharacter::receiveDamage();
@@ -353,7 +360,6 @@ void PixelGame::gameLoop(tson::Map &Map)
         }
     }
 
-
     if (IsKeyPressed(KEY_ESCAPE))
     {
         currentGameState.changeGameState(MenuState::PauseMenu);
@@ -362,8 +368,10 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     bool isMoving = false; //movement sollte noch separiert werden
 
-    if(!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
+    if(!roomChanger.isTransitioning() && !playerCamera::getIsAnimating())
+    {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP]))
+        {
             MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
             isMoving = true;
         }
@@ -393,7 +401,6 @@ void PixelGame::gameLoop(tson::Map &Map)
     }
     UpdateMusicStream(ConfigNotConst::gameBackgroundMusic);
     playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
-
 
     if (WindowShouldClose())
     {
@@ -427,6 +434,17 @@ void PixelGame::drawHud()
              1700, 140, 20, BLACK);
 }
 
+void PixelGame::openBottomDoorRoom1()
+{
+    if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[1].getRectangle()) &&
+        !roomChanger.isTransitioning())
+    {
+        roomChanger.startTransition({0, 0}); // Set new position and room
+    }
+
+    roomChanger.update();
+    Door::openDoors[20].setOpened();
+}
 
 void PixelGame::closedDoorTransition()
 {
@@ -490,4 +508,36 @@ void PixelGame::closedDoorTransition()
         Door::openDoors[6].setOpened();
         //Door::openDoors[7].setOpened();
     }
+}
+
+void PixelGame::loadMap(const std::string &mapPath)
+{
+    // Unload the current map before loading a new one
+    if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty())
+    {
+        std::cout << "Unloading current map" << std::endl;
+        unloadMap(currentMap);
+    }
+
+    // Parse the new map
+    tson::Tileson tileson;
+    auto MapPtr = tileson.parse(mapPath);
+
+    if (MapPtr && MapPtr->getStatus() == tson::ParseStatus::OK)
+    {
+        currentMap = std::move(*MapPtr);
+        std::cout << "Map loaded successfully: " << mapPath << std::endl;
+    }
+    else
+    {
+        std::cerr << "Failed to parse map: " << MapPtr->getStatusMessage() << std::endl;
+    }
+}
+
+void PixelGame::unloadMap(tson::Map &map)
+{
+    // Clear the current map data
+    map.getLayers().clear();
+    map.getTilesets().clear();
+    std::cout << "Map unloaded successfully" << std::endl;
 }

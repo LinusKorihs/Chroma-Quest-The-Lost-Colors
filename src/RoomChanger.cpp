@@ -1,37 +1,55 @@
 #include "RoomChanger.h"
 #include "MainCharacter.h"
+#include "PixelGame.h"
 
 RoomChanger::RoomChanger()
         : phase(TransitionPhase::None), transitionProgress(0.0f), targetPosition({0, 0}) {}
 
-void RoomChanger::update() {
-    if (phase != TransitionPhase::None) {
-        transitionProgress += 0.02f; //transutuon speed
+void RoomChanger::update()
+{
+    // Check if the map is loaded correctly
+    if (PixelGame::currentMap.getLayers().empty() || PixelGame::currentMap.getTilesets().empty())
+    {
+        std::cerr << "Error: Attempted to update room changer with an unloaded map." << std::endl;
+        return;
+    }
 
-        switch (phase) {
+    if (phase != TransitionPhase::None)
+    {
+        transitionProgress += 0.02f; // Transition speed
+
+        switch (phase)
+        {
             case TransitionPhase::Darkening:
-                if (transitionProgress >= 0.5f) {
-                    transitionProgress = 0.5;
+                if (transitionProgress >= 0.5f)
+                {
+                    transitionProgress = 0.5f;
                     phase = TransitionPhase::Black;
                 }
                 break;
+
             case TransitionPhase::Black:
                 MainCharacter::setPosition(targetPosition);
-                if(MainCharacter::playerPosX == targetPosition.x && MainCharacter::playerPosY == targetPosition.y)
+                if (MainCharacter::playerPosX == targetPosition.x && MainCharacter::playerPosY == targetPosition.y)
                 {
                     phase = TransitionPhase::Brightening;
                 }
                 break;
+
             case TransitionPhase::Brightening:
-                if (transitionProgress >= 1.4f) {
+                if (transitionProgress >= 1.4f)
+                {
                     phase = TransitionPhase::None;
                 }
                 break;
+
             default:
                 break;
         }
 
         drawTransitionEffect();
+
+        std::cout << "Updating Roomchanger: Map is loaded" << std::endl;
     }
 }
 
@@ -45,13 +63,19 @@ bool RoomChanger::isTransitioning() const { //true wenn phase != none
     return phase != TransitionPhase::None;
 }
 
-void RoomChanger::drawTransitionEffect() const {
+void RoomChanger::drawTransitionEffect() const
+{
     float alpha = 0.0f;
-    if (phase == TransitionPhase::Darkening) {
+    if (phase == TransitionPhase::Darkening)
+    {
         alpha = transitionProgress;
-    } else if (phase == TransitionPhase::Black) {
+    }
+    else if (phase == TransitionPhase::Black)
+    {
         alpha = 1.0f;
-    } else if (phase == TransitionPhase::Brightening) {
+    }
+    else if (phase == TransitionPhase::Brightening)
+    {
         alpha = 1.0f - (transitionProgress - 0.2f);
     }
     DrawRectangle(0, 0, 2500, 3000,
@@ -157,4 +181,16 @@ void RoomChanger::setTargetPos()
         targetPosition = {35*32, 48*32+18};
     }
 
+    // Overworld
+    if(MainCharacter::playerPosX > 34*32 && MainCharacter::playerPosX < 37*32 &&  83*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 80*32)
+    {
+        std::cout << "Unloading map" << std::endl;
+        PixelGame::unloadMap(PixelGame::getMap());
+
+        std::cout << "Loading map" << std::endl;
+        PixelGame::loadMap("assets/graphics/Old TileSet & TileMap/tilemap.tmj");
+
+        std::cout << "Map loaded" << std::endl;
+        targetPosition = {32 * 4, 32 * 12};  // Set the new target position
+    }
 }
