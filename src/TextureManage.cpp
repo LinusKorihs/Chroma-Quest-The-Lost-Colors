@@ -61,6 +61,7 @@ void TextureManager::init()
     m_textures["HeartHalf"] = LoadTexture("assets/graphics/HUD/HeartHalf.png");
     m_textures["RedButton"] = LoadTexture("assets/graphics/Tiles/RedButton.png");
     m_textures["Chest"] = LoadTexture("assets/graphics/Tiles/chest.png");
+    m_textures["Frucht"] = LoadTexture("assets/graphics/Items/Frucht.png");
 
     for (auto &texture : m_textures)
     {

@@ -102,6 +102,11 @@ void PixelGame::gameInit()
     Stone::initializeStones(stoneTexture, stoneSourceRect);
     PressurePlate::initPlates(plateTexture);
     Chest::init(chestTexture);
+
+    Texture2D npcTexture = TextureManager::getTexture("Frucht");
+    Texture2D dialogTexture = TextureManager::getTexture("speechBubble");
+    NPC::init(npcTexture,npcTexture,npcTexture); //wird wenn texturen da sind geändert
+    DialogBox::init(dialogTexture);
 }
 
 void PixelGame::checkPressurePlates()
@@ -315,7 +320,16 @@ void PixelGame::gameLoop(tson::Map &Map)
         miniboss->drawBoss();
     }
 
+    for(NPC& npc : NPC::npcs)
+    {
+        npc.draw();
+    }
 
+    for(DialogBox& dialogBox : DialogBox::dialogBoxes)
+    {
+        dialogBox.update({MainCharacter::playerPosX, MainCharacter::playerPosY});
+        //dialogBox.draw();
+    }
     MainCharacter::attack();
     MainCharacter::receiveDamage();
 
@@ -401,6 +415,10 @@ void PixelGame::unloadAll()
 
 void PixelGame::drawHud()
 {
+    for(DialogBox& dialogBox : DialogBox::dialogBoxes)
+    {
+        dialogBox.draw();
+    }
     InGameHud::drawHealthBarTexture();
     InGameHud::drawRGBBarTexture();
     DrawText(TextFormat("%s: %i", LanguageManager::getLocalizedGameText("Score", "Punkte"), MainCharacter::playerScore),

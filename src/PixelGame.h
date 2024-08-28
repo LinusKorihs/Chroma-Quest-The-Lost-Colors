@@ -13,6 +13,8 @@
 #include "MiniBoss.h"
 #include "Pathfinder.h"
 #include "Comments.h"
+#include "DialogBox.h"
+#include "NPC.h"
 
 class MiniBoss;
 

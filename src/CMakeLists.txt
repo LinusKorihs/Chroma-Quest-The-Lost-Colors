@@ -61,6 +61,10 @@ add_executable(${PROJECT_NAME} main.cpp
         Pathfinder.cpp
         Comments.cpp
         Comments.h
+        DialogBox.cpp
+        DialogBox.h
+        NPC.cpp
+        NPC.h
 )
 
 # Add config.h.in file
