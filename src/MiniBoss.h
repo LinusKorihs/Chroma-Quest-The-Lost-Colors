@@ -10,6 +10,7 @@
 #include "Objects.h"
 #include "MainCharacter.h"
 #include "Pathfinder.h"
+#include "InGameHud.h"
 
 // Diese KLasse wird am Ende Kindklasse von enemy, die jetzige Enemy Klasse wird bsp "normalEnemy" und auch Kindklasse von enemy
 
@@ -49,6 +50,7 @@ public:
     bool enemyHit;
     int getShieldHits();
     bool isCollisionInDirection(Vector2 newPosition);
+    void giveDamage();
 
     Vector2 Vector2Subtract(Vector2 v1, Vector2 v2);
 
@@ -89,6 +91,7 @@ private:
     int pathIndex; // Aktueller Index im Pfa
 
     bool pathFound = false;
+    bool canGiveDamage = true;
 
     BossState state; // Aktueller Zustand des Bosses
     float stateTimer; // Timer für den aktuellen Zustand

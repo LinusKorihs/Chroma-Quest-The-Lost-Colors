@@ -34,26 +34,36 @@ MiniBoss::MiniBoss(Vector2 position, Texture2D &enemTexture, MiniBossType type, 
     }
 
 }
-float Vector2Distance(Vector2 v1, Vector2 v2) {
+float Vector2Distance(Vector2 v1, Vector2 v2)
+{
     return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
 }
 
 
-void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition) {
-    enemyRec = {posEnemy.x, posEnemy.y+10, 64,
-                54};
+void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
+{
+    if(currentDirection == UP_RIGHT || direction == UP_LEFT || direction == DOWN_RIGHT || direction == DOWN_LEFT || direction == LEFTEN || direction == RIGHTEN)
+    {
+        enemyRec = {posEnemy.x+16, posEnemy.y + 10, 32,54};
+    }
+    else {
+        enemyRec = {posEnemy.x, posEnemy.y + 10, 64,54};
+    }
     float newPosX = posEnemy.x;
     float newPosY = posEnemy.y;
 
     static int diagonalSteps = 0; // Zähler für Schritte in diagonalen Richtungen
     Vector2 direction; // Bewegungsrichtung
 
-    switch (state) {
+    switch (state)
+    {
         case BossState::Idle:
-            if (isPlayerInRange(playerPosition, 200)) {
+            if (isPlayerInRange(playerPosition, 200))
+            {
                 std::cout << "Idle" << std::endl;
                 stateTimer += deltaTime;
-                if (stateTimer >= idleTime) {
+                if (stateTimer >= idleTime)
+                {
                     state = BossState::Attacking;
                     stateTimer = 0;
                 }
@@ -61,13 +71,16 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition) {
             break;
 
         case BossState::Attacking:
-            if (isPlayerInRange(playerPosition, 200)) {
-                if (Vector2Distance(posEnemy, playerPosition) > 1.0f) {
+            if (isPlayerInRange(playerPosition, 200))
+            {
+                if (Vector2Distance(posEnemy, playerPosition) > 1.0f)
+                {
                     direction = { playerPosition.x - posEnemy.x, playerPosition.y - posEnemy.y };
 
                     // Normalisiere die Richtung
                     float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-                    if (length > 0.0f) {
+                    if (length > 0.0f)
+                    {
                         direction.x /= length;
                         direction.y /= length;
                     }
@@ -80,20 +93,26 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition) {
                     float angle = atan2(direction.y, direction.x) * (180.0f / PI); // PI ist die Konstante für π
 
                     // Setze die Richtung basierend auf der Bewegungsrichtung
-                    if (fabs(direction.x) > fabs(direction.y)) {
+                    if (fabs(direction.x) > fabs(direction.y))
+                    {
                         currentDirection = (direction.x > 0) ? RIGHTEN : LEFTEN;
-                    } else if (fabs(direction.y) > fabs(direction.x)) {
+                    } else if (fabs(direction.y) > fabs(direction.x))
+                    {
                         currentDirection = (direction.y > 0) ? DOWNEN : UPEN;
                     } else {
                         // Bei diagonaler Bewegung, überprüfe den Winkel
-                        if (angle >= 30.0f && angle <= 60.0f) {
-                            currentDirection = UP_RIGHT; // Animation für oben rechts
-                        } else if (angle <= -30.0f && angle >= -60.0f) {
-                            currentDirection = DOWN_LEFT; // Animation für unten links
-                        } else if (angle < 30.0f && angle > 0) {
-                            currentDirection = UP_RIGHT; // Animation für oben rechts
-                        } else if (angle > -30.0f && angle < 0) {
-                            currentDirection = DOWN_LEFT; // Animation für unten links
+                        if (angle >= 30.0f && angle <= 60.0f)
+                        {
+                            currentDirection = UP_RIGHT;
+                        } else if (angle <= -30.0f && angle >= -60.0f)
+                        {
+                            currentDirection = DOWN_LEFT;
+                        } else if (angle < 30.0f && angle > 0)
+                        {
+                            currentDirection = UP_RIGHT;
+                        } else if (angle > -30.0f && angle < 0)
+                        {
+                            currentDirection = DOWN_LEFT;
                         }
                     }
                 } else {
@@ -155,20 +174,25 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition) {
                     break;
                 }
             }
-            for (const Rectangle &doorRec: currentGameState.doorRectangles) {
-                if (CheckCollisionRecs(newRec, doorRec)) {
+            for (const Rectangle &doorRec: currentGameState.doorRectangles)
+            {
+                if (CheckCollisionRecs(newRec, doorRec))
+                {
                     state = BossState::Returning;
                     break;
                 }
             }
-            for (Stone &stone: Stone::stoneObjects) {
-                if (CheckCollisionRecs(newRec, stone.getRectangle())) {
+            for (Stone &stone: Stone::stoneObjects)
+            {
+                if (CheckCollisionRecs(newRec, stone.getRectangle()))
+                {
                     state = BossState::Returning;
                     break;
                 }
             }
 
-            if (!enemyDeath) {
+            if (!enemyDeath)
+            {
                 posEnemy.x = newPosX;
                 posEnemy.y = newPosY;
             }
@@ -176,43 +200,57 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition) {
             // Animation update
             framesCounter++; // Update counter
 
-            if (framesCounter >= (60 / framesSpeed)) {
+            if (framesCounter >= (60 / framesSpeed))
+            {
                 framesCounter = 0;
 
                 if (enemyDeath) {
-                    if (currentFrame < 32) {
+                    if (currentFrame < 32)
+                    {
                         currentFrame = 32;
                     }
                     currentFrame++;
 
-                    if (currentFrame > 34) {
+                    if (currentFrame > 34)
+                    {
                         unload = true; // Ende der Death-Animation
                     }
                 } else {
                     currentFrame++;
-                    if (state == BossState::Idle) {
-                        if (currentFrame > 3) { // Reset bei 4 für Idle-Animation
+                    if (state == BossState::Idle)
+                    {
+                        if (currentFrame > 3)
+                        {
                             currentFrame = 0;
                         }
                     }
-                    if (state == BossState::Attacking || state == BossState::Returning) {
-                        if (currentDirection == RIGHTEN) {
-                            if (currentFrame > 27 || currentFrame < 24) {
+                    if (state == BossState::Attacking || state == BossState::Returning)
+                    {
+                        if (currentDirection == RIGHTEN)
+                        {
+                            if (currentFrame > 27 || currentFrame < 24)
+                            {
                                 currentFrame = 24;
                             }
                         }
-                        if (currentDirection == LEFTEN) {
-                            if (currentFrame > 31 || currentFrame < 28) {
+                        if (currentDirection == LEFTEN)
+                        {
+                            if (currentFrame > 31 || currentFrame < 28)
+                            {
                                 currentFrame = 28;
                             }
                         }
-                        if (currentDirection == DOWNEN || currentDirection == DOWN_LEFT || currentDirection == DOWN_RIGHT) {
-                            if (currentFrame > 19 || currentFrame < 16) {
+                        if (currentDirection == DOWNEN || currentDirection == DOWN_LEFT || currentDirection == DOWN_RIGHT)
+                        {
+                            if (currentFrame > 19 || currentFrame < 16)
+                            {
                                 currentFrame = 16;
                             }
                         }
-                        if (currentDirection == UPEN || currentDirection == UP_LEFT || currentDirection == UP_RIGHT) {
-                            if (currentFrame > 23 || currentFrame < 20) {
+                        if (currentDirection == UPEN || currentDirection == UP_LEFT || currentDirection == UP_RIGHT)
+                        {
+                            if (currentFrame > 23 || currentFrame < 20)
+                            {
                                 currentFrame = 20;
                             }
                         }
@@ -226,25 +264,34 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition) {
             {
                 enemyDeath = true;
             }
-            if (getBossHits() == 20 && enemyType == BOSSBLUE) {
+            if (getBossHits() == 20 && enemyType == BOSSBLUE)
+            {
                 enemyDeath = true;
             }
-            if (enemyHits == 25 && enemyType == BOSSYELLOW) {
+            if (enemyHits == 25 && enemyType == BOSSYELLOW)
+            {
                 enemyDeath = true;
             }
 
 
-            if (CheckCollisionRecs(MainCharacter::HitRec, enemyRec) && IsKeyPressed(KEY_SPACE)) {
+            if (CheckCollisionRecs(MainCharacter::HitRec, enemyRec) && IsKeyPressed(KEY_SPACE))
+            {
                 bossGetsHit();
                 //hier cooldown einfügen
             }
+            giveDamage();
+            /*if (CheckCollisionRecs(MainCharacter::playerRec, enemyRec))
+            {
+                InGameHud::health -= 1;
+            }*/
 
             updateShield();
 
     }
 
 
-void MiniBoss::findPath(Vector2 playerPosition) {
+void MiniBoss::findPath(Vector2 playerPosition)
+{
     int playerX = static_cast<int>(playerPosition.x);
     int playerY = static_cast<int>(playerPosition.y);
     int bossX = static_cast<int>(posEnemy.x);
@@ -253,7 +300,8 @@ void MiniBoss::findPath(Vector2 playerPosition) {
     pathIndex = 0;
 }
 
-bool MiniBoss::isPlayerInRange(Vector2 playerPosition, float range) {
+bool MiniBoss::isPlayerInRange(Vector2 playerPosition, float range)
+{
     return Vector2Distance(posEnemy, playerPosition) <= range;
 }
 
@@ -345,4 +393,25 @@ void MiniBoss::drawShieldBar()
         DrawRectangle(173, 40, barHits * 11, 10, RED);
     }
 }
+
+void MiniBoss::giveDamage()
+{
+    static double lastDamageTime = 0.0;
+    double currentTime = GetTime();
+
+    if (currentTime - lastDamageTime >= 0.5)
+    {
+        canGiveDamage = true;
+    }
+
+    if (CheckCollisionRecs(MainCharacter::playerRec, enemyRec))
+    {
+        if (canGiveDamage) {
+            InGameHud::health -= 0.5;
+            canGiveDamage = false;
+            lastDamageTime = currentTime;
+        }
+    }
+}
+
 

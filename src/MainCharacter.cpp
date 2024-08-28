@@ -8,6 +8,7 @@
 int MainCharacter::playerHealth = 100;
 //int MainCharacter::damagePerFrame = 2;
 bool MainCharacter::isPlayerDead = false;
+bool MainCharacter::canReceiveDamage = true;
 int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
 float MainCharacter::playerSpawnPositionX = 1120; //32*35 in new, 80 in old
@@ -16,7 +17,6 @@ float MainCharacter::playerCharacterTextureScale = 0.425f;
 float MainCharacter::playerCharacterHitBoxScale = 0.425f;
 float MainCharacter::playerPosX = MainCharacter::playerSpawnPositionX;
 float MainCharacter::playerPosY = MainCharacter::playerSpawnPositionY;
-
 std::shared_ptr<Projectile> MainCharacter::projectile_p = std::make_shared<Projectile>();
 EnemyManager* MainCharacter::enemyManager = nullptr;
 int MainCharacter::currentFrame;
@@ -28,6 +28,8 @@ std::shared_ptr<EnemyManager> MainCharacter::enemyManager_p = std::make_shared<E
 lastDirection MainCharacter::lastDir;
 punchDir MainCharacter::punch = none;
 bool MainCharacter::animationFinished = false;
+bool MainCharacter::canGiveDamage = true;
+Rectangle MainCharacter::playerEnemyRec;
 
 void MainCharacter::setEnemy(const std::shared_ptr<Enemy>& enemy)
 {
@@ -54,23 +56,20 @@ void MainCharacter::initPlayer(Texture myTexture)
 }
 
 void MainCharacter::updateRec()
-{/*
+{
+    float xPos = playerPosX + 5; // Adjusted X Position
+    float yPos = playerPosY + 4; // Adjusted Y Position
+    float width = 20; // Hitbox Width
+    float height = 28; // Hitbox Height
+
     //Rec für kollision des chars
     playerRec = {
-            playerPosX,
-            playerPosY,
-            32,
-            32
+            xPos,
+            yPos,
+            width,
+            height
     };
     //Rec zum hitten von enemies
-
-    HitRec = {
-            playerPosX,
-            playerPosY,
-            32,
-            32
-    }; */
-
     if(lastDir == LASTRIGHT || lastDir == LASTLEFT) {
         HitRec = {
                 playerPosX - 4,
@@ -87,7 +86,12 @@ void MainCharacter::updateRec()
                 40
         };
     }
-
+    playerEnemyRec = {
+            playerPosX,
+            playerPosY,
+            32,
+            32
+    };
 }
 
 void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
@@ -248,6 +252,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
         }
     }
+    checkCollisions();
 
 }
 
@@ -256,13 +261,13 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
     // Draw the player sprite
     DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
-    DrawRectangleLines(
+    /*DrawRectangleLines(
             playerRec.x,
             playerRec.y,
             playerRec.width,
             playerRec.height,
             PURPLE
-    );
+    );*/
 }
 
 float calculateSquaredDistance(float x1, float y1, float x2, float y2)
@@ -301,7 +306,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
             break;
     }
 
-    Rectangle newRec = {static_cast<float>(newPositionX + 5.5), newPositionY, playerRec.width, playerRec.height};
+    Rectangle newRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height};
 
     for (const Rectangle &doorRec : currentGameState.doorRectangles)
     {
@@ -318,6 +323,13 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
             return;
         }
     }
+    for (const auto &enemy: enemyManager->enemies)
+    {
+        if (CheckCollisionRecs(newRec, {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,enemy->getHitRec().height - 10}))
+        {
+            return;
+        }
+    }
 
     Stone* nearestStone = nullptr;
     float nearestDistanceSquared = std::numeric_limits<float>::max();
@@ -330,6 +342,8 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
             break;
         }
     }
+
+    checkCollisions();
 
     if (nearestStone)
     {
@@ -372,6 +386,28 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     }
 }
 
+void MainCharacter::checkCollisions()
+{
+    for (const auto &enemy: enemyManager->enemies)
+    {
+        if (CheckCollisionRecs(playerEnemyRec, enemy->getRec()))
+        {
+            std::cout << "collision" << std::endl;
+            if(playerPosY > enemy->getPosition().y +16 && enemy->getDirection() == DOWNEN && playerPosX >= enemy->getPosition().x -16  && playerPosX <= enemy->getPosition().x+14)
+            {
+                enemy->setPos({enemy->getPosition().x, playerPosY -32});
+                enemy->setDirection(UPEN);
+            }
+            if(playerPosY < enemy->getPosition().y-16 && enemy->getDirection() == UPEN && playerPosX >= enemy->getPosition().x -16 && playerPosX < enemy->getPosition().x+14)
+            {
+                enemy->setPos({enemy->getPosition().x, playerPosY+22});
+                enemy->setDirection(DOWNEN);
+            }
+        }
+    }
+}
+
+
 void MainCharacter::playerDeath()
 {
     if (MainCharacter::playerHealth <= 0)
@@ -384,20 +420,40 @@ void MainCharacter::playerDeath()
     }
 }
 
+
 void MainCharacter::receiveDamage()
 {
-    /*if (CheckCollisionRecs(MainCharacter::playerRec, PixelGame::lavaTileRectangle))
+    static double lastDamageTime = 0.0;
+    double currentTime = GetTime();
+
+    if (currentTime - lastDamageTime >= 0.5) {
+        canReceiveDamage = true;
+    }
+
+    for (const auto &enemy : enemyManager->enemies)
     {
-        MainCharacter::playerHealth -= MainCharacter::damagePerFrame;
-        if (MainCharacter::playerHealth <= 0)
+        if (CheckCollisionRecs(MainCharacter::playerRec, enemy->getRec()))
         {
-            playerDeath();
+            if (canReceiveDamage) {
+                InGameHud::health -= 0.5;
+                canReceiveDamage = false;
+                lastDamageTime = currentTime;
+            }
+            break;
         }
-    }*/
+    }
 }
+
 
 void MainCharacter::attack()
 {
+
+    static double lastDamageTime = 0.0;
+    double currentTime = GetTime();
+    if(currentTime - lastDamageTime >= 0.3){
+        canGiveDamage = true;
+    }
+
     if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
     {
         Vector2 startPosition;
@@ -449,10 +505,16 @@ void MainCharacter::attack()
 
     for (const auto &enemy: enemyManager->enemies)  //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
     {
+
         if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE))
         {
-            enemy->enemyGetsHit();
-            //hier cooldown einfügen
+            if(canGiveDamage)
+            {
+                enemy->enemyGetsHit();
+            }
+            canGiveDamage = false;
+            lastDamageTime = currentTime;
+            break;
         }
     }
 }
@@ -465,7 +527,12 @@ void MainCharacter::setSpawnPosition()
 
 Rectangle MainCharacter::getRectangle() const
 {
-    return playerRec;
+    Rectangle rect;
+    rect.x = HitRec.x + 4.5;
+    rect.y = HitRec.y + 2;
+    rect.width = HitRec.width - 10;
+    rect.height = HitRec.height - 4.5;
+    return rect;
 }
 
 void MainCharacter::setPosition(Vector2 pos)

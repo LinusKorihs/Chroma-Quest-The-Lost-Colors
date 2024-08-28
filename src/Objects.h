@@ -2,6 +2,7 @@
 
 #include "raylib.h"
 #include <vector>
+#include "InGameHud.h"
 
 class Stone
 {
@@ -19,6 +20,12 @@ public:
     static bool stoneCollision;
     static int drawStone;
     void drawHitboxes() const;
+    static void resetStones();
+
+    static bool roomOne;
+    static bool roomTwo;
+    static bool roomThree;
+    static bool roomFour;
 
 private:
     float stonePositionX;
@@ -37,6 +44,7 @@ private:
 
 
 
+
     bool checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle> &wallRecs) const;
     bool checkCollisionWithStones(float newX, float newY) const;
     float lerp(float start, float end, float t) const;
@@ -45,7 +53,7 @@ private:
 class PressurePlate
 {
 public:
-    PressurePlate(float x, float y, float size, Texture2D& texture);
+    PressurePlate(float x, float y, float size, Texture2D& texture, bool color);
 
     void draw() const;
     void setPressed(bool pressed);
@@ -62,6 +70,8 @@ private:
     float plateSize;
     Texture2D& plateTexture;
     bool pressed;
+    bool color;
+    bool redButton;
 };
 
 class Door
@@ -116,4 +126,22 @@ private:
     int currentStep;
     bool animationFinished;
     int frameCounter;
+};
+
+class Chest {
+public:
+    Chest(float cposX, float cposY, Texture2D texture);
+
+    void draw();
+    void update();
+    static void init(Texture2D chestTexture);
+    static std::vector<Chest> chests;
+
+private:
+    bool opened;
+    float chestPositionX;
+    float chestPositionY;
+    Texture2D chestTexture;
+    Rectangle chestRec;
+
 };

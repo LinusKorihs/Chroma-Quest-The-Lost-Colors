@@ -51,11 +51,11 @@ void PixelGame::gameInit()
 
     projectile_p = std::make_shared<Projectile>();
     MainCharacter::setProjectile(projectile_p);
-    InGameHud::drawHealthBarTexture();
     Texture2D doorTexture1 = TextureManager::getTexture("DoorRed2");
     Texture2D doorTexture2 = TextureManager::getTexture("StoneDoorR");
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
     Texture2D machineTexture = TextureManager::getTexture("Machine");
+    Texture2D chestTexture = TextureManager::getTexture("Chest");
     //pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
     //pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
     machines.emplace_back(32 * 36, 32 * 69, 32 * 47, 32 * 75, machineTexture, 0);
@@ -64,6 +64,7 @@ void PixelGame::gameInit()
 
     TextureManage::loadAudio();
     MainCharacter::playerHealth = 100;
+    InGameHud::init();
 
     projectile_p->load();
     MainCharacter::initPlayer(TextureManager::getTexture("MainCharacter"));
@@ -100,6 +101,7 @@ void PixelGame::gameInit()
 
     Stone::initializeStones(stoneTexture, stoneSourceRect);
     PressurePlate::initPlates(plateTexture);
+    Chest::init(chestTexture);
 }
 
 void PixelGame::rectangle()
@@ -196,7 +198,7 @@ void PixelGame::openDoors()
             eraseDoor(35*32,68*32);
         }
 
-        if(machines[1].isFilled() && machines[2].isFilled() || PressurePlate::pressurePlates[5].isPressed())
+        if(machines[1].isFilled() && machines[2].isFilled())
         {
             Door::openDoors[1].draw();
             eraseDoor(35*32,48*32);
@@ -226,6 +228,36 @@ void PixelGame::drawObjects()
         }
 
         Stone::drawStone = 1;
+    }
+    if(PressurePlate::pressurePlates[5].isPressed()){
+        Stone::roomOne = true;
+        Stone::resetStones();
+        Stone::roomOne = false;
+        PressurePlate::pressurePlates[5].setPressed(false);
+    }
+    if(PressurePlate::pressurePlates[6].isPressed()){
+        Stone::roomTwo = true;
+        Stone::resetStones();
+        Stone::roomTwo = false;
+        PressurePlate::pressurePlates[6].setPressed(false);
+    }
+    if(PressurePlate::pressurePlates[7].isPressed() || PressurePlate::pressurePlates[8].isPressed()){
+        Stone::roomThree = true;
+        Stone::resetStones();
+        Stone::roomThree = false;
+        PressurePlate::pressurePlates[7].setPressed(false);
+        PressurePlate::pressurePlates[8].setPressed(false);
+    }
+    if(PressurePlate::pressurePlates[9].isPressed() || PressurePlate::pressurePlates[10].isPressed()){
+        Stone::roomFour = true;
+        Stone::resetStones();
+        Stone::roomFour = false;
+        PressurePlate::pressurePlates[9].setPressed(false);
+        PressurePlate::pressurePlates[10].setPressed(false);
+    }
+    for(Chest& chest : Chest::chests)
+    {
+        chest.draw();
     }
 }
 
@@ -262,6 +294,7 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     openDoors();
 
+
     for (Stone stone: Stone::stoneObjects)
     {
         stone.draw();
@@ -269,6 +302,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     }
 
     drawObjects();
+    InGameHud::drawHealthBarTexture();
 
     if(!roomChanger.isTransitioning() && !playerCamera::getIsAnimating())
     {
@@ -298,8 +332,13 @@ void PixelGame::gameLoop(tson::Map &Map)
 
 
     MainCharacter::attack();
+    MainCharacter::receiveDamage();
 
     closedDoorTransition();
+    for(Chest& chest : Chest::chests)
+    {
+        chest.update();
+    }
 
     for (Door& doors : Door::openDoors)
     {

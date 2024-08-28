@@ -5,6 +5,7 @@
 #include "Projectile.h"
 #include <memory>
 
+
 enum EnemyType {
     SLIMERED,
     ENEMYBLUE,
@@ -47,19 +48,25 @@ public:
     void punchCollision();
 
     Rectangle getRec();
+    Rectangle getHitRec();
     bool getEnemyDeath();
     bool getUnload();
     int getEnemyHits();
     Vector2 getPosition();
+    void setPos(Vector2 pos);
+    int getDirection();
+    void setDirection(EnemyDirection dir);
 
     int enemyHits;
     bool enemyHit;
+    bool setMcCollision(bool collision);
 
 private:
     bool enemyDeath;
     bool turnAround;
     bool unload;
     bool isKnockedBack;
+    bool MCCollision = false;
 
 
     EnemyType enemyType;
@@ -73,6 +80,7 @@ private:
     Rectangle frameRec3;
     Rectangle enemyRec;
     Rectangle frameRec;
+    Rectangle hitRec;
 
     int currentFrame;
     int framesCounter;
