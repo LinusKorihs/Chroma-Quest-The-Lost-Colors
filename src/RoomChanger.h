@@ -11,6 +11,7 @@ public:
     bool isTransitioning() const;
     Vector2 getTargetPos();
     void setTargetPos();
+    void setTargetPos(tson::Map &tileMap);
 
 private:
     enum TransitionPhase {

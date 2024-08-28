@@ -65,6 +65,7 @@ add_executable(${PROJECT_NAME} main.cpp
         DialogBox.h
         NPC.cpp
         NPC.h
+
 )
 
 # Add config.h.in file

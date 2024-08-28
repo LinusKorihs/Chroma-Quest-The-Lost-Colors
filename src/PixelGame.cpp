@@ -9,6 +9,7 @@
 #include "RoomChanger.h"
 #include "MiniBoss.h"
 #include "Pathfinder.h"
+#include "tileson.h"
 
 GameState currentGameState;
 
@@ -32,6 +33,12 @@ MiniBoss* PixelGame::miniboss;
 Pathfinder* PixelGame::pathfinder;
 bool PixelGame::hasAnimated[3] = {false, false, false};
 
+tson::Map PixelGame::currentMap;
+
+tson::Map& PixelGame::getMap()
+{
+    return currentMap;
+}
 
 void PixelGame::gameInit()
 {
@@ -69,17 +76,12 @@ void PixelGame::gameInit()
     projectile_p->load();
     MainCharacter::initPlayer(TextureManager::getTexture("MainCharacter"));
 
-    tson::Tileson tileson; // tileson parse
-   // auto MapPtr = tileson.parse("assets/graphics/TileSet & TileMap/tilemap.tmj");
-    auto MapPtr = tileson.parse("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
-    tson::Map &Map = *MapPtr;
-
-    if (Map.getStatus() != tson::ParseStatus::OK)
+    if (currentMap.getStatus() != tson::ParseStatus::OK)
     {
         std::cout
                 << LanguageManager::getLocalizedGameText("Failed to parse map, error: ",
                                                          "Fehler beim Parsen der Karte, Fehler: ")
-                << Map.getStatusMessage() << std::endl;
+                << currentMap.getStatusMessage() << std::endl;
     }
 
     pathfinder = new Pathfinder();
@@ -107,6 +109,20 @@ void PixelGame::gameInit()
     Texture2D dialogTexture = TextureManager::getTexture("speechBubble");
     NPC::init(npcTexture,npcTexture,npcTexture); //wird wenn texturen da sind geändert
     DialogBox::init(dialogTexture);
+}
+
+void PixelGame::rectangle()
+{
+    float x = MainCharacter::playerPosX + 5;
+    float y = MainCharacter::playerPosY + 2.5;
+    float width = TextureManager::getTexture("MainCharacter").width - 875;
+    float height = TextureManager::getTexture("MainCharacter").height + 170;
+    float playerScale = 0.15f;
+    float hitScale = 0.18f;
+
+    MainCharacter::playerRec = {x, y, width * playerScale, height * playerScale};
+
+    MainCharacter::HitRec = {x, y, width * hitScale, height * hitScale};
 }
 
 void PixelGame::checkPressurePlates()
@@ -172,7 +188,7 @@ void PixelGame::openDoors()
                 Door::openDoors[6].drawNormal(96);
                 Door::openDoors[7].drawNormal(96);
             }
-           // eraseDoor(66*32,41*32);
+            // eraseDoor(66*32,41*32);
             eraseDoor(70*32,41*32);
         }
     }
@@ -199,11 +215,11 @@ void PixelGame::openDoors()
 void PixelGame::drawObjects()
 {
     MainCharacter::playerRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
-                                               TextureManager::getTexture("MainCharacter").width * 0.15f,
-                                               TextureManager::getTexture("MainCharacter").height * 0.15f};
+                                TextureManager::getTexture("MainCharacter").width * 0.15f,
+                                TextureManager::getTexture("MainCharacter").height * 0.15f};
     MainCharacter::HitRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
-                                                  TextureManager::getTexture("MainCharacter").width * 0.18f,
-                                                  TextureManager::getTexture("MainCharacter").height * 0.18f};
+                             TextureManager::getTexture("MainCharacter").width * 0.18f,
+                             TextureManager::getTexture("MainCharacter").height * 0.18f};
 
     if (Stone::drawStone == 0)
     {
@@ -260,9 +276,14 @@ void PixelGame::eraseDoor(int targetX, int targetY)
     currentGameState.doorRectangles.erase(it, currentGameState.doorRectangles.end());
 }
 
-
 void PixelGame::gameLoop(tson::Map &Map)
 {
+    if (Map.getLayers().empty() || Map.getTilesets().empty())
+    {
+        std::cerr << "Invalid map data" << std::endl;
+        return;
+    }
+
     if (IsKeyPressed(KEY_ESCAPE))
     {
         ConfigNotConst::isGamePaused = true;
@@ -283,7 +304,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     DrawMap::drawTiles(Map, TextureManager::m_textures["TileSet"]);
 
     openDoors();
-
+    openBottomDoorRoom1();
 
     for (Stone stone: Stone::stoneObjects)
     {
@@ -315,7 +336,8 @@ void PixelGame::gameLoop(tson::Map &Map)
     projectile_p->update(GetFrameTime(), projectile_p->getProjectileDestination());
     projectile_p->draw();
 
-    if(!miniboss->getUnload()) {
+    if(!miniboss->getUnload())
+    {
         miniboss->updateBoss(GetFrameTime(), MainCharacter::getPosition());
         miniboss->drawBoss();
     }
@@ -330,6 +352,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         dialogBox.update({MainCharacter::playerPosX, MainCharacter::playerPosY});
         //dialogBox.draw();
     }
+
     MainCharacter::attack();
     MainCharacter::receiveDamage();
 
@@ -343,7 +366,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     {
         if(doors.isOpen())
         {
-           if (!roomChanger.isTransitioning() &&
+            if (!roomChanger.isTransitioning() &&
                 CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle())) {
                 roomChanger.setTargetPos();
                 Vector2 newPos = roomChanger.getTargetPos();
@@ -353,7 +376,6 @@ void PixelGame::gameLoop(tson::Map &Map)
         }
     }
 
-
     if (IsKeyPressed(KEY_ESCAPE))
     {
         currentGameState.changeGameState(MenuState::PauseMenu);
@@ -362,32 +384,39 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     bool isMoving = false; //movement sollte noch separiert werden
 
-    if(!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
+    if(!roomChanger.isTransitioning() && !playerCamera::getIsAnimating())
+    {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP]))
+        {
             MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
             isMoving = true;
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN]))
+        {
             MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
             isMoving = true;
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT]))
+        {
             MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
             isMoving = true;
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
+        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT]))
+        {
             MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
             isMoving = true;
         }
-        if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+        if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound))
+        {
             PlaySound(ConfigNotConst::playerWalkingSound);
-        } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+        }
+        else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound))
+        {
             StopSound(ConfigNotConst::playerWalkingSound);
         }
     }
-        UpdateMusicStream(ConfigNotConst::gameBackgroundMusic);
-        playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
-
+    UpdateMusicStream(ConfigNotConst::gameBackgroundMusic);
+    playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
 
     if (WindowShouldClose())
     {
@@ -425,6 +454,17 @@ void PixelGame::drawHud()
              1700, 140, 20, BLACK);
 }
 
+void PixelGame::openBottomDoorRoom1()
+{
+    if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[1].getRectangle()) &&
+        !roomChanger.isTransitioning())
+    {
+        roomChanger.startTransition({0, 0}); // Set new position and room
+    }
+
+    roomChanger.update();
+    Door::openDoors[20].setOpened();
+}
 
 void PixelGame::closedDoorTransition()
 {
@@ -488,4 +528,36 @@ void PixelGame::closedDoorTransition()
         Door::openDoors[6].setOpened();
         //Door::openDoors[7].setOpened();
     }
+}
+
+void PixelGame::loadMap(const std::string &mapPath)
+{
+    // Unload the current map before loading a new one
+    if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty())
+    {
+        std::cout << "Unloading current map" << std::endl;
+        unloadMap(currentMap);
+    }
+
+    // Parse the new map
+    tson::Tileson tileson;
+    auto MapPtr = tileson.parse(mapPath);
+
+    if (MapPtr && MapPtr->getStatus() == tson::ParseStatus::OK)
+    {
+        currentMap = std::move(*MapPtr);
+        std::cout << "Map loaded successfully: " << mapPath << std::endl;
+    }
+    else
+    {
+        std::cerr << "Failed to parse map: " << MapPtr->getStatusMessage() << std::endl;
+    }
+}
+
+void PixelGame::unloadMap(tson::Map &map)
+{
+    // Clear the current map data
+    map.getLayers().clear();
+    map.getTilesets().clear();
+    std::cout << "Map unloaded successfully" << std::endl;
 }

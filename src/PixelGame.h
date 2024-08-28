@@ -12,9 +12,11 @@
 #include "EnemyManager.h"
 #include "MiniBoss.h"
 #include "Pathfinder.h"
+
 #include "Comments.h"
 #include "DialogBox.h"
 #include "NPC.h"
+
 
 class MiniBoss;
 
@@ -34,18 +36,24 @@ public:
 
     static void eraseDoor(int targetX, int targetY);
     static void openDoors();
+    static void openBottomDoorRoom1();
     static void closedDoorTransition();
     static void checkPressurePlates();
-
 
     static Pathfinder* pathfinder;
     static MiniBoss* miniboss;
 
+    static void rectangle();
+
+    static void loadMap(const std::string &mapPath);
+    static void unloadMap(tson::Map &map);
+    static tson::Map& getMap();
+
+    static tson::Map currentMap;
 private:
     static void drawObjects();
     static void drawHud();
     static void unloadAll();
-    static bool hasAnimated[3];
 
     static std::shared_ptr<Projectile> projectile_p;
     static std::shared_ptr<Projectile> projectileEnemy_p;
@@ -57,7 +65,9 @@ private:
     static Vector2 BossRedPosition;
     static Door door;
 
-
+    static bool doorsErased1;
+    static bool doorsErased2;
+    static bool hasAnimated[3];
 
 };
 

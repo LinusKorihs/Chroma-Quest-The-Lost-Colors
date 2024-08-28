@@ -583,8 +583,8 @@ void Door::setOpened()
 
 std::vector<Door> Door::openDoors;
 
-void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D &doorTexture3, Texture2D &doorTexture4) {
-
+void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D &doorTexture3, Texture2D &doorTexture4)
+{
     int multiple = 32;
     openDoors.emplace_back(1, doorTexture1, 35*multiple, 68*multiple,1,0); //raum 1 tür oben
     openDoors.emplace_back(1, doorTexture1, 35*multiple, 48*multiple,1,0); //raum 2 tür oben
@@ -599,11 +599,11 @@ void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D
     openDoors.emplace_back(0, doorTexture2, 8*multiple, 38*multiple,4,0); //nebenraum 5 tür links
 
     openDoors.emplace_back(0, doorTexture4, 35*multiple, 82*multiple,2,0); //raum 4 tür unten
-    openDoors.emplace_back(0, doorTexture4, 35*multiple, 64*multiple,2,0); // raum 2 tür unten
-    openDoors.emplace_back(0, doorTexture4, 41*multiple, 56*multiple,4,0); // raum 2 tür rechts
-    openDoors.emplace_back(0, doorTexture4, 29*multiple, 56*multiple,3,0);//raum 2 tür links
-    openDoors.emplace_back(0, doorTexture4, 25*multiple, 56*multiple,4,0);//raum 3 tür rechts
-    openDoors.emplace_back(0, doorTexture4, 14*multiple, 51*multiple,1,0);//raum 3 tür oben
+    openDoors.emplace_back(0, doorTexture4, 35*multiple, 64*multiple,2,0); //raum 2 tür unten
+    openDoors.emplace_back(0, doorTexture4, 41*multiple, 56*multiple,4,0); //raum 2 tür rechts
+    openDoors.emplace_back(0, doorTexture4, 29*multiple, 56*multiple,3,0); //raum 2 tür links
+    openDoors.emplace_back(0, doorTexture4, 25*multiple, 56*multiple,4,0); //raum 3 tür rechts
+    openDoors.emplace_back(0, doorTexture4, 14*multiple, 51*multiple,1,0); //raum 3 tür oben
     openDoors.emplace_back(0, doorTexture4, 14*multiple, 47*multiple,2,0); //raum 4 tür unten
     openDoors.emplace_back(0, doorTexture4, 34*multiple, 28*multiple,4,0); //raum 4 tür rechts (oben)
     openDoors.emplace_back(0, doorTexture4, 38*multiple, 28*multiple,3,0); //raum 4 tür links (oben)
@@ -612,7 +612,43 @@ void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D
     openDoors.emplace_back(0, doorTexture4, 61*multiple, 51*multiple,1,0); //raum 4 tür oben (unten)
     openDoors.emplace_back(0, doorTexture4, 61*multiple, 47*multiple,2,0); //raum 5 tür unten
     openDoors.emplace_back(0, doorTexture4, 52*multiple, 36*multiple,3,0); //raum 5 tür links
-    openDoors.emplace_back(0, doorTexture4, 35*multiple, 21*multiple,2,0);//bossraum unten
+    openDoors.emplace_back(0, doorTexture4, 35*multiple, 21*multiple,2,0); //bossraum unten
+    openDoors.emplace_back(1, doorTexture4, 35*multiple, 82*multiple,20,0); //raum 1 tür unten
+
+    /*doors sorted
+        openDoors.emplace_back(1, doorTexture1, 35*multiple, 68*multiple,1,0); //raum 1 tür oben
+    openDoors.emplace_back(1, doorTexture4, 35*multiple, 82*multiple,2,0); //raum 1 tür unten
+    openDoors.emplace_back(1, doorTexture2, 41*multiple, 75*multiple,4,0); //raum 1 tür rechts
+
+    openDoors.emplace_back(1, doorTexture3, 45*multiple, 75*multiple,3,0); //nebenraum 1 tür links
+
+    openDoors.emplace_back(1, doorTexture1, 35*multiple, 48*multiple,1,0); //raum 2 tür oben
+    openDoors.emplace_back(0, doorTexture4, 35*multiple, 64*multiple,2,0); //raum 2 tür unten
+    openDoors.emplace_back(0, doorTexture4, 41*multiple, 56*multiple,4,0); //raum 2 tür rechts
+    openDoors.emplace_back(0, doorTexture4, 29*multiple, 56*multiple,3,0); //raum 2 tür links
+
+    openDoors.emplace_back(0, doorTexture4, 25*multiple, 56*multiple,4,0); //raum 3 tür rechts
+    openDoors.emplace_back(0, doorTexture4, 14*multiple, 51*multiple,1,0); //raum 3 tür oben
+
+    openDoors.emplace_back(1, doorTexture3, 12*multiple, 38*multiple,3,0); //raum 4 tür links
+    openDoors.emplace_back(1, doorTexture3, 8*multiple, 38*multiple,4,0); //nebenraum 4 tür rechts
+    openDoors.emplace_back(0, doorTexture4, 35*multiple, 82*multiple,2,0); //raum 4 tür unten
+    openDoors.emplace_back(0, doorTexture4, 14*multiple, 47*multiple,2,0); //raum 4 tür unten
+    openDoors.emplace_back(0, doorTexture4, 34*multiple, 28*multiple,4,0); //raum 4 tür rechts (oben)
+    openDoors.emplace_back(0, doorTexture4, 38*multiple, 28*multiple,3,0); //raum 4 tür links (oben)
+    openDoors.emplace_back(0, doorTexture4, 48*multiple, 36*multiple,4,0); //raum 4 tür rechts (mittig)
+    openDoors.emplace_back(0, doorTexture4, 45*multiple, 56*multiple,3,0); //raum 4 tür links (unten)
+    openDoors.emplace_back(0, doorTexture4, 61*multiple, 51*multiple,1,0); //raum 4 tür oben (unten)
+
+    openDoors.emplace_back(0, doorTexture4, 61*multiple, 47*multiple,2,0); //raum 5 tür unten
+    openDoors.emplace_back(0, doorTexture4, 52*multiple, 36*multiple,3,0); //raum 5 tür links
+    openDoors.emplace_back(1, doorTexture2, 66*multiple, 41*multiple,4,0); //raum 5 tür rechts
+    openDoors.emplace_back(0, doorTexture3, 70*multiple, 41*multiple,3,0); //nebenraum 5 tür links
+    openDoors.emplace_back(1, doorTexture3, 12*multiple, 38*multiple,3,0); //nebenraum 5 tür links
+    openDoors.emplace_back(0, doorTexture2, 8*multiple, 38*multiple,4,0); //nebenraum 5 tür links
+
+    openDoors.emplace_back(0, doorTexture4, 35*multiple, 21*multiple,2,0); //bossraum unten
+*/
 
 }
 std::vector<Machine> Machine::machines;

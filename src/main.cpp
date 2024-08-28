@@ -1,5 +1,4 @@
-﻿#include <synchapi.h>
-#include "GameState.h"
+﻿#include "GameState.h"
 #include "config.h"
 #include "Configuration.h"
 #include "TextureManage.h"
@@ -24,9 +23,7 @@ int main()
     ToggleFullscreen();
 #endif
 
-    tson::Tileson tileson;
-    auto MapPtr = tileson.parse("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
-    tson::Map& tileMap = *MapPtr;
+    PixelGame::loadMap("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
 
     SetExitKey(KEY_F4);
 
@@ -62,7 +59,7 @@ int main()
                 Menu::drawMainMenu(applicationState);
                 break;
             case MenuState::GameRunning:
-                PixelGame::gameLoop(tileMap);
+                PixelGame::gameLoop(PixelGame::getMap());
                 if (IsKeyPressed(KEY_ESCAPE))
                 {
                     applicationState.currentGameMenu = MenuState::PauseMenu;

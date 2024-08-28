@@ -89,7 +89,7 @@ public:
 
 private:
     int doorOpen;
-    int doorNumber; //1 Up, 2 Down, 3 Left, 4 Right
+    int doorNumber; //1 Up, 2 Down, 3 Left, 4 Right,
     Texture2D doorTexture;
     float doorPositionX;
     float doorPositionY;
