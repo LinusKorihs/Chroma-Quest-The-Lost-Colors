@@ -12,6 +12,11 @@ public:
     Vector2 getTargetPos();
     void setTargetPos();
     void setTargetPos(tson::Map &tileMap);
+    bool getDungeon1();
+    bool getOverworld();
+
+    bool dungeon1 = true;
+    bool overworld = false;
 
 private:
     enum TransitionPhase {

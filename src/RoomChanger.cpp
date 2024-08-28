@@ -184,8 +184,11 @@ void RoomChanger::setTargetPos()
     // Overworld
     if(MainCharacter::playerPosX > 34*32 && MainCharacter::playerPosX < 37*32 &&  83*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 80*32)
     {
+
         std::cout << "Unloading map" << std::endl;
         PixelGame::unloadMap(PixelGame::getMap());
+        dungeon1 = false;
+        overworld = true;
 
         std::cout << "Loading map" << std::endl;
         PixelGame::loadMap("assets/graphics/Old TileSet & TileMap/tilemap.tmj");
@@ -193,4 +196,14 @@ void RoomChanger::setTargetPos()
         std::cout << "Map loaded" << std::endl;
         targetPosition = {32 * 4, 32 * 12};  // Set the new target position
     }
+}
+
+bool RoomChanger::getDungeon1()
+{
+    return dungeon1;
+}
+
+bool RoomChanger::getOverworld()
+{
+    return overworld;
 }

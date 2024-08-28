@@ -757,7 +757,7 @@ void Chest::draw()
     }
     else
     {
-        DrawRectangleLines(chestRec.x,chestRec.y,chestRec.width,chestRec.height, RED);
+        //DrawRectangleLines(chestRec.x,chestRec.y,chestRec.width,chestRec.height, RED);
         DrawTextureRec(chestTexture, {0, 0, 32, 32}, {chestPositionX, chestPositionY}, WHITE);
     }
 }

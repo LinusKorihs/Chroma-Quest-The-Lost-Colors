@@ -69,5 +69,6 @@ private:
     static bool doorsErased2;
     static bool hasAnimated[3];
 
+
 };
 

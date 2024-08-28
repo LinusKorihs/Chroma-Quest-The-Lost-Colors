@@ -4,6 +4,8 @@
 int DrawMap::sizeDoorVec = 0;
 int DrawMap::sizeWallVec = 0;
 int DrawMap::sizeOpenDoorVec = 0;
+bool DrawMap::dungeon1 = true;
+bool DrawMap::overworld = false;
 
 bool DrawMap::isOpenDoor(float x, float y) {
     return /*(x == 992 && y == 1632) || (x == 704 && y == 1600) || (x == 1024 && y == 992) ||
@@ -34,6 +36,7 @@ bool rectangleExists(const std::vector<Rectangle>& rectangles, const Rectangle& 
 
 void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
 {
+
     /*auto layer1 = gameMap.getLayer("Black")->getData();
     drawLayer(layer1, gameMap, tileTexture);
 
@@ -46,20 +49,27 @@ void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
     auto layer4 = gameMap.getLayer("Schatten")->getData();
     //drawLayer(layer4, gameMap, tileTexture);*/
 
-    auto layer1 = gameMap.getLayer("Floor & Walls")->getData();
-    drawLayer(layer1, gameMap, tileTexture);
+    if(dungeon1) {
 
-    auto layer2 = gameMap.getLayer("Wall with energy")->getData();
-    drawLayer(layer2, gameMap, tileTexture);
+        auto layer1 = gameMap.getLayer("Floor & Walls")->getData();
+        drawLayer(layer1, gameMap, tileTexture);
 
-    auto layer3 = gameMap.getLayer("Blocks Grey")->getData();
-    drawLayer(layer3, gameMap, tileTexture);
+        auto layer2 = gameMap.getLayer("Wall with energy")->getData();
+        drawLayer(layer2, gameMap, tileTexture);
 
-    auto layer4 = gameMap.getLayer("Objects")->getData();
-    drawLayer(layer4, gameMap, tileTexture);
+        auto layer3 = gameMap.getLayer("Blocks Grey")->getData();
+        drawLayer(layer3, gameMap, tileTexture);
 
-    auto layer5 = gameMap.getLayer("Torches")->getData();
-    drawLayer(layer5, gameMap, tileTexture);
+        auto layer4 = gameMap.getLayer("Objects")->getData();
+        drawLayer(layer4, gameMap, tileTexture);
+
+        auto layer5 = gameMap.getLayer("Torches")->getData();
+        drawLayer(layer5, gameMap, tileTexture);
+    }
+    if(overworld){
+        auto layer1 = gameMap.getLayer("Kachelebene 2")->getData();
+        drawLayer(layer1, gameMap, tileTexture);
+    }
 
 }
 
@@ -68,9 +78,17 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
 
     const int currentFrame = int(GetTime() * 6) % 4;
     int multiplier = 1;
+    float tileWidth;
+    int tileSetColumns;
 
-    float tileWidth = 32; // Old 16x16
-    int tileSetColumns = 31; // Old 16; rn 8, new 31
+    if(dungeon1) {
+       tileWidth = 32; // Old 16x16
+       tileSetColumns = 31; // Old 16; rn 8, new 31
+    }
+    if(overworld){
+        tileWidth = 16; // Old 16x16
+        tileSetColumns = 16; // Old 16; rn 8, new 31
+    }
 
     for (int y = 0; y < Map.getSize().y; y++)
     {
@@ -89,21 +107,33 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
 
                     Rectangle wallRec = {(float) x * tileWidth * multiplier, (float) y * tileWidth * multiplier, tileWidth * multiplier, tileWidth * multiplier}; // Create a Rectangle for the tile and add it to the list of wall rectangles
 
-                    if(isOpenDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 22 || isDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 23) //für projectile kollisionserkennung - damit es nicht durch offene türen fliegt
-                    {
-                        currentGameState.openDoorRectangles.push_back(wallRec);
-                        sizeOpenDoorVec++;
-                    }
-
-                    else if (!isOpenDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.doorRectangles, wallRec) && isDoor(wallRec.x, wallRec.y) && sizeDoorVec <= 6)
-                    {
-                        currentGameState.doorRectangles.push_back(wallRec);
-                        sizeDoorVec++;
-
-                    } else {
-
-                        if(!isOpenDoor(wallRec.x, wallRec.y) && !rectangleExists(currentGameState.wallRectangles, wallRec) && !isDoor(wallRec.x, wallRec.y))
+                    if(dungeon1) {
+                        if (isOpenDoor(wallRec.x, wallRec.y) &&
+                            !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 22 ||
+                            isDoor(wallRec.x, wallRec.y) &&
+                            !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <=
+                                                                                              23) //für projectile kollisionserkennung - damit es nicht durch offene türen fliegt
                         {
+                            currentGameState.openDoorRectangles.push_back(wallRec);
+                            sizeOpenDoorVec++;
+                        } else if (!isOpenDoor(wallRec.x, wallRec.y) &&
+                                   !rectangleExists(currentGameState.doorRectangles, wallRec) &&
+                                   isDoor(wallRec.x, wallRec.y) && sizeDoorVec <= 6) {
+                            currentGameState.doorRectangles.push_back(wallRec);
+                            sizeDoorVec++;
+
+                        } else {
+
+                            if (!isOpenDoor(wallRec.x, wallRec.y) &&
+                                !rectangleExists(currentGameState.wallRectangles, wallRec) &&
+                                !isDoor(wallRec.x, wallRec.y)) {
+                                currentGameState.wallRectangles.push_back(wallRec);
+                                sizeWallVec++;
+                            }
+                        }
+                    }
+                    if(overworld){
+                        if (!rectangleExists(currentGameState.wallRectangles, wallRec)) {
                             currentGameState.wallRectangles.push_back(wallRec);
                             sizeWallVec++;
                         }

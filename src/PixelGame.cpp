@@ -276,161 +276,148 @@ void PixelGame::eraseDoor(int targetX, int targetY)
     currentGameState.doorRectangles.erase(it, currentGameState.doorRectangles.end());
 }
 
-void PixelGame::gameLoop(tson::Map &Map)
-{
-    if (Map.getLayers().empty() || Map.getTilesets().empty())
-    {
-        std::cerr << "Invalid map data" << std::endl;
-        return;
-    }
+void PixelGame::gameLoop(tson::Map &Map) {
+    if (roomChanger.getDungeon1()) {
+        if (Map.getLayers().empty() || Map.getTilesets().empty()) {
+            std::cerr << "Invalid map data" << std::endl;
+            return;
+        }
 
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        ConfigNotConst::isGamePaused = true;
-    }
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            ConfigNotConst::isGamePaused = true;
+        }
 
-    if (ConfigNotConst::isGamePaused)
-    {
-        currentGameState.changeGameState(MenuState::PauseMenu);
-        currentGameState.currentGameMenu = MenuState::PauseMenu;
-        Menu::drawPauseMenu(currentGameState);
-    }
+        if (ConfigNotConst::isGamePaused) {
+            currentGameState.changeGameState(MenuState::PauseMenu);
+            currentGameState.currentGameMenu = MenuState::PauseMenu;
+            Menu::drawPauseMenu(currentGameState);
+        }
 
-    BeginMode2D(playerCamera::camera); //BeginDrawing();
-    checkPressurePlates();
-    playerCamera::updateCamera({MainCharacter::playerPosX, MainCharacter::playerPosY}, GetFrameTime());
-    ClearBackground(DARKGRAY);
+        BeginMode2D(playerCamera::camera); //BeginDrawing();
+        checkPressurePlates();
+        playerCamera::updateCamera({MainCharacter::playerPosX, MainCharacter::playerPosY}, GetFrameTime());
+        ClearBackground(DARKGRAY);
 
-    DrawMap::drawTiles(Map, TextureManager::m_textures["TileSet"]);
+        DrawMap::drawTiles(Map, TextureManager::m_textures["TileSet"]);
 
-    openDoors();
-    openBottomDoorRoom1();
+        openDoors();
+        openBottomDoorRoom1();
 
-    for (Stone stone: Stone::stoneObjects)
-    {
-        stone.draw();
-        //stone.drawHitboxes();
-    }
+        for (Stone stone: Stone::stoneObjects) {
+            stone.draw();
+            //stone.drawHitboxes();
+        }
 
-    drawObjects();
-    InGameHud::drawHealthBarTexture();
+        drawObjects();
+        InGameHud::drawHealthBarTexture();
 
-    if(!roomChanger.isTransitioning() && !playerCamera::getIsAnimating())
-    {
-        MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
-    }
-    MainCharacter::updateRec();
-    MainCharacter character;
-    Texture texture = TextureManager::getTexture("MainCharacter");
-    MainCharacter::drawMainCharacter(texture, character);
-    //character.drawHitboxes();
-    MainCharacter::isPlayerDead = false;
+        if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
+            MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
+        }
+        MainCharacter::updateRec();
+        MainCharacter character;
+        Texture texture = TextureManager::getTexture("MainCharacter");
+        MainCharacter::drawMainCharacter(texture, character);
+        //character.drawHitboxes();
+        MainCharacter::isPlayerDead = false;
 
-    enemyManager.updateEnemies(GetFrameTime());
-    enemyManager.drawEnemies();
-    /*miniBoss_p->updateBoss(GetFrameTime());
-    miniBoss_p->drawBoss();*/
+        enemyManager.updateEnemies(GetFrameTime());
+        enemyManager.drawEnemies();
+        /*miniBoss_p->updateBoss(GetFrameTime());
+        miniBoss_p->drawBoss();*/
 
-    //projectileEnemy_p->update(GetFrameTime(), 2);
-    //projectileEnemy_p->draw();
-    projectile_p->update(GetFrameTime(), projectile_p->getProjectileDestination());
-    projectile_p->draw();
+        //projectileEnemy_p->update(GetFrameTime(), 2);
+        //projectileEnemy_p->draw();
+        projectile_p->update(GetFrameTime(), projectile_p->getProjectileDestination());
+        projectile_p->draw();
 
-    if(!miniboss->getUnload())
-    {
-        miniboss->updateBoss(GetFrameTime(), MainCharacter::getPosition());
-        miniboss->drawBoss();
-    }
+        if (!miniboss->getUnload()) {
+            miniboss->updateBoss(GetFrameTime(), MainCharacter::getPosition());
+            miniboss->drawBoss();
+        }
 
-    for(NPC& npc : NPC::npcs)
-    {
-        npc.draw();
-    }
+        for (NPC &npc: NPC::npcs) {
+            npc.draw();
+        }
 
-    for(DialogBox& dialogBox : DialogBox::dialogBoxes)
-    {
-        dialogBox.update({MainCharacter::playerPosX, MainCharacter::playerPosY});
-        dialogBox.draw();
-    }
+        for (DialogBox &dialogBox: DialogBox::dialogBoxes) {
+            dialogBox.update({MainCharacter::playerPosX, MainCharacter::playerPosY});
+            dialogBox.draw();
+        }
 
-    MainCharacter::attack();
-    MainCharacter::receiveDamage();
+        MainCharacter::attack();
+        MainCharacter::receiveDamage();
 
-    closedDoorTransition();
-    for(Chest& chest : Chest::chests)
-    {
-        chest.update();
-    }
+        closedDoorTransition();
+        for (Chest &chest: Chest::chests) {
+            chest.update();
+        }
 
-    for (Door& doors : Door::openDoors)
-    {
-        if(doors.isOpen())
-        {
-            if (!roomChanger.isTransitioning() &&
-                CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle())) {
-                roomChanger.setTargetPos();
-                Vector2 newPos = roomChanger.getTargetPos();
-                roomChanger.startTransition(newPos); // neue Position und Raum anpassen
-                roomChanger.update();
+        for (Door &doors: Door::openDoors) {
+            if (doors.isOpen()) {
+                if (!roomChanger.isTransitioning() &&
+                    CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle())) {
+                    roomChanger.setTargetPos();
+                    Vector2 newPos = roomChanger.getTargetPos();
+                    roomChanger.startTransition(newPos); // neue Position und Raum anpassen
+                    roomChanger.update();
+                }
             }
         }
-    }
 
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        currentGameState.changeGameState(MenuState::PauseMenu);
-        return;
-    }
+        if (IsKeyPressed(KEY_ESCAPE)) {
+            currentGameState.changeGameState(MenuState::PauseMenu);
+            return;
+        }
 
-    bool isMoving = false; //movement sollte noch separiert werden
+        bool isMoving = false; //movement sollte noch separiert werden
 
-    if(!roomChanger.isTransitioning() && !playerCamera::getIsAnimating())
-    {
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP]))
-        {
-            MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
-            isMoving = true;
+        if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
+            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
+                MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
+                isMoving = true;
+            }
+            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
+                MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
+                isMoving = true;
+            }
+            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
+                MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
+                isMoving = true;
+            }
+            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
+                MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
+                isMoving = true;
+            }
+            if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                PlaySound(ConfigNotConst::playerWalkingSound);
+            } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                StopSound(ConfigNotConst::playerWalkingSound);
+            }
         }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN]))
-        {
-            MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
-            isMoving = true;
-        }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT]))
-        {
-            MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
-            isMoving = true;
-        }
-        if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT]))
-        {
-            MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
-            isMoving = true;
-        }
-        if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound))
-        {
-            PlaySound(ConfigNotConst::playerWalkingSound);
-        }
-        else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound))
-        {
-            StopSound(ConfigNotConst::playerWalkingSound);
-        }
-    }
-    UpdateMusicStream(ConfigNotConst::gameBackgroundMusic);
-    playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
+        UpdateMusicStream(ConfigNotConst::gameBackgroundMusic);
+        playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
 
-    if (WindowShouldClose())
-    {
-        CloseWindow();
-        unloadAll();
-        exit(0);
+        if (WindowShouldClose()) {
+            CloseWindow();
+            unloadAll();
+            exit(0);
+        }
+        EndMode2D();
+        drawHud();
+        if (!miniboss->getUnload()) {
+            miniboss->drawShieldBar();
+        }
+        //EndDrawing();
     }
-    EndMode2D();
-    drawHud();
-    if(!miniboss->getUnload())
-    {
-        miniboss->drawShieldBar();
+    if(roomChanger.getOverworld()){
+        DrawMap::overworld = true;
+        DrawMap::dungeon1 = false;
+        DrawRectangle(0, 0, 2500, 3000, BLACK);
+        DrawMap::drawTiles(Map, TextureManager::m_textures["OldTileSet"]);
+
+
     }
-    //EndDrawing();
 }
 
 void PixelGame::unloadAll()
