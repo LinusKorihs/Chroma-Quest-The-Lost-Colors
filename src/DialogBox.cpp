@@ -42,10 +42,11 @@ void DialogBox::draw()
         std::cout << "Drawing dialog box" << std::endl;
         // Zeichne die Textur des Dialogfeldes
         DrawTextureEx(dialogTexture, {33*32, 75*32}, 0, 1.5, WHITE);
+       // DrawTextureEx(dialogTexture, {33*32, 75*32}, 0, 1.5, WHITE);
 
         // Zeichne den aktuellen Text
-       // DrawText(dialogText[currentLineIndex].c_str(), 1068, 2407, 1, BLACK);
         DrawText(dialogText[currentLineIndex].c_str(), 1068, 2407, 1, BLACK);
+        //DrawText(dialogText[currentLineIndex].c_str(), 100, 100, 1, BLACK);
     }
 }
 

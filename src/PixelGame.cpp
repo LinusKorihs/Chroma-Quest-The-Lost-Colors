@@ -350,7 +350,7 @@ void PixelGame::gameLoop(tson::Map &Map)
     for(DialogBox& dialogBox : DialogBox::dialogBoxes)
     {
         dialogBox.update({MainCharacter::playerPosX, MainCharacter::playerPosY});
-        //dialogBox.draw();
+        dialogBox.draw();
     }
 
     MainCharacter::attack();
@@ -444,10 +444,6 @@ void PixelGame::unloadAll()
 
 void PixelGame::drawHud()
 {
-    for(DialogBox& dialogBox : DialogBox::dialogBoxes)
-    {
-        dialogBox.draw();
-    }
     InGameHud::drawHealthBarTexture();
     InGameHud::drawRGBBarTexture();
     DrawText(TextFormat("%s: %i", LanguageManager::getLocalizedGameText("Score", "Punkte"), MainCharacter::playerScore),
