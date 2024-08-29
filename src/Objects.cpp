@@ -777,5 +777,10 @@ void Chest::update()
         {
             InGameHud::health += 0.5;
         }
+        PlaySound(ConfigNotConst::chestOpenSound);
+        if(!IsSoundPlaying(ConfigNotConst::chestOpenSound))
+        {
+            StopSound(ConfigNotConst::chestOpenSound);
+        }
     }
 }

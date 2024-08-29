@@ -28,6 +28,8 @@ public:
     static Direction selectedPlayerKey;
 
     static Sound playerWalkingSound;
+    static Sound doorOpenSound;
+    static Sound chestOpenSound;
     static Music gameBackgroundMusic;
 };
 

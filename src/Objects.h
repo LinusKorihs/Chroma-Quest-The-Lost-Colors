@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include <vector>
 #include "InGameHud.h"
+#include "Configuration.h"
 
 class Stone
 {

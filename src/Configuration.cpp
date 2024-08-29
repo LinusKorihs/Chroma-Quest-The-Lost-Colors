@@ -19,6 +19,8 @@ Direction ConfigNotConst::selectedPlayerKey = Direction::NONE;
 
 Sound ConfigNotConst::playerWalkingSound;
 Music ConfigNotConst::gameBackgroundMusic;
+Sound ConfigNotConst::doorOpenSound;
+Sound ConfigNotConst::chestOpenSound;
 
 void ConfigFunction::toggleGamePause()
 {

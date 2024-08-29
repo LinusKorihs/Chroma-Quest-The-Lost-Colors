@@ -88,6 +88,8 @@ void TextureManage::loadAudio()
     //InitAudioDevice(); // Initialize audio device
 
     ConfigNotConst::playerWalkingSound = LoadSound("assets/audio/sfx/FootSteps.wav");
+    ConfigNotConst::chestOpenSound = LoadSound("assets/audio/sfx/chest.wav");
+    ConfigNotConst::doorOpenSound = LoadSound("assets/audio/sfx/doorSound.wav");
     ConfigNotConst::gameBackgroundMusic = LoadMusicStream("assets/audio/tracks/dungeon1.mp3");
 
     Audio::updateAudioVolumes();

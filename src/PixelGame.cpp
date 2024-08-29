@@ -45,8 +45,10 @@ tson::Map& PixelGame::getMap()
 
 void PixelGame::gameInit()
 {
-    music = LoadMusicStream("assets/audio/tracks/dungeon1.mp3");
-    dungeonMusic2 = LoadMusicStream("assets/audio/tracks/dungeon1-1.mp3");
+    music = LoadMusicStream("assets/audio/tracks/dungeon1-1new.wav");
+    dungeonMusic2 = LoadMusicStream("assets/audio/tracks/dungeon1-2.wav");
+    SetMusicVolume(music, 0.5f);
+    SetMusicVolume(dungeonMusic2, 0.5f);
 
     slimeEnemyTexture = TextureManager::getTexture("SlimeRed");
     BossRed = TextureManager::getTexture("BossRed");
@@ -144,6 +146,11 @@ void PixelGame::checkPressurePlates()
         if (PressurePlate::pressurePlates[i].isPressed() && !hasAnimated[i])
         {
             playerCamera::animationCam(doorPositions[i]);
+            PlaySound(ConfigNotConst::doorOpenSound);
+            if(!IsSoundPlaying(ConfigNotConst::doorOpenSound))
+            {
+                StopSound(ConfigNotConst::doorOpenSound);
+            }
             hasAnimated[i] = true; // Animation wurde für diese Platte gestartet
 
             // Aktionen für die spezifische Tür
@@ -460,6 +467,7 @@ void PixelGame::closedDoorTransition()
 {
     if(machines[0].isFilled())
     {
+
         if (CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[0].getRectangle()) &&
             !roomChanger.isTransitioning())
         {
