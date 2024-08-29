@@ -100,69 +100,71 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 
     if(IsKeyDown(KEY_S) && punch == none)
     {
-        if (framesCounter >= (60 / framesSpeed))
-        {
-            framesCounter = 0;
-            if(lastDir != LASTDOWN)
-            {
-                currentFrame = 0;
+        if(!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_W)) {
+            if (framesCounter >= (60 / framesSpeed)) {
+                framesCounter = 0;
+                if (lastDir != LASTDOWN) {
+                    currentFrame = 0;
+                }
+                currentFrame++;
+
+                if (currentFrame > 3 || currentFrame < 0) currentFrame = 0;
+
+                frameRec.x = (float) currentFrame * 32;
             }
-            currentFrame++;
-
-            if (currentFrame > 3 || currentFrame < 0) currentFrame = 0;
-
-            frameRec.x = (float) currentFrame * 32;
         }
     }
     else if(IsKeyDown(KEY_D) && punch == none)
     {
-        if (framesCounter >= (60 / framesSpeed))
+        if(!IsKeyDown(KEY_S) && !IsKeyDown(KEY_A) && !IsKeyDown(KEY_W))
         {
-            framesCounter = 0;
-            if(lastDir != LASTRIGHT)
-            {
-                currentFrame = 4;
+            if (framesCounter >= (60 / framesSpeed)) {
+                framesCounter = 0;
+                if (lastDir != LASTRIGHT) {
+                    currentFrame = 4;
+                }
+                currentFrame++;
+
+                if (currentFrame > 7 || currentFrame < 4) currentFrame = 4;
+
+                frameRec.x = (float) currentFrame * 32;
             }
-            currentFrame++;
-
-            if (currentFrame > 7 || currentFrame < 4) currentFrame = 4;
-
-            frameRec.x = (float) currentFrame * 32;
         }
     }
     else if(IsKeyDown(KEY_W) && punch == none)
     {
-        if (framesCounter >= (60 / framesSpeed))
+        if(!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_S))
         {
-            framesCounter = 0;
-            if(lastDir != LASTUP)
-            {
-                currentFrame = 8;
+            if (framesCounter >= (60 / framesSpeed)) {
+                framesCounter = 0;
+                if (lastDir != LASTUP) {
+                    currentFrame = 8;
+                }
+                currentFrame++;
+
+                if (currentFrame > 11 || currentFrame < 8) currentFrame = 8;
+
+                frameRec.x = (float) currentFrame * 32;
             }
-            currentFrame++;
-
-            if (currentFrame > 11 || currentFrame < 8) currentFrame = 8;
-
-            frameRec.x = (float) currentFrame * 32;
         }
     }
     else if(IsKeyDown(KEY_A) && punch == none)
     {
-        if (framesCounter >= (60 / framesSpeed))
+        if(!IsKeyDown(KEY_S) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_W))
         {
-            framesCounter = 0;
-            if(lastDir != LASTLEFT)
-            {
-                currentFrame = 12;
-            }
-            currentFrame++;
+            if (framesCounter >= (60 / framesSpeed)) {
+                framesCounter = 0;
+                if (lastDir != LASTLEFT) {
+                    currentFrame = 12;
+                }
+                currentFrame++;
 
-            if (currentFrame > 15 || currentFrame < 12)
-            {
-                currentFrame = 12;
-            }
+                if (currentFrame > 15 || currentFrame < 12) {
+                    currentFrame = 12;
+                }
 
-            frameRec.x = (float) currentFrame * 32;
+                frameRec.x = (float) currentFrame * 32;
+            }
         }
     }
     else if(punch == down)
@@ -252,6 +254,23 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             }
         }
     }
+    else if(lastDir == LASTRIGHT){
+        currentFrame = 7;
+        frameRec.x = (float) currentFrame * 32;
+    }
+    else if(lastDir == LASTLEFT){
+        currentFrame = 13;
+        frameRec.x = (float) currentFrame * 32;
+    }
+    else if(lastDir == LASTUP){
+        currentFrame = 9;
+        frameRec.x = (float) currentFrame * 32;
+    }
+    else if(lastDir == LASTDOWN){
+        currentFrame = 1;
+        frameRec.x = (float) currentFrame * 32;
+    }
+
     checkCollisions();
 
 }
@@ -307,6 +326,11 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     }
 
     Rectangle newRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height};
+
+    if(IsKeyDown(KEY_D) && IsKeyDown(KEY_S) || IsKeyDown(KEY_D) && IsKeyDown(KEY_W) || IsKeyDown(KEY_A) && IsKeyDown(KEY_S) || IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
+    {
+        return;
+    }
 
     for (const Rectangle &doorRec : currentGameState.doorRectangles)
     {
