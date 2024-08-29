@@ -98,9 +98,9 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 {
     framesCounter++;
 
-    if(IsKeyDown(KEY_S) && punch == none)
+    if(IsKeyDown(KEY_S) && punch == none )
     {
-        if(!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_W)) {
+
             if (framesCounter >= (60 / framesSpeed)) {
                 framesCounter = 0;
                 if (lastDir != LASTDOWN) {
@@ -112,12 +112,11 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 
                 frameRec.x = (float) currentFrame * 32;
             }
-        }
+
     }
-    else if(IsKeyDown(KEY_D) && punch == none)
+    else if(IsKeyDown(KEY_D) && punch == none )
     {
-        if(!IsKeyDown(KEY_S) && !IsKeyDown(KEY_A) && !IsKeyDown(KEY_W))
-        {
+
             if (framesCounter >= (60 / framesSpeed)) {
                 framesCounter = 0;
                 if (lastDir != LASTRIGHT) {
@@ -129,12 +128,11 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 
                 frameRec.x = (float) currentFrame * 32;
             }
-        }
+
     }
     else if(IsKeyDown(KEY_W) && punch == none)
     {
-        if(!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_S))
-        {
+
             if (framesCounter >= (60 / framesSpeed)) {
                 framesCounter = 0;
                 if (lastDir != LASTUP) {
@@ -146,12 +144,11 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 
                 frameRec.x = (float) currentFrame * 32;
             }
-        }
+
     }
     else if(IsKeyDown(KEY_A) && punch == none)
     {
-        if(!IsKeyDown(KEY_S) && !IsKeyDown(KEY_D) && !IsKeyDown(KEY_W))
-        {
+
             if (framesCounter >= (60 / framesSpeed)) {
                 framesCounter = 0;
                 if (lastDir != LASTLEFT) {
@@ -165,7 +162,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 
                 frameRec.x = (float) currentFrame * 32;
             }
-        }
+
     }
     else if(punch == down)
     {
@@ -322,15 +319,12 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
             lastDir = LASTDOWN;
             break;
         default:
-            break;
+            break; //hier cases einfügen für schräg laufen mit hälfte speed?
     }
 
     Rectangle newRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height};
 
-    if(IsKeyDown(KEY_D) && IsKeyDown(KEY_S) || IsKeyDown(KEY_D) && IsKeyDown(KEY_W) || IsKeyDown(KEY_A) && IsKeyDown(KEY_S) || IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
-    {
-        return;
-    }
+
 
     for (const Rectangle &doorRec : currentGameState.doorRectangles)
     {
