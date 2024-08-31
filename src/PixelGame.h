@@ -39,6 +39,7 @@ public:
     static void openBottomDoorRoom1();
     static void closedDoorTransition();
     static void checkPressurePlates();
+    static void createEnemies();
 
     static Pathfinder* pathfinder;
     static MiniBoss* miniboss;

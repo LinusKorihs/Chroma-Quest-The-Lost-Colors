@@ -182,8 +182,14 @@ void RoomChanger::setTargetPos()
     }
 
     // Overworld
-    if(MainCharacter::playerPosX > 34*32 && MainCharacter::playerPosX < 37*32 &&  83*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 80*32)
+   if(MainCharacter::playerPosX > 34*32 && MainCharacter::playerPosX < 37*32 &&  83*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 80*32)
     {
+        overworldTransition();
+    }
+}
+void RoomChanger::overworldTransition()
+{
+
         dungeon1 = false;
         overworld = true;
         std::cout << "Loading map" << std::endl;
@@ -194,6 +200,27 @@ void RoomChanger::setTargetPos()
         MainCharacter::setPosition({32 * 1, 32 * 39});
         targetPosition = {32 * 1, 32 * 39};  // Set the new target position
         phase = TransitionPhase::None;
+
+}
+
+void RoomChanger::dungeon1Transition()
+{
+    overworld = false;
+    dungeon1 = true;
+    std::cout << "Loading map" << std::endl;
+    PixelGame::loadMap("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
+
+    ClearBackground(BLACK);
+    MainCharacter::setPosition({32 * 35, 32 * 81});
+    targetPosition = {32 * 35, 32 * 81};  // Set the new target position
+    phase = TransitionPhase::None;
+}
+
+void RoomChanger::setTargetPosOverworld()
+{
+    if(MainCharacter::playerPosX >= 0*32 && MainCharacter::playerPosX < 1*32 &&  40*32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 38*32)
+    {
+        dungeon1Transition();
     }
 }
 

@@ -11,6 +11,9 @@ public:
     bool isTransitioning() const;
     Vector2 getTargetPos();
     void setTargetPos();
+    void setTargetPosOverworld();
+    void overworldTransition();
+    void dungeon1Transition();
     void setTargetPos(tson::Map &tileMap);
     bool getDungeon1();
     bool getOverworld();

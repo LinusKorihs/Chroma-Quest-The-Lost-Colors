@@ -45,6 +45,18 @@ tson::Map& PixelGame::getMap()
     return currentMap;
 }
 
+void PixelGame::createEnemies()
+{
+    enemyManager.addEnemy({40*32, 75*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+    enemyManager.addEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICL, DOWNEN,0,0,2358,2440);
+    enemyManager.addEnemy({19*32, 56*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+    enemyManager.addEnemy({34*32, 53*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+    enemyManager.addEnemy({35*32, 51*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+    enemyManager.addEnemy({56*32, 56*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+    enemyManager.addEnemy({29*32, 28*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+    enemyManager.addEnemy({36*32, 53*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+}
+
 void PixelGame::gameInit()
 {
     music = LoadMusicStream("assets/audio/tracks/dungeon1-1new.wav");
@@ -55,16 +67,7 @@ void PixelGame::gameInit()
     slimeEnemyTexture = TextureManager::getTexture("SlimeRed");
     BossRed = TextureManager::getTexture("BossRed");
     MainCharacter::setEnemyManager(&enemyManager);
-    enemyManager.addEnemy({40*32, 75*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    //enemyManager.addEnemy({1218, 1622}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICL, DOWNEN,0,0,2358,2440);
-    enemyManager.addEnemy({19*32, 56*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({34*32, 53*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({35*32, 51*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({56*32, 56*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({29*32, 28*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({36*32, 53*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    //enemyManager.addEnemy({32*35+80, 32*65-80}, slimeEnemyTexture, SLIMERED, WALKVERTICL, UPEN);
+    //createEnemies();
 
     projectile_p = std::make_shared<Projectile>();
     MainCharacter::setProjectile(projectile_p);
@@ -101,18 +104,18 @@ void PixelGame::gameInit()
 
     playerCamera();
 
-    Texture2D stoneTexture = TextureManager::getTexture("Stone");
-    Rectangle stoneSourceRect = {0, 0, (float)stoneTexture.width, (float)stoneTexture.height};
+    //Texture2D stoneTexture = TextureManager::getTexture("Stone");
+   // Rectangle stoneSourceRect = {0, 0, (float)stoneTexture.width, (float)stoneTexture.height};
     Texture2D doorTexture3 = TextureManager::getTexture("StoneDoorL");
     Door::initDoors(doorTexture1, doorTexture2, doorTexture3, doorTexture2);
 
-    if (!IsTextureReady(stoneTexture))
+   /* if (!IsTextureReady(stoneTexture))
     {
         std::cerr << "Error: Stone texture not loaded" << std::endl;
         return;
-    }
+    }*/
 
-    Stone::initializeStones(stoneTexture, stoneSourceRect); // kommt als 1x if in die loop dungeon1
+    //Stone::initializeStones(stoneTexture, stoneSourceRect); // kommt als 1x if in die loop dungeon1
     PressurePlate::initPlates(plateTexture);
     Chest::init(chestTexture);
 
@@ -294,6 +297,17 @@ void PixelGame::eraseDoor(int targetX, int targetY)
 
 void PixelGame::gameLoop(tson::Map &Map) {
     if (roomChanger.getDungeon1() && !roomChanger.getOverworld()) {
+        if(firstLoopDungeon1){
+            currentGameState.overworldWallRecs.clear();
+            DrawMap::dungeon1 = true;
+            DrawMap::overworld = false;
+            createEnemies();
+            Texture2D stoneTexture = TextureManager::getTexture("Stone");
+            Rectangle stoneSourceRect = {0, 0, (float)stoneTexture.width, (float)stoneTexture.height};
+            Stone::initializeStones(stoneTexture, stoneSourceRect);
+            firstLoopDungeon1 = false;
+            firstLoopOverworld = true;
+        }
 
         BeginMode2D(playerCamera::camera); //BeginDrawing();
         checkPressurePlates();
@@ -381,6 +395,7 @@ void PixelGame::gameLoop(tson::Map &Map) {
             Stone::deleteStones(); // muss gefüllt werden
             MainCharacter::setPosition({1 * 32, 39 * 32});
             firstLoopOverworld = false;
+            firstLoopDungeon1 = true;
            // std::cout << "First Position set" << std::endl;
         }
 
@@ -402,6 +417,17 @@ void PixelGame::gameLoop(tson::Map &Map) {
         MainCharacter character1;
         Texture texture = TextureManager::getTexture("MainCharacter");
         MainCharacter::drawMainCharacter(texture, character1);
+
+        Rectangle dungeonRec = {0, 39*32, 32, 32};
+        DrawRectangle(dungeonRec.x, dungeonRec.y, dungeonRec.width, dungeonRec.height, RED);
+        if (
+            CheckCollisionRecs(MainCharacter::playerRec, dungeonRec)) {
+            std::cout << "Collision with dungeon" << std::endl;
+            roomChanger.setTargetPosOverworld();
+            Vector2 newPos = roomChanger.getTargetPos();
+            roomChanger.startTransition(newPos); // neue Position und Raum anpassen
+            roomChanger.update();
+        }
 
         EndMode2D();
         drawHud();

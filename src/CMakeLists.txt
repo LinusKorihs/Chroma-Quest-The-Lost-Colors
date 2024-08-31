@@ -65,6 +65,8 @@ add_executable(${PROJECT_NAME} main.cpp
         DialogBox.h
         NPC.cpp
         NPC.h
+        OverworldObjects.cpp
+        OverworldObjects.h
 
 )
 

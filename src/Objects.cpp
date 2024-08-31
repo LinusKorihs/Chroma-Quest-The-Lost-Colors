@@ -603,7 +603,7 @@ void Door::initDoors(Texture2D &doorTexture1, Texture2D &doorTexture2, Texture2D
     openDoors.emplace_back(1, doorTexture3, 12*multiple, 38*multiple,3,0); //nebenraum 5 tür links
     openDoors.emplace_back(0, doorTexture2, 8*multiple, 38*multiple,4,0); //nebenraum 5 tür links
 
-    openDoors.emplace_back(0, doorTexture4, 35*multiple, 82*multiple,2,0); //raum 4 tür unten
+    openDoors.emplace_back(0, doorTexture4, 35*multiple, 82*multiple,2,0); //raum 1 tür unten
     openDoors.emplace_back(0, doorTexture4, 35*multiple, 64*multiple,2,0); //raum 2 tür unten
     openDoors.emplace_back(0, doorTexture4, 41*multiple, 56*multiple,4,0); //raum 2 tür rechts
     openDoors.emplace_back(0, doorTexture4, 29*multiple, 56*multiple,3,0); //raum 2 tür links
