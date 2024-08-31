@@ -14,6 +14,8 @@
 GameState currentGameState;
 
 Music PixelGame::music;
+bool PixelGame::firstLoopOverworld = true;
+bool PixelGame::firstLoopDungeon1 = true;
 bool PixelGame::track1Played = false;
 Music PixelGame::dungeonMusic2;
 std::shared_ptr<Projectile> PixelGame::projectile_p;
@@ -92,6 +94,7 @@ void PixelGame::gameInit()
                 << currentMap.getStatusMessage() << std::endl;
     }
 
+
     pathfinder = new Pathfinder();
     miniboss = new MiniBoss(BossRedPosition, BossRed, BOSSRED, *pathfinder);
 
@@ -109,7 +112,7 @@ void PixelGame::gameInit()
         return;
     }
 
-    Stone::initializeStones(stoneTexture, stoneSourceRect);
+    Stone::initializeStones(stoneTexture, stoneSourceRect); // kommt als 1x if in die loop dungeon1
     PressurePlate::initPlates(plateTexture);
     Chest::init(chestTexture);
 
@@ -290,21 +293,7 @@ void PixelGame::eraseDoor(int targetX, int targetY)
 }
 
 void PixelGame::gameLoop(tson::Map &Map) {
-    if (roomChanger.getDungeon1()) {
-        if (Map.getLayers().empty() || Map.getTilesets().empty()) {
-            std::cerr << "Invalid map data" << std::endl;
-            return;
-        }
-
-        if (IsKeyPressed(KEY_ESCAPE)) {
-            ConfigNotConst::isGamePaused = true;
-        }
-
-        if (ConfigNotConst::isGamePaused) {
-            currentGameState.changeGameState(MenuState::PauseMenu);
-            currentGameState.currentGameMenu = MenuState::PauseMenu;
-            Menu::drawPauseMenu(currentGameState);
-        }
+    if (roomChanger.getDungeon1() && !roomChanger.getOverworld()) {
 
         BeginMode2D(playerCamera::camera); //BeginDrawing();
         checkPressurePlates();
@@ -332,16 +321,10 @@ void PixelGame::gameLoop(tson::Map &Map) {
         MainCharacter character;
         Texture texture = TextureManager::getTexture("MainCharacter");
         MainCharacter::drawMainCharacter(texture, character);
-        //character.drawHitboxes();
         MainCharacter::isPlayerDead = false;
 
         enemyManager.updateEnemies(GetFrameTime());
         enemyManager.drawEnemies();
-        /*miniBoss_p->updateBoss(GetFrameTime());
-        miniBoss_p->drawBoss();*/
-
-        //projectileEnemy_p->update(GetFrameTime(), 2);
-        //projectileEnemy_p->draw();
         projectile_p->update(GetFrameTime(), projectile_p->getProjectileDestination());
         projectile_p->draw();
 
@@ -356,7 +339,7 @@ void PixelGame::gameLoop(tson::Map &Map) {
 
         for (DialogBox &dialogBox: DialogBox::dialogBoxes) {
             dialogBox.update({MainCharacter::playerPosX, MainCharacter::playerPosY});
-            dialogBox.draw();
+          //  dialogBox.draw();
         }
 
         MainCharacter::attack();
@@ -379,44 +362,6 @@ void PixelGame::gameLoop(tson::Map &Map) {
             }
         }
 
-        if (IsKeyPressed(KEY_ESCAPE)) {
-            currentGameState.changeGameState(MenuState::PauseMenu);
-            return;
-        }
-
-        bool isMoving = false; //movement sollte noch separiert werden
-
-        if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
-            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
-                MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
-                isMoving = true;
-            }
-            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
-                MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
-                isMoving = true;
-            }
-            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
-                MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
-                isMoving = true;
-            }
-            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
-                MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
-                isMoving = true;
-            }
-            if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
-                PlaySound(ConfigNotConst::playerWalkingSound);
-            } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
-                StopSound(ConfigNotConst::playerWalkingSound);
-            }
-        }
-        updateAudio();
-        playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
-
-        if (WindowShouldClose()) {
-            CloseWindow();
-            unloadAll();
-            exit(0);
-        }
         EndMode2D();
         drawHud();
         if (!miniboss->getUnload()) {
@@ -424,13 +369,101 @@ void PixelGame::gameLoop(tson::Map &Map) {
         }
         //EndDrawing();
     }
-    if(roomChanger.getOverworld()){
-        DrawMap::overworld = true;
-        DrawMap::dungeon1 = false;
-        DrawRectangle(0, 0, 2500, 3000, BLACK);
-        DrawMap::drawTiles(Map, TextureManager::m_textures["OldTileSet"]);
+    else if(roomChanger.getOverworld() && !roomChanger.getDungeon1()){
+        if(firstLoopOverworld) {
+            currentGameState.wallRectangles.clear();
+            currentGameState.doorRectangles.clear();
+            currentGameState.openDoorRectangles.clear(); //das muss dann wieder bei dungeon1 gefüllt werden
+            DrawMap::overworld = true;
+            DrawMap::dungeon1 = false;
+            enemyManager.deleteEnemies(); // muss wieder gefüllt werden
 
+            Stone::deleteStones(); // muss gefüllt werden
+            MainCharacter::setPosition({1 * 32, 39 * 32});
+            firstLoopOverworld = false;
+           // std::cout << "First Position set" << std::endl;
+        }
 
+        ClearBackground(DARKGRAY);
+        MainCharacter::playerRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
+                                    TextureManager::getTexture("MainCharacter").width * 0.15f,
+                                    TextureManager::getTexture("MainCharacter").height * 0.15f};
+        MainCharacter::HitRec = {MainCharacter::playerPosX, MainCharacter::playerPosY,
+                                 TextureManager::getTexture("MainCharacter").width * 0.18f,
+                                 TextureManager::getTexture("MainCharacter").height * 0.18f};
+
+        BeginMode2D(playerCamera::camera);
+        playerCamera::updateCamera({MainCharacter::playerPosX, MainCharacter::playerPosY}, GetFrameTime());
+        DrawMap::drawTiles(Map, TextureManager::m_textures["Overworld"]);
+
+        MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
+
+        MainCharacter::updateRec();
+        MainCharacter character1;
+        Texture texture = TextureManager::getTexture("MainCharacter");
+        MainCharacter::drawMainCharacter(texture, character1);
+
+        EndMode2D();
+        drawHud();
+    }
+    if (Map.getLayers().empty() || Map.getTilesets().empty()) {
+        std::cerr << "Invalid map data" << std::endl;
+        return;
+    }
+
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        ConfigNotConst::isGamePaused = true;
+    }
+
+    if (ConfigNotConst::isGamePaused) {
+        currentGameState.changeGameState(MenuState::PauseMenu);
+        currentGameState.currentGameMenu = MenuState::PauseMenu;
+        Menu::drawPauseMenu(currentGameState);
+    }
+
+    if (IsKeyPressed(KEY_ESCAPE)) {
+        currentGameState.changeGameState(MenuState::PauseMenu);
+        return;
+    }
+
+    bool isMoving = false; //movement sollte noch separiert werden
+
+    for (auto &dialogBox: DialogBox::dialogBoxes) {
+        if (!dialogBox.isActive()) {
+
+           // if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
+                    MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
+                    isMoving = true;
+                    std::cout << "UP" << std::endl;
+                }
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
+                    MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
+                    isMoving = true;
+                }
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
+                    MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
+                    isMoving = true;
+                }
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
+                    MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
+                    isMoving = true;
+                }
+                if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                    PlaySound(ConfigNotConst::playerWalkingSound);
+                } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                    StopSound(ConfigNotConst::playerWalkingSound);
+                }
+            }
+        //}
+    }
+    updateAudio();
+    playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
+
+    if (WindowShouldClose()) {
+        CloseWindow();
+        unloadAll();
+        exit(0);
     }
 }
 
@@ -445,10 +478,13 @@ void PixelGame::unloadAll()
 
 void PixelGame::drawHud()
 {
+    for(auto &dialogBox: DialogBox::dialogBoxes)
+    {
+        dialogBox.draw();
+    }
     InGameHud::drawHealthBarTexture();
     InGameHud::drawRGBBarTexture();
-    DrawText(TextFormat("%s: %i", LanguageManager::getLocalizedGameText("Score", "Punkte"), MainCharacter::playerScore),
-             1700, 140, 20, BLACK);
+
 }
 
 void PixelGame::openBottomDoorRoom1()
@@ -528,36 +564,44 @@ void PixelGame::closedDoorTransition()
     }
 }
 
-void PixelGame::loadMap(const std::string &mapPath)
-{
-    // Unload the current map before loading a new one
-    if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty())
-    {
-        std::cout << "Unloading current map" << std::endl;
-        unloadMap(currentMap);
+void PixelGame::loadMap(const std::string &mapPath) {
+    // Entlade die aktuelle Karte, bevor eine neue geladen wird
+    if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty()) {
+        std::cout << "Entlade aktuelle Karte und Tilesets" << std::endl;
+        unloadMap();
     }
 
-    // Parse the new map
+    // Parsen der neuen Karte
     tson::Tileson tileson;
-    auto MapPtr = tileson.parse(mapPath);
+    auto mapPtr = tileson.parse(mapPath);
 
-    if (MapPtr && MapPtr->getStatus() == tson::ParseStatus::OK)
-    {
-        currentMap = std::move(*MapPtr);
-        std::cout << "Map loaded successfully: " << mapPath << std::endl;
-    }
-    else
-    {
-        std::cerr << "Failed to parse map: " << MapPtr->getStatusMessage() << std::endl;
+    if (mapPtr && mapPtr->getStatus() == tson::ParseStatus::OK) {
+        currentMap = std::move(*mapPtr);
+        std::cout << "Karte erfolgreich geladen: " << mapPath << std::endl;
+
+        // Tilesets laden
+        for (auto& tileset : currentMap.getTilesets()) {
+            std::cout << "Tileset geladen: " << tileset.getName() << std::endl;
+        }
+    } else {
+        std::cerr << "Fehler beim Parsen der Karte: " << mapPtr->getStatusMessage() << std::endl;
     }
 }
 
-void PixelGame::unloadMap(tson::Map &map)
+void PixelGame::unloadMap()
 {
-    // Clear the current map data
-    map.getLayers().clear();
-    map.getTilesets().clear();
-    std::cout << "Map unloaded successfully" << std::endl;
+    if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty()) {
+        // Alle Layers entladen
+        currentMap.getLayers().clear();
+
+        // Alle Tilesets entladen
+        currentMap.getTilesets().clear();
+
+        // Entlade den Rest der Karte (falls benötigt)
+        currentMap = tson::Map();  // Setzt das currentMap-Objekt zurück
+
+        std::cout << "Karte und Tilesets entladen" << std::endl;
+    }
 }
 
 void PixelGame::updateAudio()
@@ -584,3 +628,4 @@ void PixelGame::updateAudio()
         UpdateMusicStream(dungeonMusic2);
     }
 }
+

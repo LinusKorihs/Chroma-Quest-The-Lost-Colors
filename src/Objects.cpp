@@ -276,6 +276,11 @@ void Stone::resetStones() {
     }
 }
 
+void Stone::deleteStones()
+{
+    Stone::stoneObjects.clear();
+}
+
 void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect)
 {
     int multiple = 32;

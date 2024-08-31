@@ -29,10 +29,10 @@ void TextureManager::init()
     m_textures["OpenWoodDoor2"] = LoadTexture("assets/graphics/Tiles/OpenWoodDoorDown.png");
     m_textures["SlimeEnemy"] = LoadTexture("assets/graphics/Enemies/TestSlime.png");
     m_textures["BossRed"] = LoadTexture("assets/graphics/Enemies/redBoss.png");
-    m_textures["speechBubble"] = LoadTexture("assets/graphics/HUD/speechBubble.png");
+    m_textures["speechBubble"] = LoadTexture("assets/graphics/HUD/speechBubbleTest2.png");
     //m_textures["TileSet"] = LoadTexture("assets/graphics/TileSet & TileMap/TileSet.png");
     m_textures["TileSet"] = LoadTexture("assets/graphics/newTileset&Tilemap/newTileSet.png");
-    m_textures["OldTileSet"] = LoadTexture("assets/graphics/Old TileSet & TileMap/TileSet.png");
+    m_textures["Overworld"] = LoadTexture("assets/graphics/newTileset&Tilemap/overworldTileset.png");
     m_textures["StartGameButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonBlue.png");
     m_textures["SettingsMenuButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonYellow.png");
     m_textures["ExitGameButtonTexture"] = LoadTexture("assets/graphics/ButtonColors/ButtonRed.png");
@@ -95,3 +95,4 @@ void TextureManage::loadAudio()
     Audio::updateAudioVolumes();
     PlayMusicStream(ConfigNotConst::gameBackgroundMusic);
 }
+

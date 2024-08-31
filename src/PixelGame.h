@@ -46,11 +46,12 @@ public:
     static void rectangle();
 
     static void loadMap(const std::string &mapPath);
-    static void unloadMap(tson::Map &map);
+    static void unloadMap();
     static tson::Map& getMap();
     static void updateAudio();
 
     static tson::Map currentMap;
+
 private:
     static void drawObjects();
     static void drawHud();
@@ -74,6 +75,8 @@ private:
     static Music dungeonMusic2;
 
     static bool track1Played;
+    static bool firstLoopOverworld;
+    static bool firstLoopDungeon1;
 
 
 };

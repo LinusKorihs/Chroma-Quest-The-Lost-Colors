@@ -23,6 +23,7 @@ private:
     std::vector<std::string> dialogText; // Liste der Dialogzeilen
     int currentLineIndex;             // Aktueller Index des Dialogs
     bool active;                      // Ob das Dialogfeld aktiv ist
+    static Font font;
 };
 
 

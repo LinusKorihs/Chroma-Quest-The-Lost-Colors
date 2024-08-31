@@ -22,6 +22,7 @@ public:
     static int drawStone;
     void drawHitboxes() const;
     static void resetStones();
+    static void deleteStones();
 
     static bool roomOne;
     static bool roomTwo;

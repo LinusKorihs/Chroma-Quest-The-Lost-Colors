@@ -341,6 +341,15 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
             return;
         }
     }
+
+    for (const Rectangle &wallRec : currentGameState.overworldWallRecs)
+    {
+        if (CheckCollisionRecs(newRec, wallRec))
+        {
+            return;
+        }
+    }
+
     for (const auto &enemy: enemyManager->enemies)
     {
         if (CheckCollisionRecs(newRec, {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,enemy->getHitRec().height - 10}))

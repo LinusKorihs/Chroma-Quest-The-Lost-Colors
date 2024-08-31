@@ -23,6 +23,7 @@ int main()
     ToggleFullscreen();
 #endif
 
+
     PixelGame::loadMap("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
 
     SetExitKey(KEY_F4);

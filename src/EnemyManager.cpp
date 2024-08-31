@@ -6,21 +6,28 @@ void EnemyManager::addEnemy(Vector2 position, Texture2D& enemyTexture, EnemyType
     enemies.push_back(std::make_shared<Enemy>(position, enemyTexture, type, behaviour, enDirection, rLimit, lLimit, uLimit, dLimit));
 }
 
-void EnemyManager::updateEnemies(float deltaTime) {
-    for (auto& enemy : enemies) {
+void EnemyManager::updateEnemies(float deltaTime)
+{
+    for (auto& enemy : enemies)
+    {
         enemy->updateEnemy(deltaTime);
     }
 }
 
-void EnemyManager::drawEnemies() {
-    for (auto& enemy : enemies) {
+void EnemyManager::drawEnemies()
+{
+    for (auto& enemy : enemies)
+    {
         enemy->drawEnemy();
     }
 }
 
-bool EnemyManager::checkProjectileEnemyCollision(const std::shared_ptr<Projectile>& projectile, const std::shared_ptr<Enemy>& enemy) {
-    for (auto& enemy : enemies) {
-        if (CheckCollisionRecs(projectile->getRec(), enemy->getRec())) {
+bool EnemyManager::checkProjectileEnemyCollision(const std::shared_ptr<Projectile>& projectile, const std::shared_ptr<Enemy>& enemy)
+{
+    for (auto& enemy : enemies)
+    {
+        if (CheckCollisionRecs(projectile->getRec(), enemy->getRec()))
+        {
             projectile->setActive(false);
             enemy->enemyGetsHit();
             return true;
@@ -29,12 +36,21 @@ bool EnemyManager::checkProjectileEnemyCollision(const std::shared_ptr<Projectil
     return false;
 }
 
-void EnemyManager::deleteEnemy() {
-    for (auto it = enemies.begin(); it != enemies.end();) {
-        if ((*it)->getUnload()) {
+void EnemyManager::deleteEnemy()
+{
+    for (auto it = enemies.begin(); it != enemies.end();)
+    {
+        if ((*it)->getUnload())
+        {
             it = enemies.erase(it);
-        } else {
+        } else
+        {
             ++it;
         }
     }
+}
+
+void EnemyManager::deleteEnemies()
+{
+    enemies.clear();
 }

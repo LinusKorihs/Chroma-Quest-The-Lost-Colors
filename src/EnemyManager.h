@@ -17,6 +17,7 @@ public:
     void drawEnemies();
     void deleteEnemy();
     bool checkProjectileEnemyCollision(const std::shared_ptr<Projectile>& projectile, const std::shared_ptr<Enemy>& enemy);
+    void deleteEnemies();
     std::vector<std::shared_ptr<Enemy>> enemies;
 
 private:

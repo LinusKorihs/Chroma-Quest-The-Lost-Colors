@@ -18,7 +18,7 @@ bool playerCamera::isGoingBack;
 playerCamera::playerCamera()
 {
     camera = { 0 };   // Camera initialisieren
-    camera.target = (Vector2){ MainCharacter::playerSpawnPositionX, MainCharacter::playerSpawnPositionY };
+    camera.target = (Vector2){ MainCharacter::playerPosX, MainCharacter::playerPosY };
     camera.offset = (Vector2){GetScreenWidth()/2.0f, GetScreenHeight()/2.0f};
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
