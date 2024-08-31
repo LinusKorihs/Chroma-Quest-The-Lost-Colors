@@ -102,6 +102,7 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                         }
                     }
                     else if(dungeon1) {
+                        sizeOverworldWallVec = 0;
                         if (isOpenDoor(wallRec.x, wallRec.y) &&
                             !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 22 ||
                             isDoor(wallRec.x, wallRec.y) &&

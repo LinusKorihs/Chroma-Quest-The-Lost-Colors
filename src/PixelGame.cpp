@@ -305,8 +305,8 @@ void PixelGame::gameLoop(tson::Map &Map) {
             Texture2D stoneTexture = TextureManager::getTexture("Stone");
             Rectangle stoneSourceRect = {0, 0, (float)stoneTexture.width, (float)stoneTexture.height};
             Stone::initializeStones(stoneTexture, stoneSourceRect);
-            firstLoopDungeon1 = false;
             firstLoopOverworld = true;
+            firstLoopDungeon1 = false;
         }
 
         BeginMode2D(playerCamera::camera); //BeginDrawing();
@@ -394,8 +394,8 @@ void PixelGame::gameLoop(tson::Map &Map) {
 
             Stone::deleteStones(); // muss gefüllt werden
             MainCharacter::setPosition({1 * 32, 39 * 32});
-            firstLoopOverworld = false;
             firstLoopDungeon1 = true;
+            firstLoopOverworld = false;
            // std::cout << "First Position set" << std::endl;
         }
 
