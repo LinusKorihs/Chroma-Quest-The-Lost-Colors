@@ -78,6 +78,7 @@ private:
     static bool track1Played;
     static bool firstLoopOverworld;
     static bool firstLoopDungeon1;
+    static bool canMove;
 
 
 };

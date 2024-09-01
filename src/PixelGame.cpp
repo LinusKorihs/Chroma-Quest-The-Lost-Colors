@@ -14,6 +14,7 @@
 GameState currentGameState;
 
 Music PixelGame::music;
+bool PixelGame::canMove = true;
 bool PixelGame::firstLoopOverworld = true;
 bool PixelGame::firstLoopDungeon1 = true;
 bool PixelGame::track1Played = false;
@@ -314,7 +315,7 @@ void PixelGame::gameLoop(tson::Map &Map) {
         InGameHud::drawHealthBarTexture();
 
 
-        if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
+        if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating() && !DialogBox::dialogBoxes[0].isActive()){
             MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
         }
         MainCharacter::updateRec();
@@ -356,6 +357,15 @@ void PixelGame::gameLoop(tson::Map &Map) {
                     roomChanger.update();
                 }
             }
+        }
+
+        if(DialogBox::dialogBoxes[0].isActive() || roomChanger.isTransitioning() || playerCamera::getIsAnimating())
+        {
+            canMove = false;
+        }
+        else
+        {
+            canMove = true;
         }
 
         EndMode2D();
@@ -404,6 +414,14 @@ void PixelGame::gameLoop(tson::Map &Map) {
         for (int i = 1; i < DialogBox::dialogBoxes.size(); ++i)
         {
             DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
+            if(DialogBox::dialogBoxes[i].isActive())
+            {
+                canMove = false;
+            }
+            else
+            {
+                canMove = true;
+            }
         }
 
 
@@ -448,35 +466,32 @@ void PixelGame::gameLoop(tson::Map &Map) {
 
     bool isMoving = false; //movement sollte noch separiert werden
 
-   /* for (auto &dialogBox: DialogBox::dialogBoxes) {
-        if (!dialogBox.isActive()) {*/
+        if (canMove)
+        {
+            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
+                MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
+                isMoving = true;
+                std::cout << "UP" << std::endl;
+            }
+            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
+                MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
+                isMoving = true;
+            }
+            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
+                MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
+                isMoving = true;
+            }
+            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
+                MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
+                isMoving = true;
+            }
+            if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                PlaySound(ConfigNotConst::playerWalkingSound);
+            } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                StopSound(ConfigNotConst::playerWalkingSound);
+            }
+        }
 
-           // if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
-                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
-                    MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
-                    isMoving = true;
-                    std::cout << "UP" << std::endl;
-                }
-                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
-                    MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
-                    isMoving = true;
-                }
-                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
-                    MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
-                    isMoving = true;
-                }
-                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
-                    MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
-                    isMoving = true;
-                }
-                if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
-                    PlaySound(ConfigNotConst::playerWalkingSound);
-                } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
-                    StopSound(ConfigNotConst::playerWalkingSound);
-                }
-           // }
-        //}
-    //}
     updateAudio();
     playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
 
