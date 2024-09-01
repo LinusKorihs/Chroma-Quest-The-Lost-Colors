@@ -9,7 +9,7 @@ Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type, EnemyBeh
     posEnemy = position;
     currentFrame = 0;
     framesCounter = 0;
-    framesSpeed = 8;
+    framesSpeed = 6;
     animationDeath = 0;
     enemyHits = 0;
     enemyType = type;

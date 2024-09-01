@@ -63,6 +63,10 @@ void TextureManager::init()
     m_textures["RedButton"] = LoadTexture("assets/graphics/Tiles/RedButton.png");
     m_textures["Chest"] = LoadTexture("assets/graphics/Tiles/chest.png");
     m_textures["Frucht"] = LoadTexture("assets/graphics/Items/Frucht.png");
+    m_textures["mouse"] = LoadTexture("assets/graphics/NPC/mouse.png");
+    m_textures["frog"] = LoadTexture("assets/graphics/NPC/frog.png");
+    m_textures["gekko"] = LoadTexture("assets/graphics/NPC/gekko.png");
+    m_textures["owl"] = LoadTexture("assets/graphics/NPC/owl.png");
 
     for (auto &texture : m_textures)
     {

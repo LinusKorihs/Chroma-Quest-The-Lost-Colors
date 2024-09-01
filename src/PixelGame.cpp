@@ -119,9 +119,12 @@ void PixelGame::gameInit()
     PressurePlate::initPlates(plateTexture);
     Chest::init(chestTexture);
 
-    Texture2D npcTexture = TextureManager::getTexture("Frucht");
+    Texture2D npcTexture = TextureManager::getTexture("mouse");
+    Texture2D npcTexture2 = TextureManager::getTexture("frog");
+    Texture2D npcTexture4 = TextureManager::getTexture("gekko");
+    Texture2D npcTexture3 = TextureManager::getTexture("owl");
     Texture2D dialogTexture = TextureManager::getTexture("speechBubble");
-    NPC::init(npcTexture,npcTexture,npcTexture); //wird wenn texturen da sind geändert
+    NPC::init(npcTexture,npcTexture2,npcTexture3, npcTexture4);
     DialogBox::init(dialogTexture);
 }
 
@@ -347,9 +350,8 @@ void PixelGame::gameLoop(tson::Map &Map) {
             miniboss->drawBoss();
         }
 
-        for (NPC &npc: NPC::npcs) {
-            npc.draw();
-        }
+        NPC::npcs[0].update();
+        NPC::npcs[0].draw();
 
         for (DialogBox &dialogBox: DialogBox::dialogBoxes) {
             dialogBox.update({MainCharacter::playerPosX, MainCharacter::playerPosY});
@@ -412,6 +414,19 @@ void PixelGame::gameLoop(tson::Map &Map) {
         DrawMap::drawTiles(Map, TextureManager::m_textures["Overworld"]);
 
         MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
+        for(auto &npc : NPC::npcs)
+        {
+            npc.update();
+        }
+        NPC::npcs[1].draw();
+        NPC::npcs[2].draw();
+        NPC::npcs[3].draw();
+        NPC::npcs[4].draw();
+        NPC::npcs[5].draw();
+        NPC::npcs[6].draw();
+        NPC::npcs[7].draw();
+        NPC::npcs[8].draw();
+
 
         MainCharacter::updateRec();
         MainCharacter character1;

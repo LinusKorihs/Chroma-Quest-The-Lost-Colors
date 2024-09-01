@@ -143,6 +143,10 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
             {
                 source.x += (float) (currentFrame * tileWidth);
             }
+            if(overworld && data >= 496) //animation layer
+            {
+                source.x += (float) (currentFrame * tileWidth);
+            }
             DrawTexturePro(tileTexture, source, destination, {0, 0}, 0, WHITE);
             //std::cout << currentGameState.wallRectangles.size() << std::endl;
         }
