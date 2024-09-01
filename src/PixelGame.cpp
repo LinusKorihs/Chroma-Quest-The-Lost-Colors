@@ -67,7 +67,6 @@ void PixelGame::gameInit()
     slimeEnemyTexture = TextureManager::getTexture("SlimeRed");
     BossRed = TextureManager::getTexture("BossRed");
     MainCharacter::setEnemyManager(&enemyManager);
-    //createEnemies();
 
     projectile_p = std::make_shared<Projectile>();
     MainCharacter::setProjectile(projectile_p);
@@ -76,8 +75,7 @@ void PixelGame::gameInit()
     Texture2D plateTexture = TextureManager::getTexture("PlateNormal");
     Texture2D machineTexture = TextureManager::getTexture("Machine");
     Texture2D chestTexture = TextureManager::getTexture("Chest");
-    //pressurePlates.emplace_back(32 * 35, 32 * 63, 32, plateTexture);
-    //pressurePlates.emplace_back(32 * 35, 32 * 71, 32, plateTexture);
+
     machines.emplace_back(32 * 36, 32 * 69, 32 * 47, 32 * 75, machineTexture, 0);
     machines.emplace_back(34*32,49*32,6*32,38*32,machineTexture,0);
     machines.emplace_back(36*32, 49*32, 72*32, 41*32, machineTexture, 0);
@@ -101,31 +99,16 @@ void PixelGame::gameInit()
     pathfinder = new Pathfinder();
     miniboss = new MiniBoss(BossRedPosition, BossRed, BOSSRED, *pathfinder);
 
-
     playerCamera();
 
-    //Texture2D stoneTexture = TextureManager::getTexture("Stone");
-   // Rectangle stoneSourceRect = {0, 0, (float)stoneTexture.width, (float)stoneTexture.height};
     Texture2D doorTexture3 = TextureManager::getTexture("StoneDoorL");
     Door::initDoors(doorTexture1, doorTexture2, doorTexture3, doorTexture2);
 
-   /* if (!IsTextureReady(stoneTexture))
-    {
-        std::cerr << "Error: Stone texture not loaded" << std::endl;
-        return;
-    }*/
-
-    //Stone::initializeStones(stoneTexture, stoneSourceRect); // kommt als 1x if in die loop dungeon1
     PressurePlate::initPlates(plateTexture);
     Chest::init(chestTexture);
 
-    Texture2D npcTexture = TextureManager::getTexture("mouse");
-    Texture2D npcTexture2 = TextureManager::getTexture("frog");
-    Texture2D npcTexture4 = TextureManager::getTexture("gekko");
-    Texture2D npcTexture3 = TextureManager::getTexture("owl");
-    Texture2D dialogTexture = TextureManager::getTexture("speechBubble");
-    NPC::init(npcTexture,npcTexture2,npcTexture3, npcTexture4);
-    DialogBox::init(dialogTexture);
+    NPC::init(TextureManager::getTexture("mouse"),TextureManager::getTexture("frog"),TextureManager::getTexture("owl"), TextureManager::getTexture("gekko"));
+    DialogBox::init(TextureManager::getTexture("MouseBubble"), TextureManager::getTexture("FrogBubble"), TextureManager::getTexture("GekkoBubble"), TextureManager::getTexture("OwlBubble"));
 }
 
 void PixelGame::rectangle()
@@ -353,10 +336,7 @@ void PixelGame::gameLoop(tson::Map &Map) {
         NPC::npcs[0].update();
         NPC::npcs[0].draw();
 
-        for (DialogBox &dialogBox: DialogBox::dialogBoxes) {
-            dialogBox.update({MainCharacter::playerPosX, MainCharacter::playerPosY});
-          //  dialogBox.draw();
-        }
+        DialogBox::dialogBoxes[0].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
 
         MainCharacter::attack();
         MainCharacter::receiveDamage();
@@ -414,18 +394,17 @@ void PixelGame::gameLoop(tson::Map &Map) {
         DrawMap::drawTiles(Map, TextureManager::m_textures["Overworld"]);
 
         MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
-        for(auto &npc : NPC::npcs)
+
+        for (int i = 1; i < NPC::npcs.size(); ++i)
         {
-            npc.update();
+            NPC::npcs[i].update();
+            NPC::npcs[i].draw();
         }
-        NPC::npcs[1].draw();
-        NPC::npcs[2].draw();
-        NPC::npcs[3].draw();
-        NPC::npcs[4].draw();
-        NPC::npcs[5].draw();
-        NPC::npcs[6].draw();
-        NPC::npcs[7].draw();
-        NPC::npcs[8].draw();
+
+        for (int i = 1; i < DialogBox::dialogBoxes.size(); ++i)
+        {
+            DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
+        }
 
 
         MainCharacter::updateRec();
@@ -469,8 +448,8 @@ void PixelGame::gameLoop(tson::Map &Map) {
 
     bool isMoving = false; //movement sollte noch separiert werden
 
-    for (auto &dialogBox: DialogBox::dialogBoxes) {
-        if (!dialogBox.isActive()) {
+   /* for (auto &dialogBox: DialogBox::dialogBoxes) {
+        if (!dialogBox.isActive()) {*/
 
            // if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating()) {
                 if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
@@ -495,9 +474,9 @@ void PixelGame::gameLoop(tson::Map &Map) {
                 } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
                     StopSound(ConfigNotConst::playerWalkingSound);
                 }
-            }
+           // }
         //}
-    }
+    //}
     updateAudio();
     playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
 
@@ -519,9 +498,16 @@ void PixelGame::unloadAll()
 
 void PixelGame::drawHud()
 {
-    for(auto &dialogBox: DialogBox::dialogBoxes)
+    if(roomChanger.getDungeon1() && !roomChanger.getOverworld())
     {
-        dialogBox.draw();
+        DialogBox::dialogBoxes[0].draw();
+    }
+    if(roomChanger.getOverworld() && !roomChanger.getDungeon1())
+    {
+        for (int i = 1; i < DialogBox::dialogBoxes.size(); ++i)
+        {
+            DialogBox::dialogBoxes[i].draw();
+        }
     }
     InGameHud::drawHealthBarTexture();
     InGameHud::drawRGBBarTexture();

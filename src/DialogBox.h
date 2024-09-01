@@ -7,22 +7,21 @@
 
 class DialogBox {
 public:
-    DialogBox(const Vector2& triggerPosition, Texture2D dialogTexture, const std::vector<std::string>& dialogText);
-    ~DialogBox();
+    DialogBox(Texture2D& dialogTexture, const std::vector<std::string>& dialogText);
 
-    void update(const Vector2& playerPosition);
+    void update(Vector2 playerPosition);
     void draw();
-    bool isActive() const;
-    static void init(Texture2D texture);
+    bool isActive();
+    static void init(Texture2D mouseTexture, Texture2D frogTexture, Texture2D gekkoTexture, Texture2D owlTexture);
 
     static std::vector<DialogBox> dialogBoxes;
 
 private:
-    Vector2 triggerPosition;          // Position, an der der Dialog ausgelöst wird
-    Texture2D dialogTexture;          // Textur des Dialogfeldes
-    std::vector<std::string> dialogText; // Liste der Dialogzeilen
-    int currentLineIndex;             // Aktueller Index des Dialogs
-    bool active;                      // Ob das Dialogfeld aktiv ist
+    Vector2 triggerPosition;
+    Texture2D dialogTexture;
+    std::vector<std::string> dialogText;
+    int currentLineIndex;
+    bool active;
     static Font font;
 };
 

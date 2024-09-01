@@ -29,7 +29,6 @@ void TextureManager::init()
     m_textures["OpenWoodDoor2"] = LoadTexture("assets/graphics/Tiles/OpenWoodDoorDown.png");
     m_textures["SlimeEnemy"] = LoadTexture("assets/graphics/Enemies/TestSlime.png");
     m_textures["BossRed"] = LoadTexture("assets/graphics/Enemies/redBoss.png");
-    m_textures["speechBubble"] = LoadTexture("assets/graphics/HUD/speechBubbleTest2.png");
     //m_textures["TileSet"] = LoadTexture("assets/graphics/TileSet & TileMap/TileSet.png");
     m_textures["TileSet"] = LoadTexture("assets/graphics/newTileset&Tilemap/newTileSet.png");
     m_textures["Overworld"] = LoadTexture("assets/graphics/newTileset&Tilemap/overworldTileset.png");
@@ -67,6 +66,10 @@ void TextureManager::init()
     m_textures["frog"] = LoadTexture("assets/graphics/NPC/frog.png");
     m_textures["gekko"] = LoadTexture("assets/graphics/NPC/gekko.png");
     m_textures["owl"] = LoadTexture("assets/graphics/NPC/owl.png");
+    m_textures["MouseBubble"] = LoadTexture("assets/graphics/NPC/mouseBubble.png");
+    m_textures["OwlBubble"] = LoadTexture("assets/graphics/NPC/owlBubble.png");
+    m_textures["GekkoBubble"] = LoadTexture("assets/graphics/NPC/gekkoBubble.png");
+    m_textures["FrogBubble"] = LoadTexture("assets/graphics/NPC/frogBubble.png");
 
     for (auto &texture : m_textures)
     {
