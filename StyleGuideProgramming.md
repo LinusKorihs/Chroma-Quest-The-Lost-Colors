@@ -1,92 +1,125 @@
-# Vor jedem Builden an Sergey Dmitriev, Eugene Belyaev und Valentin Kipiatkov beten
+# Styleguide für ChromaQuest
 
-## Grundlegend:
-Sprache: Englisch
+## Allgemeine Regeln und Richtlinien:
+
+Sprache für Kommentare: Englisch
+
+Vor jedem Build: Ein 20 Minütiges Gebet an Sergey Dmitriev, Eugene Belyaev und Valentin Kipiatkov
+
+## Formatierung und Einrückung:
+### Klammernposition:
+
+Nach Schleifen wird die öffnende Klammer "{" in die nächste Zeile geschrieben
+
+Der Codeblock innerhalb der Klammer wieder in die darauffolgende Zeile geschrieben
+
+#### Beispiel:
+``` c++
+for (int i = 0; i < 10; ++i)
+{
+    std::cout << i << std::endl;
+}
+```
+
+### Leerzeichen:
+
+"Space" nach und vor Kommata, Operatoren, Doppelpunkten, Semikolon, Rechnungen
+
+Kein "Space" bei Klammern (zb: if()) 
+
+Kein "Space" vor "!"
+
+#### Beispiel:
+``` c++
+for (int i = 0; i < 10; ++i)
+{
+    std::cout<<i<<std::endl;
+}
+```
+
+### Einrückung: 
+Bei Teilen, die im Code nicht unmittelbar zusammenhängen, wird 1 line bis zum nächsten Code freigelassen
 
 Pro Schleife eine Einrückung
 
-``` c++
-for (int i = 0; i < 10; ++i)
-{
-  std::cout << i << std::endl;
-}
-```
-
-Klammer {} nach Schleife eine Zeile untendrunter - weiterer Code wird wieder eine Zeile darunter geschrieben
-
-``` c++
-if (i = 5)
-{
-  i = i++;
-}
-```
-
-"Space" nach und vor Kommata, Operatoren, Doppelpunkten, Semikolon, Rechnungen; Kein "Space" bei Klammern (zb: if()) kein "Space" vor "!"
-
-``` c++
-for (int i = 0; i < 10; ++i)
-{
-  std::cout<<i<<std::endl;
-}
-```
-
-Sinnabschnitte: bei Teilen, die im Code nicht unmittelbar zusammenhängen, wird 1 line bis zum nächsten Code freigelassen
-
+#### Beispiel:
 ``` c++
 int add(int a, int b)
 {
-  return a + b;
+    return a + b;
 }
 
 int subtract(int a, int b)
 {
-  return a - b;
+    return a - b;
 }
 ```
 
-Variablen/Funktionen werden sinnhaft/verständlich benannt
+## Namensvergebung:
+### Variablen/Funktionen:
+Namen sinnhaft und verständlich
+
+Möglichst kurze Namen
+
+#### Beispiel:
 ``` c++
-int add(int x, int y)
-{
-  return x + y;
-}
-
-int main()
-{
-  int number1 = 5;
-  int number2 = 3;
-    
-  int result = add(number1, number2);
-}
+int number1 = 5;
+int number2 = 3;
+int result = add(number1, number2);
 ```
 
-Erklärende Kommentare bei nicht ganz trivialem Code
+### Pointer:
 
+Pointer werden mit "_p" am Ende benannt
+
+#### Beispiel:
+``` c++
+std::shared_ptr<TileMap> tile_p;
+shape* shape_p;
+```
+
+###Enums, Klassen, Namespaces, Structs:
+
+Name wird Groß geschrieben
+
+#### Beispiel:
+``` c++
+enum class Fruit { Banana };
+class FruitBasket {};
+```
+
+Klassenfunktionen werden klein geschrieben:
+
+#### Beispiel:
+``` c++
+class Player
+{
+  public:
+    void draw(); // Funktion klein geschrieben
+};
+```
+
+## Kommentare:
+
+Bei nicht trivialem Code sollten Kommentare hinzugefügt werden
+
+#### Beispiel:
 ``` c++
 int sum(int a, int b)
 {
   // Explanation: The sum of both numbers will be calculated and returned
   return a + b;
 }
-
-int main()
-{
-  int x = 5;
-  int y = 3;
-
-  // Explanation: The sum of both numbers will be calculated and safed in the variable result
-  int result = sum(x, y);
-}
 ```
 
-Code so klein wie möglich halten, soviel wie möglich in funktionen ausarbeiten/automatisieren
+## Code-Struktur:
 
+Code sollte so klein wie möglich gehalten werden
+
+Möglichst viel in Funktionen auslagern
+
+#### Beispiel:
 ``` c++
-#include <iostream>
-#include <vector>
-#include <algorithm>
-
-// Function to calculate the sum of all elements in a vector
 int calculateSum(const std::vector<int>& nums)
 {
   int sum = 0;
@@ -96,205 +129,77 @@ int calculateSum(const std::vector<int>& nums)
   }
   return sum;
 }
-
-int main()
-{
-  // A vector of numbers
-  std::vector<int> numbers = {1, 2, 3, 4, 5};
-
-  // Calculate the sum of the numbers
-  int sum = calculateSum(numbers);
-
-  // Print the result
-  std::cout << "The sum of the numbers is: " << sum << std::endl;
-
-  return 0;
-}
 ```
 
-Enums, Klassen, Namespaces und Structs werden großgeschrieben, alle anderen variablen klein
+Code in der "Main.cpp" soll so wenig anderer Code wie möglich beinhalten
 
-``` c++
-#include <iostream>
+Es soll hauptsächlich Klassenfunktionen beinhalten
 
-// Enum 
-enum class Fruit
-{
-  Banana
-};
-
-// Class
-class FruitBasket
-{
-  public:
-  // Constructor 
-  FruitBasket(Fruit f) : fruit(f) {}
-
-  void printFruit()
-  {
-    std::cout << "Banana" << std::endl;
-  }
-}
-
-private:
-    Fruit fruit; // Private variable
-};
-
-int main()
-{
-  FruitBasket basket(Fruit::Banana);
-  basket.printFruit();
-  return 0;
-}
-```
-
-Bei do while Schleifen wird das while nach der Klammer geschrieben, nicht in eine Extrazeile.
-
-``` c++
-int main()
-{
-  int i = 0;
-  do
-  {
-    std::cout << "Wert von i: " << i << std::endl;
-    i++;
-  } while (i < 5);
-
-  return 0;
-}
-```
-
-In der main.cpp stehen am besten nur Klassenfunktionen. So wenig anderer Code wie möglich.
-
+#### Beispiel:
 ``` c++
 #include "MyClass.h"
-
 int main()
 {
-  Class myObjectClass;
-  myObjectClass.classFunction(); // Call of function, nothing else
-    
+  MyClass myObject;
+  myObject.classFunction(); // Call of function, nothing else
   return 0;
 }
 ```
 
-Es wird nur funktionierender Code commited.
+## Klassen und Objekte:
 
-Verwendung von sinnhaften Namespaces um Zusammenhänge klar sichtbar zu machen.
+Klassen verwenden immer Public, Protected und Private
 
+Es muss in einer Klasse einen Konstruktor geben
+
+Destruktor sind nicht verpflichtend, aber erwünscht
+
+Der Konstruktor wird als erstes in einer Klasse aufgeschrieben
+
+#### Beispiel:
 ``` c++
-#include <iostream>
-
-namespace Geometry
+class Player
 {
-  const double PI = 3.14159265358979323846;
-
-  double calculateCircleArea(double radius)
-  {
-    return PI * radius * radius;
-  }
-}
-
-namespace Physics
-{
-  const double GRAVITY = 9.81;
-
-  double calculateFallDistance(double time)
-  {
-    return 0.5 * GRAVITY * time * time;
-  }
-}
-```
-
-Nach einer if Schleife muss ein else folgen.
-``` c++
-if(xy)
-{
-  xy;
-}
-else
-{
-  yx;
-}
-```
-
-Pointer Benennung: x_p, y_p
-``` c++
-std::shared_ptr<TileMap> tile_p;
-
-oder z.B.
-
-shape* shape_p;
-```
-
-
-## Includes:
-Am Anfang des Codes immer #Pragma once, danach .h und .cpp und alle includes, sortiert nach alphabetischer reihenfolge
-``` c++
-#pragma once
-
-#include "xy.h"
-
-#include "algorithm"
-#include "barrier"
-#include "cstdio"
-```
-Code Separierung - z.B. nicht eine Klasse für 3 komplett verschiedene Funktionen/Objekte
-
-## Klassen:
-In Klassen immer Verwendung von public und protected/private
-``` c++
-class Player {
-public:
-  xy;
-
-protected:
-  xy;
-
+  public:
+    Player(); // Konstruktor an 1. Stelle
+  
+    void draw(); // Funktion klein geschrieben
+  
+    ~Player(); // Destruktor an letzter Stelle in public
+  
+  protected:
+    int playerX; // Variable klein geschrieben
 };
-
 ```
 
-enums o.ä. stehen über Klassendefinierung
-``` c++
-typedef enum {
-  NONE = 0,
-  COLOR_GRAYSCALE,
-  COLOR_TINT,
-  PRINT_PIXEL_COLORS
-} ImageProcess;
+Alle von Klassen erstellten Objekte haben den gleichen Namensaufbau
 
-class TileMap {};
-```
-
-Alle von Klassen erstellte Objekte haben einen gleichen Namensaufbau
+#### Beispiel:
 ``` c++
 Class1 myClass1;
 Class2 myClass2;
 ```
 
-Klassenfunktionen werden klein geschrieben
+## Includes:
 
-Erklärungen über Klassen: Was macht die Klasse?
+### Reihenfolge:
 
-Es muss in einer Klasse einen Konstruktor und einen Destruktor geben.
+Am Anfang des Codes immer "#pragma once" in .h Dateien
 
-Bei 2 Konstruktoren muss sich der erste schließen bevor der 2. anfängt.
+Danach ".h und ".cpp" Dateien in alphabetischer Reihenfolge
 
-Der Konstruktor wird als erstes in einer Klasse geschrieben.
+#### Beispiel:
 ``` c++
-/* This class is used for drawing the player...*/
-class Player {
-public:
-  Player(); //Konstruktor an 1. Stelle
+#pragma once
 
-  void draw(); //Funktion klein geschrieben
-
-  ~Player(); //Destruktor an letzter stelle in public
-
-protected:
-  int playerX; //Variable klein geschrieben
-
-};
+#include "xy.h"
+#include "algorithm"
+#include "barrier"
+#include "cstdio"
 ```
 
+## Qualität des Codes:
+
+Nur funktionierender Code wird committed/gepusht
+
+Keine Klasse für komplett verschiedene Funktionen/Objekte erstellen
