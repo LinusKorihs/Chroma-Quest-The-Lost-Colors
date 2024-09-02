@@ -295,6 +295,8 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 {
     float newPositionX = MainCharacter::playerPosX;
     float newPositionY = MainCharacter::playerPosY;
+    float moveSpeedX = 0.0f;
+    float moveSpeedY = 0.0f;
 
     switch (moveDirection)
     {
@@ -318,12 +320,46 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
             newPositionY += ConfigConst::playerMoveSpeed;
             lastDir = LASTDOWN;
             break;
+
         default:
             break; //hier cases einfügen für schräg laufen mit hälfte speed?
     }
+    /*if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+    {
+        moveSpeedX = ConfigConst::playerMoveSpeed;
+        lastDir = LASTRIGHT;
+    }
+    if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+    {
+        moveSpeedX = -ConfigConst::playerMoveSpeed;
+        lastDir = LASTLEFT;
+    }
+    if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
+    {
+        moveSpeedY = -ConfigConst::playerMoveSpeed;
+        lastDir = LASTUP;
+    }
+    if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
+    {
+        moveSpeedY = ConfigConst::playerMoveSpeed;
+        lastDir = LASTDOWN;
+    }*/
+    if (IsKeyDown(KEY_S) && IsKeyDown(KEY_D) && IsKeyDown(KEY_A) || IsKeyDown(KEY_S) && IsKeyDown(KEY_D) && IsKeyDown(KEY_W) || IsKeyDown(KEY_S) && IsKeyDown(KEY_A) && IsKeyDown(KEY_W) || IsKeyDown(KEY_D) && IsKeyDown(KEY_A) && IsKeyDown(KEY_W))
+    {
+        return;
+    }
 
-    Rectangle newRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height};
+   /* if (moveSpeedX != 0.0f && moveSpeedY != 0.0f)
+    {
+        moveSpeedX *= 0.5f;
+        moveSpeedY *= 0.5;
+    }*/
 
+    newPositionX += moveSpeedX;
+    newPositionY += moveSpeedY;
+
+    Rectangle newRec = {newPositionX + 4, newPositionY+16, playerRec.width, playerRec.height-12}; //hier hab ich y und height geändert - falls was buggt wieder rückgängig machen
+    Rectangle enemyNewRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height}; // für enemy kollision, weil der player sonst komplett den enemy verdecken kann /schaden kein sinn macht
 
 
     for (const Rectangle &doorRec : currentGameState.doorRectangles)
@@ -352,7 +388,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
     for (const auto &enemy: enemyManager->enemies)
     {
-        if (CheckCollisionRecs(newRec, {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,enemy->getHitRec().height - 10}))
+        if (CheckCollisionRecs(enemyNewRec, {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,enemy->getHitRec().height - 10}))
         {
             return;
         }
@@ -363,7 +399,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
     for (Stone &stone : Stone::stoneObjects)
     {
-        if (CheckCollisionRecs(newRec, stone.getRectangle()))
+        if (CheckCollisionRecs(enemyNewRec, stone.getRectangle()))  //test
         {
             nearestStone = &stone;
             break;
@@ -393,22 +429,22 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     {
         if (lastDir == LASTLEFT)
         {
-            projectile_p->setProjectileDestination(2);
+            projectile_p->setProjectileDestination(Direction::LEFT);
         }
 
         if (lastDir == LASTRIGHT)
         {
-            projectile_p->setProjectileDestination(1);
+            projectile_p->setProjectileDestination(Direction::RIGHT);
         }
 
         if (lastDir == LASTUP)
         {
-            projectile_p->setProjectileDestination(3);
+            projectile_p->setProjectileDestination(Direction::UP);
         }
 
         if (lastDir == LASTDOWN)
         {
-            projectile_p->setProjectileDestination(4);
+            projectile_p->setProjectileDestination(Direction::DOWN);
         }
     }
 }
@@ -420,15 +456,15 @@ void MainCharacter::checkCollisions()
         if (CheckCollisionRecs(playerEnemyRec, enemy->getRec()))
         {
             std::cout << "collision" << std::endl;
-            if(playerPosY > enemy->getPosition().y +16 && enemy->getDirection() == DOWNEN && playerPosX >= enemy->getPosition().x -16  && playerPosX <= enemy->getPosition().x+14)
+            if(playerPosY > enemy->getPosition().y +16 && enemy->getDirection() == Direction::DOWN && playerPosX >= enemy->getPosition().x -16  && playerPosX <= enemy->getPosition().x+14)
             {
                 enemy->setPos({enemy->getPosition().x, playerPosY -32});
-                enemy->setDirection(UPEN);
+                enemy->setDirection(Direction::UP);
             }
-            if(playerPosY < enemy->getPosition().y-16 && enemy->getDirection() == UPEN && playerPosX >= enemy->getPosition().x -16 && playerPosX < enemy->getPosition().x+14)
+            if(playerPosY < enemy->getPosition().y-16 && enemy->getDirection() == Direction::UP && playerPosX >= enemy->getPosition().x -16 && playerPosX < enemy->getPosition().x+14)
             {
                 enemy->setPos({enemy->getPosition().x, playerPosY+22});
-                enemy->setDirection(DOWNEN);
+                enemy->setDirection(Direction::DOWN);
             }
         }
     }

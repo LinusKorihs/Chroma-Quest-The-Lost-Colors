@@ -81,7 +81,7 @@ class Door
 public:
     Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum, int step);
 
-    void draw();
+    void draw(float deltaTime);
     void drawNormal(float sourceX);
     Rectangle getRectangle() const;
     bool isOpen() const;
@@ -97,7 +97,8 @@ private:
     float doorPositionY;
     int currentStep; // Wird verwendet, um den Animationsschritt zu verfolgen
     bool animationFinished;
-    int frameCounter;
+    float frameCounter;
+    float frameSpeed;
 };
 
 class Machine

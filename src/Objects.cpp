@@ -501,9 +501,9 @@ Door::Door(int doorOp, Texture2D texture, float positionX, float positionY, int 
 {
 }
 
-void Door::draw()
+void Door::draw(float deltaTime)
 {
-    if (!animationFinished) {
+   /* if (!animationFinished) {
         frameCounter++;
         int framesPerStep;
         if(doorNumber == 1){
@@ -516,6 +516,40 @@ void Door::draw()
         if (frameCounter >= framesPerStep) {
             currentStep++;
             frameCounter = 0;
+
+            if (currentStep > 2) {
+                currentStep = 2;
+                animationFinished = true;
+            }
+        }
+
+        switch (currentStep) {
+            case 0:
+                DrawTextureRec(doorTexture, {32, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
+                break;
+            case 1:
+                DrawTextureRec(doorTexture, {64, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
+                break;
+            case 2:
+                DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
+                break;
+        }
+    } else {
+
+        DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE); //das bleibt dann
+    }*/
+    if (!animationFinished) {
+        if(doorNumber == 1){
+            frameSpeed = 8;
+        }
+        else {
+            frameSpeed = 2;
+        }
+        frameCounter += deltaTime * frameSpeed;
+
+        if (frameCounter >= 1.0f) {
+            frameCounter -= 1;
+            currentStep++;
 
             if (currentStep > 2) {
                 currentStep = 2;

@@ -2,7 +2,7 @@
 
 EnemyManager::EnemyManager() {}
 
-void EnemyManager::addEnemy(Vector2 position, Texture2D& enemyTexture, EnemyType type, EnemyBehaviour behaviour, EnemyDirection enDirection, float rLimit, float lLimit, float uLimit, float dLimit) {
+void EnemyManager::createEnemy(Vector2 position, Texture2D& enemyTexture, EnemyType type, EnemyBehaviour behaviour, Direction enDirection, float rLimit, float lLimit, float uLimit, float dLimit) {
     enemies.push_back(std::make_shared<Enemy>(position, enemyTexture, type, behaviour, enDirection, rLimit, lLimit, uLimit, dLimit));
 }
 

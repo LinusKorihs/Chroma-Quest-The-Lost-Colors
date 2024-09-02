@@ -48,14 +48,14 @@ tson::Map& PixelGame::getMap()
 
 void PixelGame::createEnemies()
 {
-    enemyManager.addEnemy({40*32, 75*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICL, DOWNEN,0,0,2358,2440);
-    enemyManager.addEnemy({19*32, 56*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({34*32, 53*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({35*32, 51*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({56*32, 56*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({29*32, 28*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
-    enemyManager.addEnemy({36*32, 53*32}, slimeEnemyTexture, SLIMERED, STAND, NONEEN,0,0,0,0);
+    enemyManager.createEnemy({40 * 32, 75 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICAL, Direction::DOWN, 0, 0, 2358, 2440);
+    enemyManager.createEnemy({19 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({34 * 32, 53 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({35 * 32, 51 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({56 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({29 * 32, 28 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({36 * 32, 53 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
 }
 
 void PixelGame::gameInit()
@@ -163,36 +163,48 @@ void PixelGame::openDoors()
         if(PressurePlate::pressurePlates[0].isPressed())
         {
             if(playerCamera::getIsHolding() || playerCamera::getIsGoingBack() ){
-                Door::openDoors[2].draw(); //wenn zeit ist animation + sound einfügen
-                Door::openDoors[3].draw();
+                for(int i = 2; i < 4; i++)
+                {
+                    Door::openDoors[i].draw(GetFrameTime());
+                }
             }
             if(!playerCamera::getIsHolding() && !playerCamera::getIsAnimating()) {
-                Door::openDoors[2].drawNormal(96);
-                Door::openDoors[3].drawNormal(96);
+                for(int i = 2; i < 4; i++)
+                {
+                    Door::openDoors[i].drawNormal(96);
+                }
             }
             eraseDoor(45*32,75*32);
         }
         if(PressurePlate::pressurePlates[1].isPressed())
         {
             if(playerCamera::getIsHolding() || playerCamera::getIsGoingBack()) {
-                Door::openDoors[8].draw(); //wenn zeit ist animation + sound einfügen
-                Door::openDoors[9].draw();
+                for(int i = 8; i < 10; i++)
+                {
+                    Door::openDoors[i].draw(GetFrameTime());
+                }
             }
             if(!playerCamera::getIsHolding() && !playerCamera::getIsAnimating()) {
-                Door::openDoors[8].drawNormal(96);
-                Door::openDoors[9].drawNormal(96);
+                for(int i = 8; i < 10; i++)
+                {
+                    Door::openDoors[i].drawNormal(96);
+                }
             }
             eraseDoor(12*32,38*32);
         }
         if(PressurePlate::pressurePlates[2].isPressed())
         {
             if(playerCamera::getIsHolding() || playerCamera::getIsGoingBack()) {
-                Door::openDoors[6].draw(); //wenn zeit ist animation + sound einfügen
-                Door::openDoors[7].draw();
+                for(int i = 6; i < 8; i++)
+                {
+                    Door::openDoors[i].draw(GetFrameTime());
+                }
             }
             if(!playerCamera::getIsHolding() && !playerCamera::getIsAnimating()) {
-                Door::openDoors[6].drawNormal(96);
-                Door::openDoors[7].drawNormal(96);
+                for(int i = 6; i < 8; i++)
+                {
+                    Door::openDoors[i].drawNormal(96);
+                }
             }
             // eraseDoor(66*32,41*32);
             eraseDoor(70*32,41*32);
@@ -206,13 +218,13 @@ void PixelGame::openDoors()
 
         if(machines[0].isFilled())
         {
-            Door::openDoors[0].draw();
+            Door::openDoors[0].draw(GetFrameTime());
             eraseDoor(35*32,68*32);
         }
 
         if(machines[1].isFilled() && machines[2].isFilled())
         {
-            Door::openDoors[1].draw();
+            Door::openDoors[1].draw(GetFrameTime());
             eraseDoor(35*32,48*32);
         }
     }
@@ -282,12 +294,15 @@ void PixelGame::eraseDoor(int targetX, int targetY)
     currentGameState.doorRectangles.erase(it, currentGameState.doorRectangles.end());
 }
 
-void PixelGame::gameLoop(tson::Map &Map) {
-    if (roomChanger.getDungeon1() && !roomChanger.getOverworld()) {
-        if(firstLoopDungeon1){
-            currentGameState.overworldWallRecs.clear();
+void PixelGame::gameLoop(tson::Map &Map)
+{
+    if (roomChanger.getDungeon1() && !roomChanger.getOverworld())
+    {
+        if(firstLoopDungeon1)
+        {
             DrawMap::dungeon1 = true;
             DrawMap::overworld = false;
+            currentGameState.overworldWallRecs.clear();
             createEnemies();
             Texture2D stoneTexture = TextureManager::getTexture("Stone");
             Rectangle stoneSourceRect = {0, 0, (float)stoneTexture.width, (float)stoneTexture.height};
@@ -321,7 +336,6 @@ void PixelGame::gameLoop(tson::Map &Map) {
         MainCharacter::updateRec();
         MainCharacter character;
         Texture texture = TextureManager::getTexture("MainCharacter");
-        MainCharacter::drawMainCharacter(texture, character);
         MainCharacter::isPlayerDead = false;
 
         enemyManager.updateEnemies(GetFrameTime());
@@ -334,13 +348,14 @@ void PixelGame::gameLoop(tson::Map &Map) {
             miniboss->drawBoss();
         }
 
-        NPC::npcs[0].update();
+        NPC::npcs[0].update(GetFrameTime());
         NPC::npcs[0].draw();
 
         DialogBox::dialogBoxes[0].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
 
         MainCharacter::attack();
         MainCharacter::receiveDamage();
+        MainCharacter::drawMainCharacter(texture, character);
 
         closedDoorTransition();
         for (Chest &chest: Chest::chests) {
@@ -359,6 +374,14 @@ void PixelGame::gameLoop(tson::Map &Map) {
             }
         }
 
+        if(CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[10].getRectangle()))
+        {
+            roomChanger.setTargetPosOverworld();
+            roomChanger.overworldTransition();
+            roomChanger.update();
+        }
+
+
         if(DialogBox::dialogBoxes[0].isActive() || roomChanger.isTransitioning() || playerCamera::getIsAnimating())
         {
             canMove = false;
@@ -375,16 +398,18 @@ void PixelGame::gameLoop(tson::Map &Map) {
         }
         //EndDrawing();
     }
-    else if(roomChanger.getOverworld() && !roomChanger.getDungeon1()){
-        if(firstLoopOverworld) {
+    else if(roomChanger.getOverworld() && !roomChanger.getDungeon1())
+    {
+        if(firstLoopOverworld)
+        {
+            DrawMap::dungeon1 = false;
             currentGameState.wallRectangles.clear();
             currentGameState.doorRectangles.clear();
             currentGameState.openDoorRectangles.clear(); //das muss dann wieder bei dungeon1 gefüllt werden
-            DrawMap::overworld = true;
-            DrawMap::dungeon1 = false;
-            enemyManager.deleteEnemies(); // muss wieder gefüllt werden
 
-            Stone::deleteStones(); // muss gefüllt werden
+            DrawMap::overworld = true;
+            enemyManager.deleteEnemies();
+            Stone::deleteStones();
             MainCharacter::setPosition({1 * 32, 39 * 32});
             firstLoopDungeon1 = true;
             firstLoopOverworld = false;
@@ -407,7 +432,7 @@ void PixelGame::gameLoop(tson::Map &Map) {
 
         for (int i = 1; i < NPC::npcs.size(); ++i)
         {
-            NPC::npcs[i].update();
+            NPC::npcs[i].update(GetFrameTime());
             NPC::npcs[i].draw();
         }
 
@@ -432,12 +457,12 @@ void PixelGame::gameLoop(tson::Map &Map) {
 
         Rectangle dungeonRec = {0, 39*32, 32, 32};
         DrawRectangle(dungeonRec.x, dungeonRec.y, dungeonRec.width, dungeonRec.height, RED);
-        if (
-            CheckCollisionRecs(MainCharacter::playerRec, dungeonRec)) {
+
+        if (CheckCollisionRecs(MainCharacter::playerRec, dungeonRec))
+        {
             std::cout << "Collision with dungeon" << std::endl;
             roomChanger.setTargetPosOverworld();
-            Vector2 newPos = roomChanger.getTargetPos();
-            roomChanger.startTransition(newPos); // neue Position und Raum anpassen
+            roomChanger.dungeon1Transition();
             roomChanger.update();
         }
 
@@ -524,8 +549,8 @@ void PixelGame::drawHud()
             DialogBox::dialogBoxes[i].draw();
         }
     }
-    InGameHud::drawHealthBarTexture();
     InGameHud::drawRGBBarTexture();
+    InGameHud::drawHealthBarTexture();
 
 }
 

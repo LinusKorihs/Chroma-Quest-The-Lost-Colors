@@ -54,11 +54,11 @@ Vector2 NPC::getNpcPos()
     return npcPos;
 }
 
-void NPC::update()
+void NPC::update(float deltaTime)
 {
-    framesCounter++; // Update counter
+   /* framesCounter += deltaTime * framesSpeed;
 
-    if (framesCounter >= (60 / framesSpeed)) {
+    if (framesCounter >= 1.0f) {
         framesCounter = 0;
 
         currentFrame++;
@@ -66,5 +66,6 @@ void NPC::update()
             currentFrame = 0;
         }
         frameRec.x = (float) currentFrame * (float) npcText.width / 4;
-    }
+    }*/
+   UniversalMethods::updateAnimation(deltaTime, framesCounter,  currentFrame, 0, 3, frameRec.x, npc);
 }

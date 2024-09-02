@@ -12,7 +12,7 @@ class EnemyManager {
 public:
     EnemyManager();
 
-    void addEnemy(Vector2 position, Texture2D& enemyTexture, EnemyType type, EnemyBehaviour behaviour, EnemyDirection enDirection, float rLimit, float lLimit, float uLimit, float dLimit);
+    void createEnemy(Vector2 position, Texture2D& enemyTexture, EnemyType type, EnemyBehaviour behaviour, Direction enDirection, float rLimit, float lLimit, float uLimit, float dLimit);
     void updateEnemies(float deltaTime);
     void drawEnemies();
     void deleteEnemy();

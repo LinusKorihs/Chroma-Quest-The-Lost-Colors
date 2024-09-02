@@ -2,7 +2,7 @@
 #include "iostream"
 
 
-Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type, EnemyBehaviour behaviour, EnemyDirection enDirection, float rLimit, float lLimit, float uLimit, float dLimit)
+Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type, EnemyBehaviour behaviour, Direction enDirection, float rLimit, float lLimit, float uLimit, float dLimit)
 {
     enemyDeath = false;
     unload = false;
@@ -41,87 +41,70 @@ void Enemy::updateEnemy(float deltaTime)
     {
         enemyRec = {posEnemy.x, posEnemy.y, 32, 32};
     }
-    framesCounter++; // Update counter
 
-    if (framesCounter >= (60 / framesSpeed)) {
-        framesCounter = 0;
+    if (enemyDeath)
+    {
+        UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
+                        19, 23, frameRec.x, enemy);
 
-        if (enemyDeath) {
-            if (currentFrame < 19) {
-                currentFrame = 19;
-            }
-            currentFrame++;
-
-            if (currentFrame > 23) // Ende der Death-Animation
+        if (currentFrame == 23)
+        {
+            unload = true;
+        }
+    } else {
+        if (enemyBehaviour == STAND)
+        {
+            UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
+                            0, 3, frameRec.x, enemy);
+        } else if (enemyBehaviour == WALKHORIZONTAL)
+        {
+            if (direction == Direction::RIGHT)
             {
-                unload = true;
+                UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
+                                8, 11, frameRec.x, enemy);
+            } else if (direction == Direction::LEFT)
+            {
+                UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
+                                16, 19, frameRec.x, enemy);
             }
-        } else {
-            if (enemyBehaviour == STAND) {
-                currentFrame++;
-                if (currentFrame > 3) { // Reset bei 4, weil normale Animation 0-3
-                    currentFrame = 0;
-                }
-            } else if (enemyBehaviour == WALKHORIZONTAL) {
-                currentFrame++;
-                if (direction == RIGHTEN) {
-                    if (currentFrame > 11) {
-                        currentFrame = 8; // Reset bei 8-11, weil Lauf-Animation
-                    }
-                } else if (direction == LEFTEN) {
-                    if (currentFrame > 19 || currentFrame < 16) {
-                        currentFrame = 16; // Reset bei 16-19, weil Lauf-Animation
-                    }
-                }
-            } else if (enemyBehaviour == WALKVERTICL) {
-                currentFrame++;
-                if (direction == UPEN) {
-                    if (currentFrame > 15 || currentFrame < 12) {
-                        currentFrame = 12; // Reset bei 12-15, weil Lauf-Animation
-                    }
-                } else if (direction == DOWNEN) {
-                    if (currentFrame > 7) {
-                        currentFrame = 4; // Reset bei 4-7, weil Lauf-Animation
-                    }
-                }
+        } else if (enemyBehaviour == WALKVERTICAL)
+        {
+            if (direction == Direction::UP) {
+                UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
+                                12, 15, frameRec.x, enemy);
+            } else if (direction == Direction::DOWN)
+            {
+                UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
+                                4, 7, frameRec.x, enemy);
             }
         }
-
-        frameRec.x = (float) currentFrame * (float) enTexture.width / 24;
     }
 
-    switch (direction) {
-        case LEFTEN:
-            posEnemy.x -= 20 * deltaTime;
-            break;
-        case RIGHTEN:
-            posEnemy.x += 20 * deltaTime;
-            break;
-        case UPEN:
-            posEnemy.y -= 20 * deltaTime;
-            break;
-        case DOWNEN:
-            posEnemy.y += 20 * deltaTime;
-            break;
-        case NONEEN:
-            break;
-    }
-    if(enemyBehaviour == WALKHORIZONTAL) {
-        if (posEnemy.x >= leftLimit) {
+    Vector2 enemySpeed = {20, 20};
+    UniversalMethods::moveObj(posEnemy, enemySpeed, direction, deltaTime);
+
+    if(enemyBehaviour == WALKHORIZONTAL)
+    {
+        if (posEnemy.x >= leftLimit)
+        {
             posEnemy.x = leftLimit;
-            direction = RIGHTEN;
-        } else if (posEnemy.x >= rightLimit) {
+            direction = Direction::RIGHT;
+        } else if (posEnemy.x >= rightLimit)
+        {
             posEnemy.x = rightLimit;
-            direction = LEFTEN;
+            direction = Direction::LEFT;
         }
     }
-    if(enemyBehaviour == WALKVERTICL) {
-        if (posEnemy.y <= upLimit) {
+    if(enemyBehaviour == WALKVERTICAL)
+    {
+        if (posEnemy.y <= upLimit)
+        {
             posEnemy.y = upLimit;
-            direction = DOWNEN;
-        } else if (posEnemy.y >= downLimit) {
+            direction = Direction::DOWN;
+        } else if (posEnemy.y >= downLimit)
+        {
             posEnemy.y = downLimit;
-            direction = UPEN;
+            direction = Direction::UP;
         }
     }
 
@@ -200,12 +183,12 @@ void Enemy::setPos(Vector2 pos)
     posEnemy = pos;
 }
 
-int Enemy::getDirection()
+Direction Enemy::getDirection()
 {
     return direction;
 }
 
-void Enemy::setDirection(EnemyDirection dir)
+void Enemy::setDirection(Direction dir)
 {
     direction = dir;
 }

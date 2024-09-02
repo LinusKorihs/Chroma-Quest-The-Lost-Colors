@@ -17,9 +17,13 @@ public:
     InGameHud();
     ~InGameHud();
     static void drawHealthBarTexture();
+    static void drawMana();
+    static void drawStamina();
     static void drawRGBBarTexture();
     static void drawImageButton(HudImageButton& button);
     static std::vector<HudImageButton> hudImagebuttons;
     static float health;
+    static float mana;
+    static float stamina;
     static void init();
 };

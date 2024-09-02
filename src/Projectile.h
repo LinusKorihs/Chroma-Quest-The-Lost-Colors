@@ -2,22 +2,23 @@
 #include "GameState.h"
 #include <memory>
 #include "raylib.h"
+#include "UniversalMethods.h"
 
 
 class Projectile
 {
 public:
     Projectile();
-    int getProjectileDestination();
+    Direction getProjectileDestination();
 
     void load();
     void init(Vector2 startPosition, Vector2 speed);
     void collision();
-    void update(float deltaTime, int direction);
+    void update(float deltaTime, Direction direction);
     void draw();
     void unload();
     void setActive(bool isActive);
-    void setProjectileDestination(int destination);
+    void setProjectileDestination(Direction destination);
 
     bool getActive();
 
@@ -30,5 +31,5 @@ private:
     Vector2 projectileSpeed;
     Texture2D projectileTexture;
     Rectangle projectileRec;
-    int projectileDestination;
+    Direction projectileDestination;
 };

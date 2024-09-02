@@ -4650,7 +4650,7 @@
                 {
                  "name":"Wall",
                  "type":"bool",
-                 "value":false
+                 "value":true
                 }]
         }, 
         {
@@ -4659,7 +4659,7 @@
                 {
                  "name":"Wall",
                  "type":"bool",
-                 "value":false
+                 "value":true
                 }]
         }, 
         {

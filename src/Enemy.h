@@ -4,6 +4,7 @@
 #include "cmath"
 #include "Projectile.h"
 #include <memory>
+#include "UniversalMethods.h"
 
 
 enum EnemyType {
@@ -15,9 +16,8 @@ enum EnemyType {
 
 enum EnemyBehaviour {
     WALKHORIZONTAL,
-    WALKVERTICL,
-    STAND,
-    SHOOT
+    WALKVERTICAL,
+    STAND
 };
 
 enum EnemyDirection {
@@ -37,7 +37,7 @@ class Enemy
 {
 public:
 
-    Enemy(Vector2 position, Texture2D &enemTexture, EnemyType type, EnemyBehaviour behaviour, EnemyDirection enDirection,
+    Enemy(Vector2 position, Texture2D &enemTexture, EnemyType type, EnemyBehaviour behaviour, Direction enDirection,
           float rLimit, float lLimit, float uLimit, float dLimit);
 
     void drawEnemy();
@@ -54,8 +54,8 @@ public:
     int getEnemyHits();
     Vector2 getPosition();
     void setPos(Vector2 pos);
-    int getDirection();
-    void setDirection(EnemyDirection dir);
+    Direction getDirection();
+    void setDirection(Direction dir);
 
     int enemyHits;
     bool enemyHit;
@@ -71,7 +71,7 @@ private:
 
     EnemyType enemyType;
     EnemyBehaviour enemyBehaviour;
-    EnemyDirection direction;
+    Direction direction;
 
     Vector2 posEnemy;
 
@@ -83,8 +83,8 @@ private:
     Rectangle hitRec;
 
     int currentFrame;
-    int framesCounter;
-    int framesSpeed;
+    float framesCounter;
+    float framesSpeed;
     int animationDeath;
     int frames;
     float rightLimit = 0;

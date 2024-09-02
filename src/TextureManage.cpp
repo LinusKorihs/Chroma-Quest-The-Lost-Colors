@@ -71,6 +71,16 @@ void TextureManager::init()
     m_textures["GekkoBubble"] = LoadTexture("assets/graphics/NPC/gekkoBubble.png");
     m_textures["FrogBubble"] = LoadTexture("assets/graphics/NPC/frogBubble.png");
 
+    //hud
+    m_textures["grayHUD"] = LoadTexture("assets/graphics/HUD/greyHud.png");
+    m_textures["blueOrb"] = LoadTexture("assets/graphics/HUD/blueOrb.png");
+    m_textures["yellowOrb"] = LoadTexture("assets/graphics/HUD/yellowOrb.png");
+    m_textures["redOrb"] = LoadTexture("assets/graphics/HUD/redOrb.png");
+    m_textures["newHeart"] = LoadTexture("assets/graphics/HUD/newHeartFull.png");
+    m_textures["newHeartHalf"] = LoadTexture("assets/graphics/HUD/newHeartHalf.png");
+    m_textures["yellowBeam"] = LoadTexture("assets/graphics/HUD/yellowBeam.png");
+    m_textures["blueBeam"] = LoadTexture("assets/graphics/HUD/blueBeam.png");
+
     for (auto &texture : m_textures)
     {
         if (!IsTextureReady(texture.second))
@@ -100,6 +110,7 @@ void TextureManage::loadAudio()
     ConfigNotConst::gameBackgroundMusic = LoadMusicStream("assets/audio/tracks/dungeon1.mp3");
 
     Audio::updateAudioVolumes();
+    SetSoundVolume(ConfigNotConst::chestOpenSound, 0.5f);
     PlayMusicStream(ConfigNotConst::gameBackgroundMusic);
 }
 

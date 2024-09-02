@@ -67,6 +67,8 @@ add_executable(${PROJECT_NAME} main.cpp
         NPC.h
         OverworldObjects.cpp
         OverworldObjects.h
+        UniversalMethods.cpp
+        UniversalMethods.h
 
 )
 

@@ -36,11 +36,11 @@ void Projectile::collision()
 
 }
 
-void Projectile::update(float deltaTime, int direction)
+void Projectile::update(float deltaTime, Direction direction)
 {
     projectileRec = {projectilePos.x, projectilePos.y, static_cast<float>(projectileTexture.width) , static_cast<float>(projectileTexture.height)};
 
-    switch (projectileDestination)
+   /* switch (projectileDestination)
     {
         case 1:
             projectilePos.x += projectileSpeed.x  * deltaTime;
@@ -54,7 +54,9 @@ void Projectile::update(float deltaTime, int direction)
         case 4:
             projectilePos.y += projectileSpeed.y  * deltaTime;
             break;
-    }
+    }*/
+
+    UniversalMethods::moveObj(projectilePos, projectileSpeed, projectileDestination, deltaTime);
 
     collision(); //kollisionen mit wänden
 }
@@ -88,12 +90,12 @@ void Projectile::unload()
     UnloadTexture(projectileTexture);
 }
 
-int Projectile::getProjectileDestination()
+Direction Projectile::getProjectileDestination()
 {
     return projectileDestination;
 }
 
-void Projectile::setProjectileDestination(int destination)
+void Projectile::setProjectileDestination(Direction destination)
 {
     projectileDestination = destination;
 }

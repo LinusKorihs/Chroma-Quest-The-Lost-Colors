@@ -8,6 +8,7 @@ public:
     RoomChanger();
     void update();
     void startTransition(Vector2 newPosition);
+    void startTransitionMap(Vector2 newPosition, const std::string &mapPath);
     bool isTransitioning() const;
     Vector2 getTargetPos();
     void setTargetPos();
@@ -32,7 +33,9 @@ private:
     TransitionPhase phase;
     float transitionProgress;
     Vector2 targetPosition;
-    void drawTransitionEffect() const;
+    void drawTransitionEffect() ;
+    bool isMapTransition;
+    std::string nextMap;
 };
 
 

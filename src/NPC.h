@@ -3,6 +3,7 @@
 #include <vector>
 #include "TextureManage.h"
 #include <iostream>
+#include "UniversalMethods.h"
 
 class NPC {
 public:
@@ -12,7 +13,7 @@ public:
     Rectangle getRec();
     static void init(Texture2D mouse, Texture2D frog, Texture2D owl, Texture2D gekko);
     void setNpcPos(Vector2 pos);
-    void update();
+    void update(float deltaTime);
     Vector2 getNpcPos();
 
     static std::vector<NPC> npcs;
@@ -25,8 +26,8 @@ private:
     Rectangle frameRec;
 
     int currentFrame = 0;
-    int framesCounter = 0;
-    int framesSpeed = 6;
+    float framesCounter = 0;
+    float framesSpeed = 6;
 
 };
 

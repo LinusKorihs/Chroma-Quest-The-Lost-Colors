@@ -46,7 +46,7 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
     {
         enemyRec = {posEnemy.x+16, posEnemy.y + 10, 32,54};
     }
-    else {
+    else if(currentDirection == UPEN || currentDirection == DOWNEN || state == BossState::Idle) {
         enemyRec = {posEnemy.x, posEnemy.y + 10, 64,54};
     }
     float newPosX = posEnemy.x;

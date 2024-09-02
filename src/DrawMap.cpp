@@ -94,14 +94,13 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                 {
 
                     Rectangle wallRec = {(float) x * tileWidth * multiplier, (float) y * tileWidth * multiplier, tileWidth * multiplier, tileWidth * multiplier}; // Create a Rectangle for the tile and add it to the list of wall rectangles
-                    if(overworld && sizeOverworldWallVec <= 939) {
-                        if (!rectangleExists(currentGameState.overworldWallRecs, wallRec)) {
-                            currentGameState.overworldWallRecs.push_back(wallRec);
-                            sizeOverworldWallVec++;
-
-                        }
+                    if(overworld && sizeOverworldWallVec <= 939)
+                    {
+                        currentGameState.overworldWallRecs.push_back(wallRec);
+                        sizeOverworldWallVec++;
                     }
-                    else if(dungeon1) {
+                    else if(dungeon1)
+                    {
                         sizeOverworldWallVec = 0;
                         if (isOpenDoor(wallRec.x, wallRec.y) &&
                             !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 22 ||
