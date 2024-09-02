@@ -147,7 +147,7 @@ void PixelGame::checkPressurePlates()
             hasAnimated[i] = true; // Animation wurde für diese Platte gestartet
 
             // Aktionen für die spezifische Tür
-            //Door::openDoors[i].draw();
+            Door::openDoors[i].draw();
             eraseDoor(doorPositions[i].x, doorPositions[i].y);
         }
     }
