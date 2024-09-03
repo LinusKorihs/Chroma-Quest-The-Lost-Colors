@@ -5,8 +5,8 @@ int DrawMap::sizeDoorVec = 0;
 int DrawMap::sizeWallVec = 0;
 int DrawMap::sizeOpenDoorVec = 0;
 int DrawMap::sizeOverworldWallVec = 0;
-bool DrawMap::dungeon1 = true;
-bool DrawMap::overworld = false;
+bool DrawMap::dungeon1 = false;
+bool DrawMap::overworld = true;
 
 bool DrawMap::isOpenDoor(float x, float y) {
     return
@@ -142,10 +142,10 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
             {
                 source.x += (float) (currentFrame * tileWidth);
             }
-            if(overworld && data >= 496) //animation layer
+            /*if(overworld && data >= 496) //animation layer
             {
                 source.x += (float) (currentFrame * tileWidth);
-            }
+            }*/
             DrawTexturePro(tileTexture, source, destination, {0, 0}, 0, WHITE);
             //std::cout << currentGameState.wallRectangles.size() << std::endl;
         }

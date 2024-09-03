@@ -212,7 +212,7 @@ void RoomChanger::overworldTransition()
     dungeon1 = false;
     overworld = true;
     isMapTransition = true;
-    startTransitionMap({32 * 1, 32 * 39}, "assets/graphics/newTileset&Tilemap/Overworld.tmj");
+    startTransitionMap({32 * 88, 32 * 28}, "assets/graphics/newTileset&Tilemap/Overworld.tmj");
 
 }
 
@@ -229,8 +229,8 @@ void RoomChanger::setTargetPosOverworld()
 {
     if(overworld && !dungeon1)
     {
-        if (MainCharacter::playerPosX >= 0 * 32 && MainCharacter::playerPosX < 1 * 32 &&
-            40 * 32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 38 * 32)
+        if (MainCharacter::playerPosX > 86 * 32 && MainCharacter::playerPosX < 90 * 32 &&
+            29 * 32 > MainCharacter::playerPosY && MainCharacter::playerPosY > 26 * 32)
         {
             dungeon1Transition();
         }

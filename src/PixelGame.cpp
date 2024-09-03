@@ -147,7 +147,7 @@ void PixelGame::checkPressurePlates()
             hasAnimated[i] = true; // Animation wurde für diese Platte gestartet
 
             // Aktionen für die spezifische Tür
-            Door::openDoors[i].draw();
+            Door::openDoors[i].draw(GetFrameTime());
             eraseDoor(doorPositions[i].x, doorPositions[i].y);
         }
     }
@@ -329,7 +329,6 @@ void PixelGame::gameLoop(tson::Map &Map)
         drawObjects();
         InGameHud::drawHealthBarTexture();
 
-
         if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating() && !DialogBox::dialogBoxes[0].isActive()){
             MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
         }
@@ -410,7 +409,7 @@ void PixelGame::gameLoop(tson::Map &Map)
             DrawMap::overworld = true;
             enemyManager.deleteEnemies();
             Stone::deleteStones();
-            MainCharacter::setPosition({1 * 32, 39 * 32});
+            //MainCharacter::setPosition({43 * 32, 37 * 32});
             firstLoopDungeon1 = true;
             firstLoopOverworld = false;
            // std::cout << "First Position set" << std::endl;
@@ -442,27 +441,27 @@ void PixelGame::gameLoop(tson::Map &Map)
             if(DialogBox::dialogBoxes[i].isActive())
             {
                 canMove = false;
+                break;
             }
             else
             {
                 canMove = true;
             }
-        }
 
+        }
 
         MainCharacter::updateRec();
         MainCharacter character1;
         Texture texture = TextureManager::getTexture("MainCharacter");
         MainCharacter::drawMainCharacter(texture, character1);
 
-        Rectangle dungeonRec = {0, 39*32, 32, 32};
-        DrawRectangle(dungeonRec.x, dungeonRec.y, dungeonRec.width, dungeonRec.height, RED);
+        Rectangle dungeonRec = {87*32, 27*32, 96, 32};
 
         if (CheckCollisionRecs(MainCharacter::playerRec, dungeonRec))
         {
             std::cout << "Collision with dungeon" << std::endl;
             roomChanger.setTargetPosOverworld();
-            roomChanger.dungeon1Transition();
+            //roomChanger.dungeon1Transition();
             roomChanger.update();
         }
 
@@ -496,7 +495,6 @@ void PixelGame::gameLoop(tson::Map &Map)
             if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
                 MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
                 isMoving = true;
-                std::cout << "UP" << std::endl;
             }
             if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
                 MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
@@ -632,13 +630,12 @@ void PixelGame::closedDoorTransition()
 }
 
 void PixelGame::loadMap(const std::string &mapPath) {
-    // Entlade die aktuelle Karte, bevor eine neue geladen wird
+
     if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty()) {
         std::cout << "Entlade aktuelle Karte und Tilesets" << std::endl;
         unloadMap();
     }
 
-    // Parsen der neuen Karte
     tson::Tileson tileson;
     auto mapPtr = tileson.parse(mapPath);
 
@@ -646,7 +643,6 @@ void PixelGame::loadMap(const std::string &mapPath) {
         currentMap = std::move(*mapPtr);
         std::cout << "Karte erfolgreich geladen: " << mapPath << std::endl;
 
-        // Tilesets laden
         for (auto& tileset : currentMap.getTilesets()) {
             std::cout << "Tileset geladen: " << tileset.getName() << std::endl;
         }
@@ -658,14 +654,9 @@ void PixelGame::loadMap(const std::string &mapPath) {
 void PixelGame::unloadMap()
 {
     if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty()) {
-        // Alle Layers entladen
         currentMap.getLayers().clear();
-
-        // Alle Tilesets entladen
         currentMap.getTilesets().clear();
-
-        // Entlade den Rest der Karte (falls benötigt)
-        currentMap = tson::Map();  // Setzt das currentMap-Objekt zurück
+        currentMap = tson::Map();
 
         std::cout << "Karte und Tilesets entladen" << std::endl;
     }
@@ -675,7 +666,6 @@ void PixelGame::updateAudio()
 {
     if (!track1Played)
     {
-        // Nur einmal den Track starten, nicht in jedem Frame
         if (GetMusicTimePlayed(music) == 0)
         {
             PlayMusicStream(music);
@@ -685,7 +675,7 @@ void PixelGame::updateAudio()
         if (GetMusicTimePlayed(music) >= 104.34)
         {
             StopMusicStream(music);
-            track1Played = true;  // Mark that Track 1 has finished
+            track1Played = true;
             std::cout << "Music stopped, switching to track 2" << std::endl;
             PlayMusicStream(dungeonMusic2);
         }

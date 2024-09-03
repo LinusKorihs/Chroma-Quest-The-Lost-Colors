@@ -308,7 +308,7 @@ bool MiniBoss::isPlayerInRange(Vector2 playerPosition, float range)
 void MiniBoss::drawBoss()
 {
     DrawTextureRec(enemyTexture, frameRec, posEnemy, WHITE);
-    DrawRectangleLines(enemyRec.x, enemyRec.y, enemyRec.width, enemyRec.height, RED);
+    //DrawRectangleLines(enemyRec.x, enemyRec.y, enemyRec.width, enemyRec.height, RED);
 
 }
 

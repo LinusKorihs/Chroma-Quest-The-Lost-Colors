@@ -24,7 +24,8 @@ int main()
 #endif
 
 
-    PixelGame::loadMap("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
+   // PixelGame::loadMap("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
+    PixelGame::loadMap("assets/graphics/newTileset&Tilemap/Overworld.tmj");
 
     SetExitKey(KEY_F4);
 

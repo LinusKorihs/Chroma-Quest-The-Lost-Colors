@@ -19,8 +19,8 @@ public:
     bool getDungeon1();
     bool getOverworld();
 
-    bool dungeon1 = true;
-    bool overworld = false;
+    bool dungeon1 = false;
+    bool overworld = true;
 
 private:
     enum TransitionPhase {

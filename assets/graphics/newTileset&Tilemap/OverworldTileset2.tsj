@@ -1,9 +1,9 @@
 { "columns":31,
- "image":"Overworld_TileSet_aaah-export.png",
+ "image":"Overworld_TileSet_Complete.png",
  "imageheight":1000,
  "imagewidth":1000,
  "margin":0,
- "name":"Overworld_TileSet",
+ "name":"OverworldTileset",
  "spacing":0,
  "tilecount":961,
  "tiledversion":"1.10.2",
@@ -133,6 +133,15 @@
                  "name":"Wall",
                  "type":"bool",
                  "value":true
+                }]
+        }, 
+        {
+         "id":69,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
                 }]
         }, 
         {
@@ -451,6 +460,24 @@
                 }]
         }, 
         {
+         "id":171,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
+                }]
+        }, 
+        {
+         "id":172,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
+                }]
+        }, 
+        {
          "id":176,
          "properties":[
                 {
@@ -487,6 +514,15 @@
                 }]
         }, 
         {
+         "id":181,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
+                }]
+        }, 
+        {
          "id":182,
          "properties":[
                 {
@@ -502,6 +538,15 @@
                  "name":"Wall",
                  "type":"bool",
                  "value":true
+                }]
+        }, 
+        {
+         "id":184,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
                 }]
         }, 
         {
@@ -559,6 +604,15 @@
                 }]
         }, 
         {
+         "id":196,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
+                }]
+        }, 
+        {
          "id":197,
          "properties":[
                 {
@@ -574,6 +628,15 @@
                  "name":"Wall",
                  "type":"bool",
                  "value":true
+                }]
+        }, 
+        {
+         "id":200,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
                 }]
         }, 
         {
@@ -622,6 +685,24 @@
                 }]
         }, 
         {
+         "id":207,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":true
+                }]
+        }, 
+        {
+         "id":208,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
+                }]
+        }, 
+        {
          "id":209,
          "properties":[
                 {
@@ -640,6 +721,15 @@
                 }]
         }, 
         {
+         "id":212,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
+                }]
+        }, 
+        {
          "id":213,
          "properties":[
                 {
@@ -655,6 +745,15 @@
                  "name":"Wall",
                  "type":"bool",
                  "value":true
+                }]
+        }, 
+        {
+         "id":215,
+         "properties":[
+                {
+                 "name":"Wall",
+                 "type":"bool",
+                 "value":false
                 }]
         }, 
         {
@@ -982,24 +1081,6 @@
                 }]
         }, 
         {
-         "id":306,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
-         "id":308,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
          "id":311,
          "properties":[
                 {
@@ -1028,24 +1109,6 @@
         }, 
         {
          "id":321,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
-         "id":337,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
-         "id":339,
          "properties":[
                 {
                  "name":"Wall",
@@ -1090,24 +1153,6 @@
                 }]
         }, 
         {
-         "id":368,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
-         "id":370,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
          "id":373,
          "properties":[
                 {
@@ -1144,24 +1189,6 @@
                 }]
         }, 
         {
-         "id":399,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
-         "id":401,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
          "id":404,
          "properties":[
                 {
@@ -1172,33 +1199,6 @@
         }, 
         {
          "id":411,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
-         "id":430,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
-         "id":431,
-         "properties":[
-                {
-                 "name":"Wall",
-                 "type":"bool",
-                 "value":true
-                }]
-        }, 
-        {
-         "id":432,
          "properties":[
                 {
                  "name":"Wall",

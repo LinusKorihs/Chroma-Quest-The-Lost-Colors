@@ -11,8 +11,8 @@ bool MainCharacter::isPlayerDead = false;
 bool MainCharacter::canReceiveDamage = true;
 int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
-float MainCharacter::playerSpawnPositionX = 1120; //32*35 in new, 80 in old
-float MainCharacter::playerSpawnPositionY = 2590; //32*65 in new, 368 in old
+float MainCharacter::playerSpawnPositionX = 43*32; //1120
+float MainCharacter::playerSpawnPositionY = 37*32; //2590
 float MainCharacter::playerCharacterTextureScale = 0.425f;
 float MainCharacter::playerCharacterHitBoxScale = 0.425f;
 float MainCharacter::playerPosX = MainCharacter::playerSpawnPositionX;
@@ -364,7 +364,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
     for (const Rectangle &doorRec : currentGameState.doorRectangles)
     {
-        if (CheckCollisionRecs(newRec, doorRec))
+        if (CheckCollisionRecs(enemyNewRec, doorRec))
         {
             return;
         }
