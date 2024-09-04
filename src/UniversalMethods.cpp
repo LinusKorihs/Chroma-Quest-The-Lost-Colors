@@ -1,6 +1,6 @@
 
 #include "UniversalMethods.h"
-
+//für sowas braucht man keine class sondern namespace
 void UniversalMethods::updateAnimation(float deltaTime, float &frameCounter, int &currentFrame, int startFrame, int endFrame, float &frameRecX, type type)
 {
     int textureWidth;

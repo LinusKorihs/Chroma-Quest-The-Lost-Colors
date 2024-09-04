@@ -98,7 +98,7 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                     {
                         if(!rectangleExists(currentGameState.overworldWallRecs, wallRec)) {
                             currentGameState.overworldWallRecs.push_back(wallRec);
-                            //if(sizeOverworldWallVec <= 1007)
+                            //if(sizeOverworldWallVec <= 1007){
                             sizeOverworldWallVec++;
                             std::cout << sizeOverworldWallVec << std::endl;
                         }

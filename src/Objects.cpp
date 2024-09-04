@@ -803,23 +803,22 @@ void Chest::draw()
 
 void Chest::update()
 {
-    if(CheckCollisionRecs(chestRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E))
+    if(!opened)
     {
-        std::cout << "Chest collision" << std::endl;
-        opened = true;
-        if(InGameHud::health < 4.5)
-        {
-            InGameHud::health += 1;
-            return;
-        }
-        if(InGameHud::health == 4.5)
-        {
-            InGameHud::health += 0.5;
-        }
-        PlaySound(ConfigNotConst::chestOpenSound);
-        if(!IsSoundPlaying(ConfigNotConst::chestOpenSound))
-        {
-            StopSound(ConfigNotConst::chestOpenSound);
+        if (CheckCollisionRecs(chestRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E)) {
+            std::cout << "Chest collision" << std::endl;
+            opened = true;
+            if (InGameHud::health < 4.5) {
+                InGameHud::health += 1;
+                return;
+            }
+            if (InGameHud::health == 4.5) {
+                InGameHud::health += 0.5;
+            }
+            PlaySound(ConfigNotConst::chestOpenSound);
+            if (!IsSoundPlaying(ConfigNotConst::chestOpenSound)) {
+                StopSound(ConfigNotConst::chestOpenSound);
+            }
         }
     }
 }
