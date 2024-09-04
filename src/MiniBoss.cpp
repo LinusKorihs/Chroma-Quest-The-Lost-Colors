@@ -42,7 +42,7 @@ float Vector2Distance(Vector2 v1, Vector2 v2)
 
 void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
 {
-    if(currentDirection == UP_RIGHT || direction == UP_LEFT || direction == DOWN_RIGHT || direction == DOWN_LEFT || direction == LEFTEN || direction == RIGHTEN)
+    if(currentDirection == UP_RIGHT || currentDirection == UP_LEFT || currentDirection == DOWN_RIGHT || currentDirection == DOWN_LEFT || currentDirection == LEFTEN || currentDirection == RIGHTEN)
     {
         enemyRec = {posEnemy.x+16, posEnemy.y + 10, 32,54};
     }
