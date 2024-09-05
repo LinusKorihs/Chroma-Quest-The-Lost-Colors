@@ -151,10 +151,10 @@ private:
 
 class Signs {
 public:
-    Signs(float sposX, float sposY, Texture2D signtexture, Texture2D textText);
+    Signs(float sposX, float sposY, Texture2D signtexture, Texture2D textText, bool bigSign);
 
     void draw();
-    static void init(Texture2D signTexture, Texture2D textTexture);
+    static void init(Texture2D signTexture);
     void update();
     static std::vector<Signs> signs;
 
@@ -164,5 +164,14 @@ private:
     Texture2D signTexture;
     Texture2D textTexture;
     Rectangle signRec;
+    Rectangle bigSignRec;
     bool active = false;
+    bool bigSign;
+
+    static Texture2D blueRoad;
+    static Texture2D redRoad;
+    static Texture2D yellowRoad;
+    static Texture2D blueDist;
+    static Texture2D redDist;
+    static Texture2D yellowDist;
 };

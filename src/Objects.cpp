@@ -824,41 +824,59 @@ void Chest::update()
 }
 
 std::vector<Signs> Signs::signs;
+Texture2D Signs::blueDist;
+Texture2D Signs::redDist;
+Texture2D Signs::yellowDist;
+Texture2D Signs::blueRoad;
+Texture2D Signs::redRoad;
+Texture2D Signs::yellowRoad;
 
-Signs::Signs(float posX, float posY, Texture2D signtexture, Texture2D textText)
+Signs::Signs(float posX, float posY, Texture2D signtexture, Texture2D textText, bool bigSign)
+        : signPositionX(posX), signPositionY(posY), bigSign(bigSign), signTexture(signtexture), textTexture(textText)
 {
-    signPositionX = posX;
-    signPositionY = posY;
-    signTexture = signtexture;
-    textTexture = textText;
-    signRec = {signPositionX, signPositionY-32, 32, 64};
+    //blueDist = TextureManager::getTexture("blueDist");
+    redDist = TextureManager::getTexture("redDist");
+    yellowDist = TextureManager::getTexture("yellowDist");
+    blueRoad = TextureManager::getTexture("blueRoad");
+    redRoad = TextureManager::getTexture("redRoad");
+    yellowRoad = TextureManager::getTexture("yellowRoad");
+
+    if(bigSign)
+    {
+        signRec = {signPositionX-4, signPositionY - 40, 40, 80};
+    }
+    else
+    {
+        signRec = {signPositionX-4, signPositionY-4, 40, 40};
+    }
 }
 
-void Signs::init(Texture2D signTexture, Texture2D textTexture)
+void Signs::init(Texture2D signTexture)
 {
-    signs.emplace_back(47*32, 33*32, signTexture, textTexture); //redDist
-    signs.emplace_back(38*32, 41*32, signTexture, textTexture); //blue dist
-    signs.emplace_back(38*32, 30*32, signTexture, textTexture); // yellow dist
-    signs.emplace_back(34*32, 9*32, signTexture, textTexture); // yellow road
-    signs.emplace_back(17*32, 38*32, signTexture, textTexture); //blue road
-    signs.emplace_back(59*32, 40*32, signTexture, textTexture); //red road
+    blueDist = TextureManager::getTexture("blueDist");
+    signs.emplace_back(38*32, 41*32, signTexture, blueDist, false); //blue dist
+    signs.emplace_back(47*32, 33*32, signTexture, redDist, false); //redDist
+    signs.emplace_back(38*32, 30*32, signTexture, yellowDist, false); // yellow dist
+    signs.emplace_back(34*32, 9*32, signTexture, yellowRoad, true); // yellow road
+    signs.emplace_back(17*32, 38*32, signTexture, blueRoad, true); //blue road
+    signs.emplace_back(59*32, 40*32, signTexture, redRoad, true); //red road
 }
 
 void Signs::draw()
 {
     if(active)
     {
-        DrawTexture(signTexture, signPositionX, signPositionY, WHITE);
-        DrawTexture(textTexture, signPositionX+10, signPositionY+32, WHITE);
+        DrawTexture(signTexture, 280, 10, WHITE);
+        DrawTexture(textTexture, 300, 40, WHITE);
     }
 }
 
 void Signs::update()
 {
-    if (CheckCollisionRecs(signRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E)) {
+    if (CheckCollisionRecs(signRec, MainCharacter::playerRec)) {
         active = true;
     }
-    if(IsKeyPressed(KEY_E) && active)
+    else
     {
         active = false;
     }

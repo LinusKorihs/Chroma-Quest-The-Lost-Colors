@@ -110,6 +110,7 @@ void PixelGame::gameInit()
 
     NPC::init(TextureManager::getTexture("mouse"),TextureManager::getTexture("frog"),TextureManager::getTexture("owl"), TextureManager::getTexture("gekko"));
     DialogBox::init(TextureManager::getTexture("MouseBubble"), TextureManager::getTexture("FrogBubble"), TextureManager::getTexture("GekkoBubble"), TextureManager::getTexture("OwlBubble"));
+    Signs::init(TextureManager::getTexture("controlBox"));
 }
 
 void PixelGame::rectangle()
@@ -452,6 +453,7 @@ void PixelGame::gameLoop(tson::Map &Map)
 
         }
 
+
         MainCharacter::updateRec();
         MainCharacter character1;
         Texture texture = TextureManager::getTexture("MainCharacter");
@@ -469,6 +471,11 @@ void PixelGame::gameLoop(tson::Map &Map)
 
         EndMode2D();
         drawHud();
+        for(auto &Sign : Signs::signs)
+        {
+            Sign.update();
+            Sign.draw();
+        }
     }
     if (Map.getLayers().empty() || Map.getTilesets().empty()) {
         std::cerr << "Invalid map data" << std::endl;

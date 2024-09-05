@@ -80,15 +80,14 @@ void TextureManager::init()
     m_textures["newHeartHalf"] = LoadTexture("assets/graphics/HUD/newHeartHalf.png");
     m_textures["yellowBeam"] = LoadTexture("assets/graphics/HUD/yellowBeam.png");
     m_textures["blueBeam"] = LoadTexture("assets/graphics/HUD/blueBeam.png");
-    m_textures["controlBox"] = LoadTexture("assets/graphics/HUD/showBox.png");
     //signs
-
+    m_textures["controlBox"] = LoadTexture("assets/graphics/HUD/showBox.png");
     m_textures["blueDist"] = LoadTexture("assets/graphics/HUD/Districts/Blue District.png");
     m_textures["yellowDist"] = LoadTexture("assets/graphics/HUD/Districts/Yellow District.png");
     m_textures["redDist"] = LoadTexture("assets/graphics/HUD/Districts/Red District.png");
     m_textures["blueRoad"] = LoadTexture("assets/graphics/HUD/Districts/blue Road.png");
     m_textures["yellowRoad"] = LoadTexture("assets/graphics/HUD/Districts/yellow Road.png");
-    m_textures["redRoad"] = LoadTexture("assets/graphics/HUD/Districts/red Road.png");
+    m_textures["redRoad"] = LoadTexture("assets/graphics/HUD/Districts/Red Road.png");
     m_textures["central"] = LoadTexture("assets/graphics/HUD/Districts/central.png");
 
     for (auto &texture : m_textures)
