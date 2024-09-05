@@ -17,6 +17,7 @@ public:
     InGameHud();
     ~InGameHud();
     static void drawHealthBarTexture();
+    static void drawControlBox();
     static void drawMana();
     static void drawStamina();
     static void drawRGBBarTexture();
@@ -26,4 +27,5 @@ public:
     static float mana;
     static float stamina;
     static void init();
+    static bool controlActive;
 };

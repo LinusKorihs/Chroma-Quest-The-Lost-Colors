@@ -20,7 +20,7 @@ float MainCharacter::playerPosY = MainCharacter::playerSpawnPositionY;
 std::shared_ptr<Projectile> MainCharacter::projectile_p = std::make_shared<Projectile>();
 EnemyManager* MainCharacter::enemyManager = nullptr;
 int MainCharacter::currentFrame;
-int MainCharacter::framesCounter;
+float MainCharacter::framesCounter = 0;
 int MainCharacter::framesSpeed;
 Rectangle MainCharacter::frameRec;
 std::shared_ptr<Enemy> MainCharacter::enemy_p;
@@ -96,180 +96,63 @@ void MainCharacter::updateRec()
 
 void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 {
-    framesCounter++;
+    bool moving;
 
-    if(IsKeyDown(KEY_S) && punch == none )
+    if(IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D))
     {
+        moving = true;
+    }else if(!IsKeyDown(KEY_W) && !IsKeyDown(KEY_A) && !IsKeyDown(KEY_S) && !IsKeyDown(KEY_D))
+    {
+        moving = false;
+    }
 
-            if (framesCounter >= (60 / framesSpeed)) {
-                framesCounter = 0;
-                if (lastDir != LASTDOWN) {
-                    currentFrame = 0;
-                }
-                currentFrame++;
-
-                if (currentFrame > 3 || currentFrame < 0) currentFrame = 0;
-
-                frameRec.x = (float) currentFrame * 32;
-            }
+    if (punch == none && moving)
+    {
+        if (IsKeyDown(KEY_D)) {
+            UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 4, 7, frameRec.x, player);
+        }
+        else if (IsKeyDown(KEY_A)) {
+            UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 12, 15, frameRec.x, player);
+        }
+        else if (IsKeyDown(KEY_W)) {
+            UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 8, 11, frameRec.x, player);
+        }
+        else if (IsKeyDown(KEY_S)) {
+            UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 0, 3, frameRec.x, player);
+        }
 
     }
-    else if(IsKeyDown(KEY_D) && punch == none )
+    else if (punch != none)
     {
+        int startFrame, endFrame;
 
-            if (framesCounter >= (60 / framesSpeed)) {
-                framesCounter = 0;
-                if (lastDir != LASTRIGHT) {
-                    currentFrame = 4;
-                }
-                currentFrame++;
-
-                if (currentFrame > 7 || currentFrame < 4) currentFrame = 4;
-
-                frameRec.x = (float) currentFrame * 32;
-            }
-
-    }
-    else if(IsKeyDown(KEY_W) && punch == none)
-    {
-
-            if (framesCounter >= (60 / framesSpeed)) {
-                framesCounter = 0;
-                if (lastDir != LASTUP) {
-                    currentFrame = 8;
-                }
-                currentFrame++;
-
-                if (currentFrame > 11 || currentFrame < 8) currentFrame = 8;
-
-                frameRec.x = (float) currentFrame * 32;
-            }
-
-    }
-    else if(IsKeyDown(KEY_A) && punch == none)
-    {
-
-            if (framesCounter >= (60 / framesSpeed)) {
-                framesCounter = 0;
-                if (lastDir != LASTLEFT) {
-                    currentFrame = 12;
-                }
-                currentFrame++;
-
-                if (currentFrame > 15 || currentFrame < 12) {
-                    currentFrame = 12;
-                }
-
-                frameRec.x = (float) currentFrame * 32;
-            }
-
-    }
-    else if(punch == down)
-    {
-        animationFinished = false;
-        if (!animationFinished)
+        switch (punch)
         {
-            if (framesCounter >= (60 / framesSpeed))
-            {
-                framesCounter = 0;
-                currentFrame++;
-                if (currentFrame > 19 || currentFrame < 16)
-                {
-                    currentFrame = 16;
-                }
-                if(currentFrame == 19)
-                {
-                    animationFinished = true;
-                    punch = none;
-                }
-                frameRec.x = (float) currentFrame * 32;
-            }
+            case down:  startFrame = 16; endFrame = 19; break;
+            case right: startFrame = 20; endFrame = 23; break;
+            case up:    startFrame = 24; endFrame = 27; break;
+            case left:  startFrame = 28; endFrame = 31; break;
+            default:    startFrame = 0;  endFrame = 0;  break;
+        }
+
+        UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, startFrame, endFrame, frameRec.x, player);
+
+        if (currentFrame == endFrame) {
+            animationFinished = true;
+            punch = none;
         }
     }
-    else if(punch == right)
+    else if (!moving && punch == none)
     {
-        animationFinished = false;
-        if(!animationFinished)
-        {
-            if (framesCounter >= (60 / framesSpeed))
-            {
-                framesCounter = 0;
-                currentFrame++;
-                if (currentFrame > 23 || currentFrame < 20)
-                {
-                    currentFrame = 20;
-                }
-                if(currentFrame == 23)
-                {
-                    animationFinished = true;
-                    punch = none;
-                }
-                frameRec.x = (float) currentFrame * 32;
-            }
+        switch (lastDir) {
+            case LASTRIGHT: UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 36, 39, frameRec.x, player); break;
+            case LASTLEFT:  UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 44, 47, frameRec.x, player); break;
+            case LASTUP:    UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 40, 43, frameRec.x, player); break;
+            case LASTDOWN:  UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 32, 35, frameRec.x, player); break;
         }
-    }
-    else if(punch == up)
-    {
-        animationFinished = false;
-        if (!animationFinished)
-        {
-            if (framesCounter >= (60 / framesSpeed))
-            {
-                framesCounter = 0;
-                currentFrame++;
-                if (currentFrame > 27 || currentFrame < 24)
-                {
-                    currentFrame = 24;
-                }
-                if(currentFrame == 27)
-                {
-                    animationFinished = true;
-                    punch = none;
-                }
-                frameRec.x = (float) currentFrame * 32;
-            }
-        }
-    }
-    else if(punch == left)
-    {
-        animationFinished = false;
-        if(!animationFinished) {
-            if (framesCounter >= (60 / framesSpeed))
-            {
-                framesCounter = 0;
-                currentFrame++;
-                if (currentFrame > 31 || currentFrame < 28)
-                {
-                    currentFrame = 28;
-                }
-                if(currentFrame == 31)
-                {
-                    animationFinished = true;
-                    punch = none;
-                }
-                frameRec.x = (float) currentFrame * 32;
-            }
-        }
-    }
-    else if(lastDir == LASTRIGHT){
-        currentFrame = 7;
-        frameRec.x = (float) currentFrame * 32;
-    }
-    else if(lastDir == LASTLEFT){
-        currentFrame = 13;
-        frameRec.x = (float) currentFrame * 32;
-    }
-    else if(lastDir == LASTUP){
-        currentFrame = 9;
-        frameRec.x = (float) currentFrame * 32;
-    }
-    else if(lastDir == LASTDOWN){
-        currentFrame = 1;
-        frameRec.x = (float) currentFrame * 32;
     }
 
     checkCollisions();
-
 }
 
 void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& character)

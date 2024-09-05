@@ -68,7 +68,7 @@ private:
     static std::shared_ptr<EnemyManager> enemyManager_p;
     static EnemyManager* enemyManager;
     static int currentFrame;
-    static int framesCounter;
+    static float framesCounter;
     static int framesSpeed;
     static bool forward;
     static Rectangle frameRec;

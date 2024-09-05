@@ -21,7 +21,7 @@ void TextureManager::init()
     m_texturesLoaded = true;
     m_textures["ERROR"] = LoadTexture("assets/graphics/Tiles/MissingTexture.png");
     //m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/MainCharacter.png");
-    m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/MC_animation_sheet.png");
+    m_textures["MainCharacter"] = LoadTexture("assets/graphics/MainCharacter/newMC.png");
     m_textures["DoorRed2"] = LoadTexture("assets/graphics/Tiles/DoorRed2.png");
     m_textures["StoneDoorR"] = LoadTexture("assets/graphics/Tiles/StoneDoorR.png");
     m_textures["StoneDoorL"] = LoadTexture("assets/graphics/Tiles/StoneDoorL.png");
@@ -80,6 +80,7 @@ void TextureManager::init()
     m_textures["newHeartHalf"] = LoadTexture("assets/graphics/HUD/newHeartHalf.png");
     m_textures["yellowBeam"] = LoadTexture("assets/graphics/HUD/yellowBeam.png");
     m_textures["blueBeam"] = LoadTexture("assets/graphics/HUD/blueBeam.png");
+    m_textures["controlBox"] = LoadTexture("assets/graphics/HUD/showBox.png");
 
     for (auto &texture : m_textures)
     {
