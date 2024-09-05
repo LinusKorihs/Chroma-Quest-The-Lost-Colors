@@ -19,6 +19,7 @@ public:
 private:
     static int sizeDoorVec;
     static int sizeWallVec;
+    static int sizeStoneWallVec;
     static int sizeOpenDoorVec;
     static int sizeOverworldWallVec;
 };

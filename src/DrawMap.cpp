@@ -3,12 +3,14 @@
 
 int DrawMap::sizeDoorVec = 0;
 int DrawMap::sizeWallVec = 0;
+int DrawMap::sizeStoneWallVec = 0;
 int DrawMap::sizeOpenDoorVec = 0;
 int DrawMap::sizeOverworldWallVec = 0;
 bool DrawMap::dungeon1 = false;
 bool DrawMap::overworld = true;
 
-bool DrawMap::isOpenDoor(float x, float y) {
+bool DrawMap::isOpenDoor(float x, float y)
+{
     return
     (x == 1120 && y == 2624) || (x == 1120 && y == 2048) || (x == 1312 && y == 1792) || (x == 928 && y == 1792) || (x == 800 && y == 1792) ||
     (x == 448 && y == 1632) || (x == 448 && y == 1504) || (x == 1088 && y == 896) || (x == 1216 && y == 896) || (x == 1536 && y == 1152) ||
@@ -82,7 +84,6 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
     {
         for (int x = 0; x < Map.getSize().x; x++)
         {
-
             int data = layer[y * Map.getSize().x + x];
 
             tson::Tileset* tileset = Map.getTilesetByGid(data); // Get the tile from the tileset
@@ -92,11 +93,11 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
 
                 if (tile != nullptr && tile->get<bool>("Wall")) // Check if the tile is a wall
                 {
-
                     Rectangle wallRec = {(float) x * tileWidth * multiplier, (float) y * tileWidth * multiplier, tileWidth * multiplier, tileWidth * multiplier}; // Create a Rectangle for the tile and add it to the list of wall rectangles
                     if(overworld)
                     {
-                        if(!rectangleExists(currentGameState.overworldWallRecs, wallRec)) {
+                        if(!rectangleExists(currentGameState.overworldWallRecs, wallRec))
+                        {
                             currentGameState.overworldWallRecs.push_back(wallRec);
                             //if(sizeOverworldWallVec <= 1007){
                             sizeOverworldWallVec++;
@@ -114,19 +115,68 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                         {
                             currentGameState.openDoorRectangles.push_back(wallRec);
                             sizeOpenDoorVec++;
-                        } else if (!isOpenDoor(wallRec.x, wallRec.y) &&
+                        }
+                        else if (!isOpenDoor(wallRec.x, wallRec.y) &&
                                    !rectangleExists(currentGameState.doorRectangles, wallRec) &&
-                                   isDoor(wallRec.x, wallRec.y) && sizeDoorVec <= 6) {
+                                   isDoor(wallRec.x, wallRec.y) && sizeDoorVec <= 6)
+                        {
                             currentGameState.doorRectangles.push_back(wallRec);
                             sizeDoorVec++;
 
-                        } else {
-
+                        }
+                        else
+                        {
                             if (!isOpenDoor(wallRec.x, wallRec.y) &&
                                 !rectangleExists(currentGameState.wallRectangles, wallRec) &&
-                                !isDoor(wallRec.x, wallRec.y)) {
+                                !isDoor(wallRec.x, wallRec.y))
+                            {
                                 currentGameState.wallRectangles.push_back(wallRec);
                                 sizeWallVec++;
+                            }
+                        }
+                    }
+                }
+
+                if (tile != nullptr && tile->get<bool>("StoneWall")) // Check if the tile is a Stonewall
+                {
+                    Rectangle stoneWallRec = {(float) x * tileWidth * multiplier, (float) y * tileWidth * multiplier, tileWidth * multiplier, tileWidth * multiplier}; // Create a Rectangle for the tile and add it to the list of wall rectangles
+                    if(overworld)
+                    {
+                        if(!rectangleExists(currentGameState.overworldWallRecs, stoneWallRec))
+                        {
+                            currentGameState.overworldWallRecs.push_back(stoneWallRec);
+                            //if(sizeOverworldWallVec <= 1007)
+                            sizeOverworldWallVec++;
+                            std::cout << sizeOverworldWallVec << std::endl;
+                        }
+                    }
+                    else if(dungeon1)
+                    {
+                        sizeOverworldWallVec = 0;
+                        if (isOpenDoor(stoneWallRec.x, stoneWallRec.y) &&
+                            !rectangleExists(currentGameState.openDoorRectangles, stoneWallRec) && sizeOpenDoorVec <= 22 ||
+                            isDoor(stoneWallRec.x, stoneWallRec.y) &&
+                            !rectangleExists(currentGameState.openDoorRectangles, stoneWallRec) && sizeOpenDoorVec <=
+                                                                                              23) //für projectile kollisionserkennung - damit es nicht durch offene türen fliegt
+                        {
+                            currentGameState.openDoorRectangles.push_back(stoneWallRec);
+                            sizeOpenDoorVec++;
+                        }
+                        else if (!isOpenDoor(stoneWallRec.x, stoneWallRec.y) &&
+                                 !rectangleExists(currentGameState.doorRectangles, stoneWallRec) &&
+                                 isDoor(stoneWallRec.x, stoneWallRec.y) && sizeDoorVec <= 6)
+                        {
+                            currentGameState.doorRectangles.push_back(stoneWallRec);
+                            sizeDoorVec++;
+                        }
+                        else
+                        {
+                            if (!isOpenDoor(stoneWallRec.x, stoneWallRec.y) &&
+                                !rectangleExists(currentGameState.stoneWallRectangles, stoneWallRec) &&
+                                !isDoor(stoneWallRec.x, stoneWallRec.y))
+                            {
+                                currentGameState.stoneWallRectangles.push_back(stoneWallRec);
+                                sizeStoneWallVec++;
                             }
                         }
                     }

@@ -41,6 +41,7 @@ public:
     std::map<Direction, int> playerKeyBindings = {{Direction::UP, KEY_W}, {Direction::DOWN, KEY_S}, {Direction::LEFT, KEY_A}, {Direction::RIGHT, KEY_D} };
     std::pair<Direction, int> lastChangedPlayerKey = {Direction::NONE, -1 };
     std::vector<Rectangle> wallRectangles;
+    std::vector<Rectangle> stoneWallRectangles;
     std::vector<Rectangle> overworldWallRecs;
     std::vector<Rectangle> doorRectangles;
     std::vector<Rectangle> openDoorRectangles;

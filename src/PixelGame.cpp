@@ -403,6 +403,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         {
             DrawMap::dungeon1 = false;
             currentGameState.wallRectangles.clear();
+            currentGameState.stoneWallRectangles.clear();
             currentGameState.doorRectangles.clear();
             currentGameState.openDoorRectangles.clear(); //das muss dann wieder bei dungeon1 gefüllt werden
 
@@ -629,9 +630,10 @@ void PixelGame::closedDoorTransition()
     }
 }
 
-void PixelGame::loadMap(const std::string &mapPath) {
-
-    if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty()) {
+void PixelGame::loadMap(const std::string &mapPath)
+{
+    if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty())
+    {
         std::cout << "Entlade aktuelle Karte und Tilesets" << std::endl;
         unloadMap();
     }
@@ -639,21 +641,26 @@ void PixelGame::loadMap(const std::string &mapPath) {
     tson::Tileson tileson;
     auto mapPtr = tileson.parse(mapPath);
 
-    if (mapPtr && mapPtr->getStatus() == tson::ParseStatus::OK) {
+    if (mapPtr && mapPtr->getStatus() == tson::ParseStatus::OK)
+    {
         currentMap = std::move(*mapPtr);
         std::cout << "Karte erfolgreich geladen: " << mapPath << std::endl;
 
-        for (auto& tileset : currentMap.getTilesets()) {
+        for (auto& tileset : currentMap.getTilesets())
+        {
             std::cout << "Tileset geladen: " << tileset.getName() << std::endl;
         }
-    } else {
+    }
+    else
+    {
         std::cerr << "Fehler beim Parsen der Karte: " << mapPtr->getStatusMessage() << std::endl;
     }
 }
 
 void PixelGame::unloadMap()
 {
-    if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty()) {
+    if (!currentMap.getLayers().empty() || !currentMap.getTilesets().empty())
+    {
         currentMap.getLayers().clear();
         currentMap.getTilesets().clear();
         currentMap = tson::Map();

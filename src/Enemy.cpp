@@ -1,7 +1,6 @@
 #include "Enemy.h"
 #include "iostream"
 
-
 Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type, EnemyBehaviour behaviour, Direction enDirection, float rLimit, float lLimit, float uLimit, float dLimit)
 {
     enemyDeath = false;
@@ -27,7 +26,6 @@ Enemy::Enemy(Vector2 position, Texture2D &enemyTexture, EnemyType type, EnemyBeh
 
 void Enemy::updateEnemy(float deltaTime)
 {
-
     if(enemyType == SLIMERED)
     {
         enemyRec = {posEnemy.x + 8, posEnemy.y +12, 16, 12};
@@ -51,28 +49,35 @@ void Enemy::updateEnemy(float deltaTime)
         {
             unload = true;
         }
-    } else {
+    }
+    else
+    {
         if (enemyBehaviour == STAND)
         {
             UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
                             0, 3, frameRec.x, enemy);
-        } else if (enemyBehaviour == WALKHORIZONTAL)
+        }
+        else if (enemyBehaviour == WALKHORIZONTAL)
         {
             if (direction == Direction::RIGHT)
             {
                 UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
                                 8, 11, frameRec.x, enemy);
-            } else if (direction == Direction::LEFT)
+            }
+            else if (direction == Direction::LEFT)
             {
                 UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
                                 16, 19, frameRec.x, enemy);
             }
-        } else if (enemyBehaviour == WALKVERTICAL)
+        }
+        else if (enemyBehaviour == WALKVERTICAL)
         {
-            if (direction == Direction::UP) {
+            if (direction == Direction::UP)
+            {
                 UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
                                 12, 15, frameRec.x, enemy);
-            } else if (direction == Direction::DOWN)
+            }
+            else if (direction == Direction::DOWN)
             {
                 UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame,
                                 4, 7, frameRec.x, enemy);
