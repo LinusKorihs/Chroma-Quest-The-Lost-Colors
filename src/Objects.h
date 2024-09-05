@@ -148,3 +148,21 @@ private:
     Rectangle chestRec;
 
 };
+
+class Signs {
+public:
+    Signs(float sposX, float sposY, Texture2D signtexture, Texture2D textText);
+
+    void draw();
+    static void init(Texture2D signTexture, Texture2D textTexture);
+    void update();
+    static std::vector<Signs> signs;
+
+private:
+    float signPositionX;
+    float signPositionY;
+    Texture2D signTexture;
+    Texture2D textTexture;
+    Rectangle signRec;
+    bool active = false;
+};

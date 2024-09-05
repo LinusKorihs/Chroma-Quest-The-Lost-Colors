@@ -822,3 +822,44 @@ void Chest::update()
         }
     }
 }
+
+std::vector<Signs> Signs::signs;
+
+Signs::Signs(float posX, float posY, Texture2D signtexture, Texture2D textText)
+{
+    signPositionX = posX;
+    signPositionY = posY;
+    signTexture = signtexture;
+    textTexture = textText;
+    signRec = {signPositionX, signPositionY-32, 32, 64};
+}
+
+void Signs::init(Texture2D signTexture, Texture2D textTexture)
+{
+    signs.emplace_back(47*32, 33*32, signTexture, textTexture); //redDist
+    signs.emplace_back(38*32, 41*32, signTexture, textTexture); //blue dist
+    signs.emplace_back(38*32, 30*32, signTexture, textTexture); // yellow dist
+    signs.emplace_back(34*32, 9*32, signTexture, textTexture); // yellow road
+    signs.emplace_back(17*32, 38*32, signTexture, textTexture); //blue road
+    signs.emplace_back(59*32, 40*32, signTexture, textTexture); //red road
+}
+
+void Signs::draw()
+{
+    if(active)
+    {
+        DrawTexture(signTexture, signPositionX, signPositionY, WHITE);
+        DrawTexture(textTexture, signPositionX+10, signPositionY+32, WHITE);
+    }
+}
+
+void Signs::update()
+{
+    if (CheckCollisionRecs(signRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E)) {
+        active = true;
+    }
+    if(IsKeyPressed(KEY_E) && active)
+    {
+        active = false;
+    }
+}
