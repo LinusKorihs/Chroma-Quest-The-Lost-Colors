@@ -32,7 +32,7 @@ Rectangle Stone::getRectangle() const
     return {stonePositionX, stonePositionY, stoneSize, stoneSize};
 }
 
-void Stone::moveOneTile(int moveDirection, const std::vector<Rectangle>& wallRectangles, const std::vector<Rectangle>& stoneWallRectangles)
+void Stone::moveOneTile(int moveDirection, const std::vector<Rectangle>& wallRectangles, const std::vector<Rectangle>& stoneWallRectangles, const std::vector<Rectangle>& doorRecs)
 {
     if (isMoving) return; // Do not initiate another move while already moving
 
@@ -67,7 +67,7 @@ void Stone::moveOneTile(int moveDirection, const std::vector<Rectangle>& wallRec
             return;
     }
 
-    if (!checkCollisionWithWalls(targetX, targetY, wallRectangles, stoneWallRectangles) && !checkCollisionWithStones(targetX, targetY))
+    if (!checkCollisionWithWalls(targetX, targetY, wallRectangles, stoneWallRectangles, doorRecs) && !checkCollisionWithStones(targetX, targetY))
     {
         isMoving = true;
         startTime = GetTime(); // Record the start time of the move
@@ -106,7 +106,7 @@ float Stone::lerp(float start, float end, float t) const
     return start + t * (end - start);
 }
 
-bool Stone::checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle>& wallRecs, const std::vector<Rectangle>& stoneWallRecs) const
+bool Stone::checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle>& wallRecs, const std::vector<Rectangle>& stoneWallRecs, const std::vector<Rectangle>& doorRecs) const
 {
     Rectangle newRec = { newX, newY, stoneSize, stoneSize };
     for (const Rectangle& wallRec : wallRecs)
@@ -120,6 +120,14 @@ bool Stone::checkCollisionWithWalls(float newX, float newY, const std::vector<Re
     for (const Rectangle& stoneWallRec : stoneWallRecs)
     {
         if (CheckCollisionRecs(newRec, stoneWallRec))
+        {
+            return true;
+        }
+    }
+
+    for(const Rectangle& doorRec : doorRecs)
+    {
+        if(CheckCollisionRecs(newRec, doorRec))
         {
             return true;
         }

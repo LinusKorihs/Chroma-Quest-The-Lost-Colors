@@ -292,7 +292,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
     if (nearestStone)
     {
-        nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles, currentGameState.stoneWallRectangles);
+        nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles, currentGameState.openDoorRectangles, currentGameState.stoneWallRectangles);
     }
     else
     {

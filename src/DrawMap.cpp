@@ -110,8 +110,8 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                         if (isOpenDoor(wallRec.x, wallRec.y) &&
                             !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <= 22 ||
                             isDoor(wallRec.x, wallRec.y) &&
-                            !rectangleExists(currentGameState.openDoorRectangles, wallRec) && sizeOpenDoorVec <=
-                                                                                              23) //für projectile kollisionserkennung - damit es nicht durch offene türen fliegt
+                            !rectangleExists(currentGameState.openDoorRectangles, wallRec) /*&& sizeOpenDoorVec <=
+                                                                                              23*/) //für projectile kollisionserkennung - damit es nicht durch offene türen fliegt
                         {
                             currentGameState.openDoorRectangles.push_back(wallRec);
                             sizeOpenDoorVec++;
@@ -140,44 +140,15 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                 if (tile != nullptr && tile->get<bool>("StoneWall")) // Check if the tile is a Stonewall
                 {
                     Rectangle stoneWallRec = {(float) x * tileWidth * multiplier, (float) y * tileWidth * multiplier, tileWidth * multiplier, tileWidth * multiplier}; // Create a Rectangle for the tile and add it to the list of wall rectangles
-                    if(overworld)
-                    {
-                        if(!rectangleExists(currentGameState.overworldWallRecs, stoneWallRec))
-                        {
-                            currentGameState.overworldWallRecs.push_back(stoneWallRec);
-                            //if(sizeOverworldWallVec <= 1007)
-                            sizeOverworldWallVec++;
-                            std::cout << sizeOverworldWallVec << std::endl;
-                        }
-                    }
-                    else if(dungeon1)
+                     if(dungeon1)
                     {
                         sizeOverworldWallVec = 0;
-                        if (isOpenDoor(stoneWallRec.x, stoneWallRec.y) &&
-                            !rectangleExists(currentGameState.openDoorRectangles, stoneWallRec) && sizeOpenDoorVec <= 22 ||
-                            isDoor(stoneWallRec.x, stoneWallRec.y) &&
-                            !rectangleExists(currentGameState.openDoorRectangles, stoneWallRec) && sizeOpenDoorVec <=
-                                                                                              23) //für projectile kollisionserkennung - damit es nicht durch offene türen fliegt
+                        if (!isOpenDoor(stoneWallRec.x, stoneWallRec.y) &&
+                        !rectangleExists(currentGameState.stoneWallRectangles, stoneWallRec) &&
+                        !isDoor(stoneWallRec.x, stoneWallRec.y))
                         {
-                            currentGameState.openDoorRectangles.push_back(stoneWallRec);
-                            sizeOpenDoorVec++;
-                        }
-                        else if (!isOpenDoor(stoneWallRec.x, stoneWallRec.y) &&
-                                 !rectangleExists(currentGameState.doorRectangles, stoneWallRec) &&
-                                 isDoor(stoneWallRec.x, stoneWallRec.y) && sizeDoorVec <= 6)
-                        {
-                            currentGameState.doorRectangles.push_back(stoneWallRec);
-                            sizeDoorVec++;
-                        }
-                        else
-                        {
-                            if (!isOpenDoor(stoneWallRec.x, stoneWallRec.y) &&
-                                !rectangleExists(currentGameState.stoneWallRectangles, stoneWallRec) &&
-                                !isDoor(stoneWallRec.x, stoneWallRec.y))
-                            {
-                                currentGameState.stoneWallRectangles.push_back(stoneWallRec);
-                                sizeStoneWallVec++;
-                            }
+                            currentGameState.stoneWallRectangles.push_back(stoneWallRec);
+                            sizeStoneWallVec++;
                         }
                     }
                 }
@@ -188,10 +159,6 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
             Rectangle source = {(float) (data % tileSetColumns) * tileWidth, (float) (data / tileSetColumns) * tileWidth, tileWidth, tileWidth};
             Rectangle destination = {(float) x * tileWidth * multiplier, (float) y * tileWidth * multiplier, tileWidth * multiplier, tileWidth * multiplier};
 
-            /*if (data >= 0xE0) //animation layer
-            {
-                source.x += (float) (currentFrame * tileWidth);
-            }*/
             if (dungeon1 && data >= 448) //animation layer
             {
                 source.x += (float) (currentFrame * tileWidth);
@@ -201,7 +168,6 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                 source.x += (float) (currentFrame * tileWidth);
             }*/
             DrawTexturePro(tileTexture, source, destination, {0, 0}, 0, WHITE);
-            //std::cout << currentGameState.wallRectangles.size() << std::endl;
         }
     }
 }

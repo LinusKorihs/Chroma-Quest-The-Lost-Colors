@@ -13,7 +13,7 @@ public:
 
     void draw();
     Rectangle getRectangle() const;
-    void moveOneTile(int moveDirection, const std::vector<Rectangle> &wallRectangles, const std::vector<Rectangle> &stoneWallRectangles);
+    void moveOneTile(int moveDirection, const std::vector<Rectangle> &wallRectangles, const std::vector<Rectangle> &stoneWallRectangles, const std::vector<Rectangle>& doorRecs);
     void update(float deltaTime);
 
     static void initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect);
@@ -45,7 +45,7 @@ private:
     float startTime;
     float duration;
 
-    bool checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle> &wallRecs, const std::vector<Rectangle> &stoneWallRecs) const;
+    bool checkCollisionWithWalls(float newX, float newY, const std::vector<Rectangle> &wallRecs, const std::vector<Rectangle> &stoneWallRecs, const std::vector<Rectangle>& doorRecs) const;
     bool checkCollisionWithStones(float newX, float newY) const;
     float lerp(float start, float end, float t) const;
 };
