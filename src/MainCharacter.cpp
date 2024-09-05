@@ -244,7 +244,6 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     Rectangle newRec = {newPositionX + 4, newPositionY+16, playerRec.width, playerRec.height-12}; //hier hab ich y und height geändert - falls was buggt wieder rückgängig machen
     Rectangle enemyNewRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height}; // für enemy kollision, weil der player sonst komplett den enemy verdecken kann /schaden kein sinn macht
 
-
     for (const Rectangle &doorRec : currentGameState.doorRectangles)
     {
         if (CheckCollisionRecs(enemyNewRec, doorRec))
@@ -293,7 +292,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
     if (nearestStone)
     {
-        nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles);
+        nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles, currentGameState.stoneWallRectangles);
     }
     else
     {
@@ -372,7 +371,8 @@ void MainCharacter::receiveDamage()
     static double lastDamageTime = 0.0;
     double currentTime = GetTime();
 
-    if (currentTime - lastDamageTime >= 0.5) {
+    if (currentTime - lastDamageTime >= 0.5)
+    {
         canReceiveDamage = true;
     }
 
@@ -380,7 +380,8 @@ void MainCharacter::receiveDamage()
     {
         if (CheckCollisionRecs(MainCharacter::playerRec, enemy->getRec()))
         {
-            if (canReceiveDamage) {
+            if (canReceiveDamage)
+            {
                 InGameHud::health -= 0.5;
                 canReceiveDamage = false;
                 lastDamageTime = currentTime;
@@ -390,13 +391,12 @@ void MainCharacter::receiveDamage()
     }
 }
 
-
 void MainCharacter::attack()
 {
-
     static double lastDamageTime = 0.0;
     double currentTime = GetTime();
-    if(currentTime - lastDamageTime >= 0.3){
+    if(currentTime - lastDamageTime >= 0.3)
+    {
         canGiveDamage = true;
     }
 
@@ -451,7 +451,6 @@ void MainCharacter::attack()
 
     for (const auto &enemy: enemyManager->enemies)  //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
     {
-
         if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE))
         {
             if(canGiveDamage)

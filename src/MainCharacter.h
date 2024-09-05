@@ -62,11 +62,11 @@ public:
     static void updateRec();
     static void checkCollisions();
 
+    static EnemyManager* enemyManager;
 private:
     static std::shared_ptr<Projectile> projectile_p;
     static std::shared_ptr<Enemy> enemy_p;
     static std::shared_ptr<EnemyManager> enemyManager_p;
-    static EnemyManager* enemyManager;
     static int currentFrame;
     static float framesCounter;
     static int framesSpeed;

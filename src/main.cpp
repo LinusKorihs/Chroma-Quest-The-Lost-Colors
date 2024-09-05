@@ -23,7 +23,6 @@ int main()
     ToggleFullscreen();
 #endif
 
-
    // PixelGame::loadMap("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
     PixelGame::loadMap("assets/graphics/newTileset&Tilemap/Overworld.tmj");
 
