@@ -22,7 +22,7 @@ void UniversalMethods::updateAnimation(float deltaTime, float &frameCounter, int
     }
     else if(type == player)
     {
-        totalFrames = 32;
+        totalFrames = 72;
         textureWidth = totalFrames*tileWidth;
         framesSpeed = 6;
     }

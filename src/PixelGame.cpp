@@ -384,6 +384,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         if(DialogBox::dialogBoxes[0].isActive() || roomChanger.isTransitioning() || playerCamera::getIsAnimating())
         {
             canMove = false;
+            InGameHud::controlActive = false;
         }
         else
         {
@@ -442,6 +443,7 @@ void PixelGame::gameLoop(tson::Map &Map)
             if(DialogBox::dialogBoxes[i].isActive())
             {
                 canMove = false;
+                InGameHud::controlActive = false;
                 break;
             }
             else
@@ -550,6 +552,8 @@ void PixelGame::drawHud()
     }
     InGameHud::drawRGBBarTexture();
     InGameHud::drawHealthBarTexture();
+    InGameHud::drawControlBox();
+
 
 }
 

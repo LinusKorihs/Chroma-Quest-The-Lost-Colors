@@ -5,6 +5,7 @@
 
 float InGameHud::health;
 std::vector<HudImageButton> InGameHud::hudImagebuttons;
+bool InGameHud::controlActive = true;
 
 InGameHud::InGameHud()
 {
@@ -138,4 +139,17 @@ void InGameHud::drawImageButton(HudImageButton& button)
     float buttonTextY = buttonCenterY - buttonTextHeight / 2;
 
     DrawText(button.buttonText.c_str(), buttonTextX, buttonTextY, 20, BLACK);
+}
+
+void InGameHud::drawControlBox() {
+    if(controlActive){
+        Texture2D controlBox = TextureManager::getTexture("controlBox");
+        DrawTexture(controlBox, 3, 180, WHITE);
+        DrawText("Press ´E´ to interact", 15, 195, 1, WHITE);
+        DrawText("Press ´MOUSE LEFT´ to attack", 15, 215, 1, WHITE);
+        DrawText("Press ´C´ to show/hide", 15, 235, 1, WHITE);
+    }
+    if(IsKeyPressed(KEY_C)){
+        controlActive = !controlActive;
+    }
 }

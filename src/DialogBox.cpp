@@ -24,9 +24,9 @@ void DialogBox::update(Vector2 playerPosition)
 
     for (int i = 0; i < dialogBoxes.size(); i++)
     {
-        if (CheckCollisionRecs(MainCharacter::playerRec, NPC::npcs[i].getInteractRec()) && !dialogBoxes[i].active && IsKeyPressed(KEY_E))
+        if (CheckCollisionRecs({MainCharacter::playerRec.x, MainCharacter::playerRec.y, 32,32}, NPC::npcs[i].getInteractRec()) && !dialogBoxes[i].active && IsKeyPressed(KEY_E))
         {
-            dialogBoxes[i].active = true;
+           dialogBoxes[i].active = true;
             break;
         }
     }
@@ -66,3 +66,4 @@ void DialogBox::init(Texture2D mouseTexture, Texture2D frogTexture, Texture2D ge
     dialogBoxes.emplace_back(gekkoTexture, std::vector<std::string>{ "If you follow this road,\nyou will reach the yellow tower."});
     dialogBoxes.emplace_back(mouseTexture, std::vector<std::string>{ "Aurora!", "Please come meet me at\nthe red tower...","I will wait in there."});
 }
+
