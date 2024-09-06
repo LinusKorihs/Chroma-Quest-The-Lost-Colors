@@ -31,6 +31,12 @@ int main()
 
     Menu::initBackgroundGif();
 
+    Image logo = LoadImage("assets/graphics/Buttons/Logo_official.png");
+    Texture2D logoTex = LoadTextureFromImage(logo);
+    logoTex.width = logo.width / 6;
+    logoTex.height = logo.height / 6;
+    UnloadImage(logo);
+
     while (ConfigNotConst::isGameRunning && !WindowShouldClose())
     {
         Vector2 currentWindowSize = {(float) GetScreenWidth(), (float) GetScreenHeight()};
@@ -55,6 +61,10 @@ int main()
                        {0, 0, (float) Menu::backgroundTex.width, (float) Menu::backgroundTex.height},
                        {0, 0, currentWindowSize.x, currentWindowSize.y},
                        {0, 0}, 0.0f, WHITE);
+
+        float logoX = GetScreenWidth() / 2.5;
+        float logoY = GetScreenHeight() / 13;
+        DrawTexture(logoTex, logoX, logoY, WHITE);
 
         switch (applicationState.currentGameMenu)
         {
@@ -103,7 +113,7 @@ int main()
                        renderRectangle, {0, 0}, 0.0f, WHITE);
         EndDrawing();
     }
-
+    UnloadTexture(logoTex);
     Menu::unloadBackgroundGif();
     CloseWindow();
     return EXIT_SUCCESS;

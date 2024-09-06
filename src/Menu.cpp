@@ -1,3 +1,4 @@
+#include <iostream>
 #include "GameState.h"
 #include "Audio.h"
 #include "config.h"
@@ -30,6 +31,15 @@ void Menu::initBackgroundGif()
 {
     backgroundPic = LoadImageAnim("assets/background.gif", &animFrames);
     backgroundTex = LoadTextureFromImage(backgroundPic);
+
+    // Update the background GIF
+    updateBackgroundAnimation();
+
+    // Draw the background GIF
+    int currentScreenWidth = GetScreenWidth();
+    float scaleX = (float)currentScreenWidth / backgroundTex.width;
+    DrawTextureEx(backgroundTex, (Vector2){0, 0}, 0.0f, scaleX, WHITE);
+
 }
 
 void Menu::unloadBackgroundGif()
@@ -56,46 +66,38 @@ void Menu::updateBackgroundAnimation()
 int Menu::drawMainMenu(GameState &currentGameState)
 {
     Menu::buttonPos = UpdateButtonPositions();
-    float newButtonWidth = Menu::buttonPos[0];
-    float newButtonHeight = Menu::buttonPos[1];
+    float newButtonWidth = Button::buttonScreenWidth * 0.5f; // Half the original width
+    float newButtonHeight = (float)PixelGameConfig::ScreenHeight / 3; // Half the original height
     int upMenuScreenWidth = static_cast<int>(Menu::buttonPos[2]);
 
-    // Update the background GIF
-    updateBackgroundAnimation();
+    // Load button textures
+    Texture2D playButtonTexture = TextureManager::getTexture("playButton");
+    Texture2D settingsButtonTexture = TextureManager::getTexture("settingsButton");
+    Texture2D exitButtonTexture = TextureManager::getTexture("exitButton");
 
-    // Draw the background GIF
-    int currentScreenWidth = GetScreenWidth();
-    float scaleX = (float)currentScreenWidth / backgroundTex.width;
-    DrawTextureEx(backgroundTex, (Vector2){0, 0}, 0.0f, scaleX, WHITE);
+    // Define button rectangles with new dimensions
+    Rectangle playButtonRec = {(upMenuScreenWidth - newButtonWidth) / 2, newButtonHeight + buttonSpacing * 0, newButtonWidth, newButtonHeight};
+    Rectangle settingsButtonRec = {(upMenuScreenWidth - newButtonWidth) / 2, newButtonHeight + buttonSpacing * 1, newButtonWidth, newButtonHeight};
+    Rectangle exitButtonRec = {(upMenuScreenWidth - newButtonWidth) / 2, newButtonHeight + buttonSpacing * 2, newButtonWidth, newButtonHeight};
 
-    startGameButton.texture = TextureManager::getTexture("StartGameButtonTexture");
-    Button::updateButtonDimensions(startGameButton, newButtonWidth, newButtonHeight + buttonSpacing * 0, Button::buttonWidth, Button::buttonHeight);
-    startGameButton.buttonText = LanguageManager::getLocalizedGameText("Start Game", "Spiel starten");
+    // Draw buttons with scaling
+    DrawTextureEx(playButtonTexture, (Vector2){playButtonRec.x, playButtonRec.y}, 0.0f, 0.5f, WHITE);
+    DrawTextureEx(settingsButtonTexture, (Vector2){settingsButtonRec.x, settingsButtonRec.y}, 0.0f, 0.5f, WHITE);
+    DrawTextureEx(exitButtonTexture, (Vector2){exitButtonRec.x, exitButtonRec.y}, 0.0f, 0.5f, WHITE);
 
-    settingsMenuButton.texture = TextureManager::getTexture("SettingsMenuButtonTexture");
-    Button::updateButtonDimensions(settingsMenuButton, newButtonWidth, newButtonHeight + buttonSpacing * 1, Button::buttonWidth, Button::buttonHeight);
-    settingsMenuButton.buttonText = LanguageManager::getLocalizedGameText("Settings", "Einstellungen");
-
-    exitGameButton.texture = TextureManager::getTexture("ExitGameButtonTexture");
-    Button::updateButtonDimensions(exitGameButton, newButtonWidth, newButtonHeight + buttonSpacing * 2, Button::buttonWidth, Button::buttonHeight);
-    exitGameButton.buttonText = LanguageManager::getLocalizedGameText("Quit Game", "Spiel beenden");
-
-    InGameHud::drawImageButton(startGameButton);
-    InGameHud::drawImageButton(settingsMenuButton);
-    InGameHud::drawImageButton(exitGameButton);
-
-    if (Button::checkButtonClick(startGameButton.rec, "Start Game", "Spiel starten"))
+    // Check button clicks
+    if (CheckCollisionPointRec(GetMousePosition(), playButtonRec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         currentGameState.changeGameState(MenuState::GameRunning);
         ConfigNotConst::isGameRunning = true;
     }
 
-    if (Button::checkButtonClick(settingsMenuButton.rec, "Settings", "Einstellungen"))
+    if (CheckCollisionPointRec(GetMousePosition(), settingsButtonRec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         currentGameState.changeGameState(MenuState::SettingsMenu);
     }
 
-    if (Button::checkButtonClick(exitGameButton.rec, "Quit Game", "Spiel beenden"))
+    if (CheckCollisionPointRec(GetMousePosition(), exitButtonRec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         TraceLog(LOG_INFO, "Quit button clicked");
         ConfigNotConst::isGameRunning = false;
@@ -117,7 +119,6 @@ int Menu::drawMainMenu(GameState &currentGameState)
 
     return ConfigNotConst::isProgramRunning ? 1 : 0;
 }
-
 std::vector<float> Menu::UpdateButtonPositions()
 {
     float upMenuScreenWidth = GetScreenWidth();
