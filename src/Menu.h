@@ -21,15 +21,13 @@ public:
 
     static void initBackgroundGif();
     static void unloadBackgroundGif();
-    static void updateBackgroundGif();
+    static void updateBackgroundAnimation();
 
-private:
     static Image backgroundPic;
     static Texture2D backgroundTex;
+private:
     static int animFrames;
     static int currentAnimFrame;
     static int frameDelay;
     static int frameCounter;
-
-    void drawBackgroundGif(const Texture2D &backgroundGif, float renderScale);
 };

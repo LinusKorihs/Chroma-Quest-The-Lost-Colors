@@ -15,27 +15,20 @@ int main()
     GameState applicationState;
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(PixelGameConfig::ScreenWidth, PixelGameConfig::ScreenHeight, PixelGameConfig::PROJECT_NAME);
-
     SetTargetFPS(ConfigConst::targetFPS);
     InitAudioDevice();
 
-#ifdef GAME_START_FULLSCREEN
-    ToggleFullscreen();
-#endif
+    //ToggleFullscreen();
 
     PixelGame::loadMap("assets/graphics/newTileset&Tilemap/Overworld.tmj");
-
     SetExitKey(KEY_F4);
 
-    RenderTexture canvas = LoadRenderTexture(PixelGameConfig::ScreenWidth, PixelGameConfig::ScreenHeight);
-
+    RenderTexture canvas = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
     float renderScale = 1.0f;
     TextureManager::init();
     PixelGame::gameInit();
-
     Vector2 previousWindowSize = {(float) GetScreenWidth(), (float) GetScreenHeight()};
 
-    // Initialize the background GIF
     Menu::initBackgroundGif();
 
     while (ConfigNotConst::isGameRunning && !WindowShouldClose())
@@ -44,30 +37,23 @@ int main()
 
         if (currentWindowSize.x != previousWindowSize.x || currentWindowSize.y != previousWindowSize.y)
         {
-            previousWindowSize = currentWindowSize; // Update previous window size
+            previousWindowSize = currentWindowSize;
         }
 
-        // Calculate the render scale based on the current window size
-        renderScale = fminf(currentWindowSize.x / PixelGameConfig::ScreenWidth,
-                            currentWindowSize.y / PixelGameConfig::ScreenHeight);
+        renderScale = fminf(currentWindowSize.x / GetScreenWidth(),
+                            currentWindowSize.y / GetScreenHeight());
 
-        // Calculate the render rectangle for letterboxing
         Rectangle renderRectangle = WindowSizeScale::calculateRenderRectangle(renderScale);
-
-        // Update virtual mouse position
         VMouse::calcVMouse(renderRectangle, renderScale);
 
         BeginDrawing();
         ClearBackground(BLACK);
         BeginTextureMode(canvas);
 
-        // Draw the background texture scaled to the current window size
-        DrawTexturePro(canvas.texture,
-                       {0, 0, (float) canvas.texture.width, (float) -canvas.texture.height},
+        DrawTexturePro(Menu::backgroundTex,
+                       {0, 0, (float) Menu::backgroundTex.width, (float) -Menu::backgroundTex.height},
                        {0, 0, currentWindowSize.x, currentWindowSize.y},
-                       {0, 0},
-                       0.0f,
-                       WHITE);
+                       {0, 0}, 0.0f, WHITE);
 
         switch (applicationState.currentGameMenu)
         {
@@ -117,9 +103,7 @@ int main()
         EndDrawing();
     }
 
-    // Unload the background GIF
     Menu::unloadBackgroundGif();
-
     CloseWindow();
     return EXIT_SUCCESS;
 }

@@ -38,7 +38,7 @@ void Menu::unloadBackgroundGif()
     UnloadImage(backgroundPic);
 }
 
-void Menu::updateBackgroundGif()
+void Menu::updateBackgroundAnimation()
 {
     frameCounter++;
     if (frameCounter >= frameDelay)
@@ -53,42 +53,6 @@ void Menu::updateBackgroundGif()
     }
 }
 
-std::vector<float> Menu::UpdateButtonPositions()
-{
-    float upMenuScreenWidth = GetScreenWidth();
-    float upMenuScreenHeight = GetScreenHeight();
-
-    float newButtonWidth = Button::buttonScreenWidth;
-    float newButtonHeight = (float)PixelGameConfig::ScreenHeight / 2 - 50;
-    Menu::buttonPos = {newButtonWidth, newButtonHeight, upMenuScreenWidth};
-
-    float startY = (upMenuScreenHeight - (3 * newButtonHeight + 2 * buttonSpacing)) / 2; // Calculate initial y position for the first button (centered vertically)
-    Rectangle buttonRec1 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + buttonSpacing * 0, newButtonWidth, newButtonHeight};
-    Rectangle buttonRec2 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + newButtonHeight + buttonSpacing * 1, newButtonWidth, newButtonHeight};
-    Rectangle buttonRec3 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + 2 * newButtonHeight + buttonSpacing * 2, newButtonWidth, newButtonHeight};
-    Rectangle buttonRec4 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + newButtonHeight + buttonSpacing * 1, newButtonWidth, newButtonHeight};
-    Rectangle buttonRec5 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + 2 * newButtonHeight + buttonSpacing * 2, newButtonWidth, newButtonHeight};
-
-    startGameButton.rec = buttonRec1;
-    settingsMenuButton.rec = buttonRec2;
-    exitGameButton.rec = buttonRec3;
-
-    volumeSettingsButton.rec = buttonRec1;
-    controlSettingsButton.rec = buttonRec2;
-    languageSettingsButton.rec = buttonRec3;
-
-    englishLanguageButton.rec = buttonRec4;
-    germanLanguageButton.rec = buttonRec5;
-
-    keyBoardSettingsButton.rec = buttonRec4;
-    controllerSettingsButton.rec = buttonRec5;
-
-    resumeGameButton.rec = buttonRec4;
-    quitGameButton.rec = buttonRec5;
-
-    return Menu::buttonPos;
-}
-
 int Menu::drawMainMenu(GameState &currentGameState)
 {
     Menu::buttonPos = UpdateButtonPositions();
@@ -97,7 +61,7 @@ int Menu::drawMainMenu(GameState &currentGameState)
     int upMenuScreenWidth = static_cast<int>(Menu::buttonPos[2]);
 
     // Update the background GIF
-    updateBackgroundGif();
+    updateBackgroundAnimation();
 
     // Draw the background GIF
     int currentScreenWidth = GetScreenWidth();
@@ -152,6 +116,42 @@ int Menu::drawMainMenu(GameState &currentGameState)
     }
 
     return ConfigNotConst::isProgramRunning ? 1 : 0;
+}
+
+std::vector<float> Menu::UpdateButtonPositions()
+{
+    float upMenuScreenWidth = GetScreenWidth();
+    float upMenuScreenHeight = GetScreenHeight();
+
+    float newButtonWidth = Button::buttonScreenWidth;
+    float newButtonHeight = (float)PixelGameConfig::ScreenHeight / 2 - 50;
+    Menu::buttonPos = {newButtonWidth, newButtonHeight, upMenuScreenWidth};
+
+    float startY = (upMenuScreenHeight - (3 * newButtonHeight + 2 * buttonSpacing)) / 2; // Calculate initial y position for the first button (centered vertically)
+    Rectangle buttonRec1 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + buttonSpacing * 0, newButtonWidth, newButtonHeight};
+    Rectangle buttonRec2 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + newButtonHeight + buttonSpacing * 1, newButtonWidth, newButtonHeight};
+    Rectangle buttonRec3 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + 2 * newButtonHeight + buttonSpacing * 2, newButtonWidth, newButtonHeight};
+    Rectangle buttonRec4 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + newButtonHeight + buttonSpacing * 1, newButtonWidth, newButtonHeight};
+    Rectangle buttonRec5 = {(upMenuScreenWidth - newButtonWidth) / 2, startY + 2 * newButtonHeight + buttonSpacing * 2, newButtonWidth, newButtonHeight};
+
+    startGameButton.rec = buttonRec1;
+    settingsMenuButton.rec = buttonRec2;
+    exitGameButton.rec = buttonRec3;
+
+    volumeSettingsButton.rec = buttonRec1;
+    controlSettingsButton.rec = buttonRec2;
+    languageSettingsButton.rec = buttonRec3;
+
+    englishLanguageButton.rec = buttonRec4;
+    germanLanguageButton.rec = buttonRec5;
+
+    keyBoardSettingsButton.rec = buttonRec4;
+    controllerSettingsButton.rec = buttonRec5;
+
+    resumeGameButton.rec = buttonRec4;
+    quitGameButton.rec = buttonRec5;
+
+    return Menu::buttonPos;
 }
 
 void Menu::drawSettingsMenu(GameState &currentGameState)

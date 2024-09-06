@@ -44,7 +44,8 @@ void playerCamera::animationCam(Vector2 doorPos)
 
 }
 
-void playerCamera::updateCamera(Vector2 playerPos, float deltaTime) {
+void playerCamera::updateCamera(Vector2 playerPos, float deltaTime)
+{
 
     if (isAnimating)
     {
