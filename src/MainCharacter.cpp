@@ -431,8 +431,8 @@ void MainCharacter::attack()
     if (projectile_p->getActive())
     {
         enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
-    }
-    enemyManager->deleteEnemy();*/
+    }*/
+    enemyManager->deleteEnemy();
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && punch == none)
     {
