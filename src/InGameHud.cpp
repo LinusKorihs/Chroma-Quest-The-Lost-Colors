@@ -101,7 +101,9 @@ void InGameHud::drawHealthBarTexture()
             MainCharacter::playerPosX = 35*32;
             MainCharacter::playerPosY = 81*32;
             health = 5;
+            PixelGame::canMove = true;
             MainCharacter::isPlayerDead = false;
+
         }
     }
 
