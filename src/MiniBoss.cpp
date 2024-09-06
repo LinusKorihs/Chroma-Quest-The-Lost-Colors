@@ -281,7 +281,7 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
         canGiveDamage1 = true;
     }
 
-            if (CheckCollisionRecs(MainCharacter::HitRec, {enemyRec.x-4,enemyRec.y-4,enemyRec.width+8,enemyRec.height+4}) && IsKeyPressed(KEY_SPACE))
+            if (CheckCollisionRecs(MainCharacter::HitRec, {enemyRec.x-4,enemyRec.y-4,enemyRec.width+8,enemyRec.height+4}) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
                 if(canGiveDamage1)
                 {

@@ -426,7 +426,7 @@ void MainCharacter::attack()
     }
     enemyManager->deleteEnemy();*/
 
-    if(IsKeyPressed(KEY_SPACE) && punch == none)
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && punch == none)
     {
         if (lastDir == LASTRIGHT)
         {
@@ -448,7 +448,7 @@ void MainCharacter::attack()
 
     for (const auto &enemy: enemyManager->enemies)  //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
     {
-        if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsKeyPressed(KEY_SPACE))
+        if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             if(canGiveDamage)
             {
