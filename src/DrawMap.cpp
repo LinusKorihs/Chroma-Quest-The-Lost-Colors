@@ -104,6 +104,8 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                     Rectangle wallRec = {(float) x * tileWidth * multiplier, (float) y * tileWidth * multiplier, tileWidth * multiplier, tileWidth * multiplier}; // Create a Rectangle for the tile and add it to the list of wall rectangles
                     if(overworld)
                     {
+                        sizeDoorVec = 0;
+                        sizeOpenDoorVec = 0;
                        /* if(!rectangleExists(currentGameState.overworldWallRecs, wallRec))
                         {*/
                             //currentGameState.overworldWallRecs.push_back(wallRec);
