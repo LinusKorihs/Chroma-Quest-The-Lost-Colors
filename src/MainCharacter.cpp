@@ -160,13 +160,13 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
     // Draw the player sprite
     DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
-    DrawRectangleLines(
+    /*DrawRectangleLines(
             playerRec.x,
             playerRec.y,
             playerRec.width,
             playerRec.height,
             PURPLE
-    );
+    );*/
 }
 
 float calculateSquaredDistance(float x1, float y1, float x2, float y2)
@@ -244,67 +244,64 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     Rectangle newRec = {newPositionX + 4, newPositionY+16, playerRec.width, playerRec.height-12}; //hier hab ich y und height geändert - falls was buggt wieder rückgängig machen
     Rectangle enemyNewRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height}; // für enemy kollision, weil der player sonst komplett den enemy verdecken kann /schaden kein sinn macht
 
-    for (const Rectangle &doorRec : currentGameState.doorRectangles)
-    {
-        if (CheckCollisionRecs(enemyNewRec, doorRec))
-        {
-            return;
+    if(DrawMap::overworld) {
+
+        for (const Rectangle &wallRec: currentGameState.overworldWallRecs) {
+            if (CheckCollisionRecs(newRec, wallRec)) {
+                return;
+            }
         }
-    }
-
-    for (const Rectangle &wallRec : currentGameState.wallRectangles)
-    {
-        if (CheckCollisionRecs(newRec, wallRec))
-        {
-            return;
-        }
-    }
-
-    for (const Rectangle &wallRec : currentGameState.overworldWallRecs)
-    {
-        if (CheckCollisionRecs(newRec, wallRec))
-        {
-            return;
-        }
-    }
-
-    for (const auto &enemy: enemyManager->enemies)
-    {
-        if (CheckCollisionRecs(enemyNewRec, {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,enemy->getHitRec().height - 10}))
-        {
-            return;
-        }
-    }
-
-    Stone* nearestStone = nullptr;
-    float nearestDistanceSquared = std::numeric_limits<float>::max();
-
-    for (Stone &stone : Stone::stoneObjects)
-    {
-        if (CheckCollisionRecs(enemyNewRec, stone.getRectangle()))  //test
-        {
-            nearestStone = &stone;
-            break;
-        }
-    }
-
-    checkCollisions();
-
-    if (nearestStone)
-    {
-        nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles, currentGameState.openDoorRectangles, currentGameState.stoneWallRectangles);
-    }
-    else
-    {
-        // If no stone is to be moved, update player position
         playerPosX = newPositionX;
         playerPosY = newPositionY;
     }
+    else if(DrawMap::dungeon1) {
+        for (const Rectangle &doorRec: currentGameState.doorRectangles) {
+            if (CheckCollisionRecs(enemyNewRec, doorRec)) {
+                return;
+            }
+        }
 
-    // Update all stones
-    for (Stone &stone : Stone::stoneObjects)
-    {
-        stone.update(deltaTime);
+        for (const Rectangle &wallRec: currentGameState.wallRectangles) {
+            if (CheckCollisionRecs(newRec, wallRec)) {
+                return;
+            }
+        }
+
+        for (const auto &enemy: enemyManager->enemies) {
+            if (CheckCollisionRecs(enemyNewRec,
+                                   {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,
+                                    enemy->getHitRec().height - 10})) {
+                return;
+            }
+        }
+
+
+        Stone *nearestStone = nullptr;
+        float nearestDistanceSquared = std::numeric_limits<float>::max();
+
+        for (Stone &stone: Stone::stoneObjects) {
+            if (CheckCollisionRecs(enemyNewRec, stone.getRectangle()))  //test
+            {
+                nearestStone = &stone;
+                break;
+            }
+        }
+
+        checkCollisions();
+
+        if (nearestStone) {
+            nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles,
+                                      currentGameState.openDoorRectangles, currentGameState.stoneWallRectangles);
+        } else {
+            // If no stone is to be moved, update player position
+            playerPosX = newPositionX;
+            playerPosY = newPositionY;
+        }
+
+        // Update all stones
+        for (Stone &stone: Stone::stoneObjects) {
+            stone.update(deltaTime);
+        }
     }
 
     if (!projectile_p->getActive())

@@ -28,10 +28,7 @@ MiniBoss::MiniBoss(Vector2 position, Texture2D &enemTexture, MiniBossType type, 
     framesSpeed = 8;
     plate1Pressed = false;
     plate2Pressed = false;
-    if(enemyType == BOSSRED)
-    {
-        barHits = 15;
-    }
+    barHits = 0;
 
 }
 float Vector2Distance(Vector2 v1, Vector2 v2)
@@ -260,7 +257,7 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
 
             frameRec.x = (float) currentFrame * 64; // Update frame rectangle
 
-            if (getBossHits() == 15 && enemyType == BOSSRED) //wie viele hits ein enemy aushält
+            if (getBossHits() == 7 && enemyType == BOSSRED) //wie viele hits ein enemy aushält
             {
                 enemyDeath = true;
             }
@@ -336,7 +333,7 @@ void MiniBoss::bossGetsHit()
     if(!hasShield)
     {
         enemyHits++;
-        barHits--;
+        barHits++;
         std::cout << "Enemy hits: " << enemyHits << std::endl;
     }
 }
@@ -377,7 +374,7 @@ int MiniBoss::getShieldHits()
 
 void MiniBoss::drawShieldBar()
 {
-    if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400))
+    /*if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400))
     {
         if(shieldHits == 1)
         {
@@ -391,6 +388,40 @@ void MiniBoss::drawShieldBar()
 
         DrawRectangle(173, 40, 165, 10, DARKGRAY);
         DrawRectangle(173, 40, barHits * 11, 10, RED);
+    }*/
+    if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400))
+    {
+        if(shieldHits == 0){
+            DrawTexture(TextureManager::getTexture("BossFull"),150, 10, WHITE);
+        }
+        if(shieldHits == 1){
+            DrawTexture(TextureManager::getTexture("Boss1Shield"),150, 10, WHITE);
+        }
+        if(!hasShield && barHits == 0){
+            DrawTexture(TextureManager::getTexture("BossNoShield"),150, 10, WHITE);
+        }
+        if(barHits == 1){
+            DrawTexture(TextureManager::getTexture("Boss-1"),150, 10, WHITE);
+        }
+        if(barHits == 2){
+            DrawTexture(TextureManager::getTexture("Boss-2"),150, 10, WHITE);
+        }
+        if(barHits == 3){
+            DrawTexture(TextureManager::getTexture("Boss-3"),150, 10, WHITE);
+        }
+        if(barHits == 4){
+            DrawTexture(TextureManager::getTexture("Boss-4"),150, 10, WHITE);
+        }
+        if(barHits == 5){
+            DrawTexture(TextureManager::getTexture("Boss-5"),150, 10, WHITE);
+        }
+        if(barHits == 6){
+            DrawTexture(TextureManager::getTexture("Boss-6"),150, 10, WHITE);
+        }
+        if(barHits >= 7){
+            DrawTexture(TextureManager::getTexture("BossEmpty"),150, 10, WHITE);
+        }
+
     }
 }
 

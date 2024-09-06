@@ -149,17 +149,16 @@ private:
 
 class Signs {
 public:
-    Signs(float sposX, float sposY, Texture2D signtexture, Texture2D textText, bool bigSign);
+    Signs(float sposX, float sposY, Texture2D textText, bool bigSign);
 
     void draw();
-    static void init(Texture2D signTexture);
+    static void init();
     void update();
     static std::vector<Signs> signs;
 
 private:
     float signPositionX;
     float signPositionY;
-    Texture2D signTexture;
     Texture2D textTexture;
     Rectangle signRec;
     Rectangle bigSignRec;

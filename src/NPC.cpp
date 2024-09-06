@@ -13,7 +13,7 @@ NPC::NPC(Vector2 position, Texture2D& texture)
 
 void NPC::draw()
 {
-    DrawRectangleLines(npcInteractRec.x, npcInteractRec.y, npcInteractRec.width, npcInteractRec.height, RED);
+    //DrawRectangleLines(npcInteractRec.x, npcInteractRec.y, npcInteractRec.width, npcInteractRec.height, RED);
     DrawTextureRec(npcText, frameRec,{npcPos.x, npcPos.y}, WHITE);
 }
 

@@ -253,3 +253,9 @@ bool RoomChanger::getOverworld()
 {
     return overworld;
 }
+
+void RoomChanger::setOverworld()
+{
+    dungeon1 = false;
+    overworld = true;
+}

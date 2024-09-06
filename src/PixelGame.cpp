@@ -13,7 +13,10 @@
 
 GameState currentGameState;
 
+enum gameLoopState PixelGame::state = sequence;
 Music PixelGame::music;
+bool PixelGame::dialogDone = false;
+int PixelGame::sentence = 0;
 bool PixelGame::canMove = true;
 bool PixelGame::firstLoopOverworld = true;
 bool PixelGame::firstLoopDungeon1 = true;
@@ -32,7 +35,6 @@ std::vector<Machine> machines;
 //std::vector<Door> openDoors;
 RoomChanger roomChanger;
 
-bool PixelGame::isPlayerKnocked = false;
 Rectangle MainCharacter::playerRec;
 Rectangle MainCharacter::HitRec;
 MiniBoss* PixelGame::miniboss;
@@ -110,7 +112,7 @@ void PixelGame::gameInit()
 
     NPC::init(TextureManager::getTexture("mouse"),TextureManager::getTexture("frog"),TextureManager::getTexture("owl"), TextureManager::getTexture("gekko"));
     DialogBox::init(TextureManager::getTexture("MouseBubble"), TextureManager::getTexture("FrogBubble"), TextureManager::getTexture("GekkoBubble"), TextureManager::getTexture("OwlBubble"));
-    Signs::init(TextureManager::getTexture("controlBox"));
+    Signs::init();
 }
 
 void PixelGame::rectangle()
@@ -294,6 +296,7 @@ void PixelGame::eraseDoor(int targetX, int targetY)
                              });
     currentGameState.doorRectangles.erase(it, currentGameState.doorRectangles.end());
 }
+
 
 void PixelGame::gameLoop(tson::Map &Map)
 {
@@ -704,3 +707,80 @@ void PixelGame::updateAudio()
     }
 }
 
+void PixelGame::startSequence() {
+    DrawRectangle(0,0,500,300,BLACK);
+    DrawText("Press 'Enter' to continue", 340, 250, 1, GRAY);
+
+    if(sentence == 0)
+    {
+        DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
+                 "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
+                 10, 20, 10, WHITE);
+    }
+    if(sentence == 1){
+        DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
+                 "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
+                 10, 20, 10, WHITE);
+        DrawText("Each time she awoke, the meaning of them slipped away.",10,90,10,WHITE);
+    }
+    if(sentence == 2){
+        DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
+                 "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
+                 10, 20, 10, WHITE);
+        DrawText("Each time she awoke, the meaning of them slipped away.",10,90,10,WHITE);
+
+        DrawText("One night, the pull of these structures became stronger than ever... she could finally see clearly:\nIt was The Three Towers.",10,115,10,WHITE);
+    }
+    if(sentence == 3){
+        DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
+                 "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
+                 10, 20, 10, WHITE);
+        DrawText("Each time she awoke, the meaning of them slipped away.",10,90,10,WHITE);
+
+        DrawText("One night, the pull of these structures became stronger than ever... she could finally see clearly:\nIt was The Three Towers.",10,115,10,WHITE);
+
+        DrawText("Awakened near the Prismwell at the heart of Chroma City, scared for her world to be lost to shades of grey,\nshe knew she had to act.\nThough the path ahead is unclear, The Three Towers are calling to her.",10,155,10,WHITE);
+    }
+    if(sentence == 4){
+        DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
+                 "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
+                 10, 20, 10, WHITE);
+        DrawText("Each time she awoke, the meaning of them slipped away.",10,90,10,WHITE);
+
+        DrawText("One night, the pull of these structures became stronger than ever... she could finally see clearly:\nIt was The Three Towers.",10,115,10,WHITE);
+
+        DrawText("Awakened near the Prismwell at the heart of Chroma City, scared for her world to be lost to shades of grey,\nshe knew she had to act.\nThough the path ahead is unclear, The Three Towers are calling to her.",10,155,10,WHITE);
+
+        DrawText("But why now? And why her?",10,210,10,WHITE);
+    }
+    if(sentence == 5){
+        DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
+                 "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
+                 10, 20, 10, WHITE);
+        DrawText("Each time she awoke, the meaning of them slipped away.",10,90,10,WHITE);
+
+        DrawText("One night, the pull of these structures became stronger than ever... she could finally see clearly:\nIt was The Three Towers.",10,115,10,WHITE);
+
+        DrawText("Awakened near the Prismwell at the heart of Chroma City, scared for her world to be lost to shades of grey,\nshe knew she had to act.\nThough the path ahead is unclear, The Three Towers are calling to her.",10,155,10,WHITE);
+
+        DrawText("But why now? And why her?",10,210,10,WHITE);
+
+        DrawText("This is where Aurora's journey begins...",10,225,10,WHITE);
+    }
+
+    if(IsKeyPressed(KEY_ENTER))
+    {
+        sentence++;
+    }
+    if( sentence == 6)
+    {
+        state = gameLoopState;
+    }
+
+    if (WindowShouldClose()) {
+        CloseWindow();
+        unloadAll();
+        exit(0);
+    }
+
+}
