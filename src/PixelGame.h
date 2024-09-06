@@ -86,6 +86,8 @@ private:
     static bool firstLoopDungeon1;
     static bool canMove;
     static int sentence;
+    static bool controlBoxWasActive;
+    static int dialogCounter;
 
 
 };

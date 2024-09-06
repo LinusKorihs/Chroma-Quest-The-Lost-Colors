@@ -14,6 +14,8 @@
 GameState currentGameState;
 
 enum gameLoopState PixelGame::state = sequence;
+int PixelGame::dialogCounter = 0;
+bool PixelGame::controlBoxWasActive = true;
 Music PixelGame::music;
 bool PixelGame::dialogDone = false;
 int PixelGame::sentence = 0;
@@ -420,6 +422,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         if(firstLoopOverworld)
         {
             DrawMap::dungeon1 = false;
+            InGameHud::controlActive = true;
             currentGameState.wallRectangles.clear();
             currentGameState.stoneWallRectangles.clear();
             currentGameState.doorRectangles.clear();
@@ -459,12 +462,19 @@ void PixelGame::gameLoop(tson::Map &Map)
             DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
             if(DialogBox::dialogBoxes[i].isActive())
             {
-                canMove = false;
+                dialogCounter = 1;
+                controlBoxWasActive = InGameHud::controlActive;
                 InGameHud::controlActive = false;
+                canMove = false;
                 break;
             }
             else
             {
+                if(dialogCounter == 1)
+                {
+                    InGameHud::controlActive = controlBoxWasActive;
+                    dialogCounter = 0;
+                }
                 canMove = true;
             }
         }
