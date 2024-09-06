@@ -83,6 +83,7 @@ int main()
                 break;
             case MenuState::ResumeGame:
                 ConfigFunction::toggleGamePause();
+                InGameHud::health = 5;
                 applicationState.currentGameMenu = MenuState::GameRunning;
                 break;
             case MenuState::VolumeSliders:

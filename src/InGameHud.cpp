@@ -6,6 +6,7 @@
 float InGameHud::health;
 std::vector<HudImageButton> InGameHud::hudImagebuttons;
 bool InGameHud::controlActive = true;
+int InGameHud::gameOverCount = 0;
 
 InGameHud::InGameHud()
 {
@@ -90,6 +91,18 @@ void InGameHud::drawHealthBarTexture()
     }
 
     if(health <= 0){
+        MainCharacter::isPlayerDead = true;
+        DrawRectangle(0, 0, 2500, 3000, BLACK);
+        DrawText("Game Over!", 200, 100, 20, RED);
+        DrawText("Press Enter to restart", 190, 150, 1, WHITE);
+        DrawText("You will respawn at the Red Tower entrance!", 140, 200, 1, WHITE);
+        if(IsKeyPressed(KEY_ENTER)) {
+            gameOverCount++;
+            MainCharacter::playerPosX = 35*32;
+            MainCharacter::playerPosY = 81*32;
+            health = 5;
+            MainCharacter::isPlayerDead = false;
+        }
     }
 
 }
