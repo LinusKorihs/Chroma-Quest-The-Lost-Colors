@@ -6,7 +6,7 @@ std::vector<NPC> NPC::npcs;
 NPC::NPC(Vector2 position, Texture2D& texture)
         : npcPos(position), npcText(texture)
 {
-    npcRec = { npcPos.x, npcPos.y, 32, 32 };
+    npcRec = { npcPos.x+3, npcPos.y, 26, 32 };
     npcInteractRec = { npcPos.x - 3, npcPos.y - 3, 38, 38 };
     frameRec = {0, 0, (float)npcText.width / 4, (float)npcText.height};
 }

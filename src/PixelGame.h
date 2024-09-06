@@ -61,6 +61,7 @@ public:
 
     static enum gameLoopState state;
 
+    static bool canMove;
 private:
     static void drawObjects();
     static void drawHud();
@@ -84,7 +85,6 @@ private:
     static bool track1Played;
     static bool firstLoopOverworld;
     static bool firstLoopDungeon1;
-    static bool canMove;
     static int sentence;
     static bool controlBoxWasActive;
     static int dialogCounter;

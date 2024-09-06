@@ -412,8 +412,6 @@ void PixelGame::gameLoop(tson::Map &Map)
         if(MainCharacter::isPlayerDead)
         {
             canMove = false;
-        }else{
-            canMove = true;
         }
         //EndDrawing();
     }
@@ -479,11 +477,6 @@ void PixelGame::gameLoop(tson::Map &Map)
             }
         }
 
-        if(roomChanger.isTransitioning())
-        {
-            canMove = false;
-        }
-
         MainCharacter::updateRec();
         MainCharacter character1;
         Texture texture = TextureManager::getTexture("MainCharacter");
@@ -531,28 +524,29 @@ void PixelGame::gameLoop(tson::Map &Map)
 
         if (canMove)
         {
-            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
-                MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
-                isMoving = true;
+
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
+                    MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
+                    isMoving = true;
+                }
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
+                    MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
+                    isMoving = true;
+                }
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
+                    MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
+                    isMoving = true;
+                }
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
+                    MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
+                    isMoving = true;
+                }
+                if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                    PlaySound(ConfigNotConst::playerWalkingSound);
+                } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                    StopSound(ConfigNotConst::playerWalkingSound);
+                }
             }
-            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
-                MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
-                isMoving = true;
-            }
-            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
-                MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
-                isMoving = true;
-            }
-            if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
-                MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
-                isMoving = true;
-            }
-            if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
-                PlaySound(ConfigNotConst::playerWalkingSound);
-            } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
-                StopSound(ConfigNotConst::playerWalkingSound);
-            }
-        }
 
     updateAudio();
     playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
