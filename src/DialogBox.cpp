@@ -65,5 +65,7 @@ void DialogBox::init(Texture2D mouseTexture, Texture2D frogTexture, Texture2D ge
     dialogBoxes.emplace_back(gekkoTexture, std::vector<std::string>{ "I wouldn´t go past this point...", "It´s too dangerous there!"});
     dialogBoxes.emplace_back(gekkoTexture, std::vector<std::string>{ "If you follow this road,\nyou will reach the yellow tower."});
     dialogBoxes.emplace_back(mouseTexture, std::vector<std::string>{ "Aurora, hey!\nGEKKO sent you, right?","He told me you were headed\nfor The Three Towers...\nI thought my big mouse ears\ndidn´t hear right!", "They're scary places, you know...\nthe red one will test you\nboth physically and mentally.","So it's not just about\nbrute force, though you’ll need\nplenty of that.","Keep your wits sharp\nand your muscles ready.\nOh, and one more thing —","Don´t get discouraged\nif things get heavy.\nYou´re stronger than you think!","Remember,\nThe Red Tower is in the east,\noutside of town.","Just stay on the road and\nit´ll lead you right to it.\nI´ll see you there!"});
+    dialogBoxes.emplace_back(mouseTexture, std::vector<std::string>{ "Aurora!\nLet´s meet inside."});
+
 }
 

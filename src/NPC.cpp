@@ -40,6 +40,8 @@ void NPC::init(Texture2D mouse, Texture2D frog, Texture2D owl, Texture2D gekko)
     npcs.emplace_back(Vector2{ 42*32, 58*32 }, gekko);
     npcs.emplace_back(Vector2{ 37*32, 8*32 }, gekko);
     npcs.emplace_back(Vector2{ 50*32, 32*32 }, mouse);
+    npcs.emplace_back(Vector2{ 113*32, 39*32 }, mouse);
+
 }
 
 void NPC::setNpcPos(Vector2 pos)

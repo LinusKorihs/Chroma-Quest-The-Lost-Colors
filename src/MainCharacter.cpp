@@ -252,6 +252,13 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
                 return;
             }
         }
+        for (int i = 1; i < NPC::npcs.size(); ++i)
+        {
+            if(CheckCollisionRecs(newRec, NPC::npcs[i].getRec()))
+            {
+                return;
+            }
+        }
         playerPosX = newPositionX;
         playerPosY = newPositionY;
     }
@@ -275,6 +282,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
                 return;
             }
         }
+
 
 
         Stone *nearestStone = nullptr;
@@ -423,8 +431,8 @@ void MainCharacter::attack()
     if (projectile_p->getActive())
     {
         enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
-    }
-    enemyManager->deleteEnemy();*/
+    }*/
+    enemyManager->deleteEnemy();
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && punch == none)
     {
