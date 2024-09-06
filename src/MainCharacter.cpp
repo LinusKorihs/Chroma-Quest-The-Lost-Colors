@@ -6,6 +6,7 @@
 #include "Enemy.h"
 
 int MainCharacter::playerHealth = 100;
+double MainCharacter::lastDamageTime = 0.0;
 //int MainCharacter::damagePerFrame = 2;
 bool MainCharacter::isPlayerDead = false;
 bool MainCharacter::canReceiveDamage = true;
@@ -390,7 +391,6 @@ void MainCharacter::receiveDamage()
 
 void MainCharacter::attack()
 {
-    static double lastDamageTime = 0.0;
     double currentTime = GetTime();
     if(currentTime - lastDamageTime >= 0.3)
     {

@@ -46,6 +46,9 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
     else if(currentDirection == UPEN || currentDirection == DOWNEN || state == BossState::Idle) {
         enemyRec = {posEnemy.x, posEnemy.y + 10, 64,54};
     }
+    if(state == BossState::Idle){
+        enemyRec = {posEnemy.x, posEnemy.y + 10, 64,54};
+    }
     float newPosX = posEnemy.x;
     float newPosY = posEnemy.y;
 
@@ -55,7 +58,7 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
     switch (state)
     {
         case BossState::Idle:
-            if (isPlayerInRange(playerPosition, 200))
+            if (isPlayerInRange(playerPosition, 400))
             {
                 std::cout << "Idle" << std::endl;
                 stateTimer += deltaTime;
@@ -68,7 +71,7 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
             break;
 
         case BossState::Attacking:
-            if (isPlayerInRange(playerPosition, 200))
+            if (isPlayerInRange(playerPosition, 400))
             {
                 if (Vector2Distance(posEnemy, playerPosition) > 1.0f)
                 {
@@ -120,7 +123,7 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
             break;
 
         case BossState::Returning:
-            if (isPlayerInRange(playerPosition, 200)) {
+            if (isPlayerInRange(playerPosition, 400)) {
                 if (Vector2Distance(posEnemy, {35 * 32, 11 * 32}) > 1.0f) {
                     direction = { 35 * 32 - posEnemy.x, 11 * 32 - posEnemy.y };
 
@@ -271,16 +274,23 @@ void MiniBoss::updateBoss(float deltaTime, Vector2 playerPosition)
             }
 
 
-            if (CheckCollisionRecs(MainCharacter::HitRec, enemyRec) && IsKeyPressed(KEY_SPACE))
+
+    double currentTimer = GetTime();
+    if(currentTimer - lastDamageTimer >= 0.3)
+    {
+        canGiveDamage1 = true;
+    }
+
+            if (CheckCollisionRecs(MainCharacter::HitRec, {enemyRec.x-4,enemyRec.y-4,enemyRec.width+8,enemyRec.height+4}) && IsKeyPressed(KEY_SPACE))
             {
-                bossGetsHit();
-                //hier cooldown einfügen
+                if(canGiveDamage1)
+                {
+                    bossGetsHit();
+                }
+                canGiveDamage1 = false;
+                lastDamageTimer = currentTimer;
             }
             giveDamage();
-            /*if (CheckCollisionRecs(MainCharacter::playerRec, enemyRec))
-            {
-                InGameHud::health -= 1;
-            }*/
 
             updateShield();
 
@@ -305,7 +315,7 @@ bool MiniBoss::isPlayerInRange(Vector2 playerPosition, float range)
 void MiniBoss::drawBoss()
 {
     DrawTextureRec(enemyTexture, frameRec, posEnemy, WHITE);
-    //DrawRectangleLines(enemyRec.x, enemyRec.y, enemyRec.width, enemyRec.height, RED);
+   // DrawRectangleLines(enemyRec.x, enemyRec.y, enemyRec.width, enemyRec.height, RED);
 
 }
 
@@ -392,34 +402,34 @@ void MiniBoss::drawShieldBar()
     if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400))
     {
         if(shieldHits == 0){
-            DrawTexture(TextureManager::getTexture("BossFull"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("BossFull"),186, 5, WHITE);
         }
         if(shieldHits == 1){
-            DrawTexture(TextureManager::getTexture("Boss1Shield"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss1Shield"),186, 5, WHITE);
         }
         if(!hasShield && barHits == 0){
-            DrawTexture(TextureManager::getTexture("BossNoShield"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("BossNoShield"),186, 5, WHITE);
         }
         if(barHits == 1){
-            DrawTexture(TextureManager::getTexture("Boss-1"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-1"),186, 5, WHITE);
         }
         if(barHits == 2){
-            DrawTexture(TextureManager::getTexture("Boss-2"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-2"),186, 5, WHITE);
         }
         if(barHits == 3){
-            DrawTexture(TextureManager::getTexture("Boss-3"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-3"),186, 5, WHITE);
         }
         if(barHits == 4){
-            DrawTexture(TextureManager::getTexture("Boss-4"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-4"),186, 5, WHITE);
         }
         if(barHits == 5){
-            DrawTexture(TextureManager::getTexture("Boss-5"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-5"),186, 5, WHITE);
         }
         if(barHits == 6){
-            DrawTexture(TextureManager::getTexture("Boss-6"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-6"),186, 5, WHITE);
         }
         if(barHits >= 7){
-            DrawTexture(TextureManager::getTexture("BossEmpty"),150, 10, WHITE);
+            DrawTexture(TextureManager::getTexture("BossEmpty"),186, 5, WHITE);
         }
 
     }
