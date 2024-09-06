@@ -36,20 +36,24 @@ void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
 {
     if(dungeon1)
     {
-        auto layer1 = gameMap.getLayer("Floor & Walls")->getData();
+        auto layer1 = gameMap.getLayer("Barrier Boss")->getData();
         drawLayer(layer1, gameMap, tileTexture);
 
-        auto layer2 = gameMap.getLayer("Wall with energy")->getData();
+        auto layer2 = gameMap.getLayer("Floor & Walls")->getData();
         drawLayer(layer2, gameMap, tileTexture);
 
-        auto layer3 = gameMap.getLayer("Blocks Grey")->getData();
+        auto layer3 = gameMap.getLayer("Wall with energy")->getData();
         drawLayer(layer3, gameMap, tileTexture);
 
-        auto layer4 = gameMap.getLayer("Objects")->getData();
+        auto layer4 = gameMap.getLayer("Blocks Grey")->getData();
         drawLayer(layer4, gameMap, tileTexture);
 
-        auto layer5 = gameMap.getLayer("Torches")->getData();
+        auto layer5 = gameMap.getLayer("Objects")->getData();
         drawLayer(layer5, gameMap, tileTexture);
+
+        auto layer6 = gameMap.getLayer("Torches")->getData();
+        drawLayer(layer6, gameMap, tileTexture);
+
     }
     else if(overworld)
     {
@@ -58,6 +62,8 @@ void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
 
         auto layer2 = gameMap.getLayer("objekte")->getData();
         drawLayer(layer2, gameMap, tileTexture);
+
+        auto layer3 = gameMap.getLayer("NPCs")->getData();
     }
 }
 
@@ -96,11 +102,12 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                     if(overworld)
                     {
                        /* if(!rectangleExists(currentGameState.overworldWallRecs, wallRec))
-                        {
-                            currentGameState.overworldWallRecs.push_back(wallRec);*/
-                            if(sizeOverworldWallVec <= 1007){
+                        {*/
+                            //currentGameState.overworldWallRecs.push_back(wallRec);
+                            if(sizeOverworldWallVec <= 1189){
                                 currentGameState.overworldWallRecs.push_back(wallRec);
                                 sizeOverworldWallVec++;
+                                //std::cout << "sizeOverworldWallVec: " << sizeOverworldWallVec << std::endl;
                         }
                     }
                     else if(dungeon1)
@@ -162,10 +169,10 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
             {
                 source.x += (float) (currentFrame * tileWidth);
             }
-            /*if(overworld && data >= 496) //animation layer
+            if(overworld && data >= 496) //animation layer
             {
                 source.x += (float) (currentFrame * tileWidth);
-            }*/
+            }
             DrawTexturePro(tileTexture, source, destination, {0, 0}, 0, WHITE);
         }
     }

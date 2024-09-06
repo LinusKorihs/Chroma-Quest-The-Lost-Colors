@@ -12,7 +12,7 @@ bool MainCharacter::isPlayerDead = false;
 bool MainCharacter::canReceiveDamage = true;
 int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
-float MainCharacter::playerSpawnPositionX = 43*32; //1120
+float MainCharacter::playerSpawnPositionX = 42*32; //1120
 float MainCharacter::playerSpawnPositionY = 37*32; //2590
 float MainCharacter::playerCharacterTextureScale = 0.425f;
 float MainCharacter::playerCharacterHitBoxScale = 0.425f;
@@ -53,7 +53,7 @@ void MainCharacter::initPlayer(Texture myTexture)
     framesCounter = 0;
     currentFrame = 0;
     framesSpeed = 8;
-    lastDir = LASTRIGHT;
+    lastDir = LASTUP;
 }
 
 void MainCharacter::updateRec()

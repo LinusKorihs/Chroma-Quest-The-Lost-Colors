@@ -810,8 +810,8 @@ void Chest::init(Texture2D chestTexture)
     chests.emplace_back(16*32, 42*32, chestTexture);
     chests.emplace_back(29*32, 37*32, chestTexture);
     chests.emplace_back(45*32, 48*32, chestTexture);
-    chests.emplace_back(25*32, 14*32, chestTexture);
-    chests.emplace_back(45*32, 14*32, chestTexture);
+    chests.emplace_back(27*32, 8*32, chestTexture);
+    chests.emplace_back(43*32, 8*32, chestTexture);
     chests.emplace_back(59*32, 34*32, chestTexture);
 }
 

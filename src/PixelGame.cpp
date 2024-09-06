@@ -400,6 +400,11 @@ void PixelGame::gameLoop(tson::Map &Map)
         if (!miniboss->getUnload()) {
             miniboss->drawShieldBar();
         }
+        if(miniboss->getUnload()){
+            DrawRectangle(0, 0, 2500, 3000, BLACK);
+            DrawText("You have defeated the boss!\nThanks for playing our Demo!", 90, 100, 20, WHITE);
+            canMove = false;
+        }
         //EndDrawing();
     }
     else if(roomChanger.getOverworld() && !roomChanger.getDungeon1())
@@ -463,7 +468,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         Texture texture = TextureManager::getTexture("MainCharacter");
         MainCharacter::drawMainCharacter(texture, character1);
 
-        Rectangle dungeonRec = {87*32, 27*32, 96, 32};
+        Rectangle dungeonRec = {112*32, 38*32, 32, 32};
 
         if (CheckCollisionRecs(MainCharacter::playerRec, dungeonRec))
         {
@@ -774,7 +779,9 @@ void PixelGame::startSequence() {
     }
     if( sentence == 6)
     {
+        DialogBox::dialogBoxes[4].setActive(true);
         state = gameLoopState;
+        sentence++;
     }
 
     if (WindowShouldClose()) {
