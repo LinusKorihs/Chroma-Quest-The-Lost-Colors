@@ -36,12 +36,13 @@ void Button::updateAllButtonDimensions(float posX, float posY, float width, floa
     }
 }
 
-void Button::updateButtonDimensions(HudImageButton& button, float posX, float posY, float width, float height)
+void Button::updateButtonDimensions(HudImageButton &button, float x, float y, float width, float height)
 {
-    button.rec.x = posX;
-    button.rec.y = posY;
-    button.rec.width = width;
-    button.rec.height = height;
+    button.x = x;
+    button.y = y;
+    button.width = width;
+    button.height = height;
+    button.rec = {x, y, width, height};
 }
 
 

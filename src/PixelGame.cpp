@@ -509,10 +509,11 @@ void PixelGame::gameLoop(tson::Map &Map)
         ConfigNotConst::isGamePaused = true;
     }
 
-    if (ConfigNotConst::isGamePaused) {
+    if (ConfigNotConst::isGamePaused)
+    {
         currentGameState.changeGameState(MenuState::PauseMenu);
         currentGameState.currentGameMenu = MenuState::PauseMenu;
-        Menu::drawPauseMenu(currentGameState);
+        //Menu::drawPauseMenu(currentGameState);
     }
 
     if (IsKeyPressed(KEY_ESCAPE)) {
@@ -807,4 +808,41 @@ void PixelGame::startSequence() {
         exit(0);
     }
 
+}
+
+void PixelGame::ReloadAssets(Texture2D &logoTex, RenderTexture &canvas)
+{
+    // Unload current assets
+    UnloadTexture(logoTex);
+    UnloadRenderTexture(canvas);
+
+    // Reload assets with new window size
+    canvas = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+    if (canvas.id == 0)
+    {
+        // Handle error
+        exit(EXIT_FAILURE);
+    }
+
+    Image logo = LoadImage("assets/graphics/Buttons/Logo_official.png");
+    if (logo.data == nullptr)
+    {
+        // Handle error
+        exit(EXIT_FAILURE);
+    }
+
+    logoTex = LoadTextureFromImage(logo);
+    if (logoTex.id == 0)
+    {
+        // Handle error
+        UnloadImage(logo);
+        exit(EXIT_FAILURE);
+    }
+
+    logoTex.width = logo.width / 6;
+    logoTex.height = logo.height / 6;
+    UnloadImage(logo);
+
+    // Reload background GIF
+    Menu::initBackgroundGif();
 }

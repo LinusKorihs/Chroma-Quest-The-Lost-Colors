@@ -5,7 +5,7 @@
 class Menu
 {
 public:
-    static std::vector<float> UpdateButtonPositions();
+    static void updateButtonPositions(Vector2 windowSize);
     static int drawMainMenu(GameState &currentGameState);
     static void drawKeyBindingsMenu(GameState &currentGameState);
     static void drawControlMenu(GameState &currentGameState);
@@ -30,4 +30,5 @@ private:
     static int currentAnimFrame;
     static int frameDelay;
     static int frameCounter;
+
 };

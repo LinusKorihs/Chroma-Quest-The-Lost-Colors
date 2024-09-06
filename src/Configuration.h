@@ -24,7 +24,6 @@ public:
     static bool shouldUnloadMeat;
     static bool shouldUnloadFruit;
 
-
     static Direction selectedPlayerKey;
 
     static Sound playerWalkingSound;

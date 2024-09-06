@@ -13,17 +13,21 @@
 int main()
 {
     GameState applicationState;
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(PixelGameConfig::ScreenWidth, PixelGameConfig::ScreenHeight, PixelGameConfig::PROJECT_NAME);
     SetTargetFPS(ConfigConst::targetFPS);
+    SetWindowState(FLAG_WINDOW_RESIZABLE);
     InitAudioDevice();
-
-    //ToggleFullscreen();
 
     PixelGame::loadMap("assets/graphics/newTileset&Tilemap/Overworld.tmj");
     SetExitKey(KEY_F4);
 
     RenderTexture canvas = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+    if (canvas.id == 0)
+    {
+        // Handle error
+        return EXIT_FAILURE;
+    }
+
     float renderScale = 1.0f;
     TextureManager::init();
     PixelGame::gameInit();
@@ -32,7 +36,20 @@ int main()
     Menu::initBackgroundGif();
 
     Image logo = LoadImage("assets/graphics/Buttons/Logo_official.png");
+    if (logo.data == nullptr)
+    {
+        // Handle error
+        return EXIT_FAILURE;
+    }
+
     Texture2D logoTex = LoadTextureFromImage(logo);
+    if (logoTex.id == 0)
+    {
+        // Handle error
+        UnloadImage(logo);
+        return EXIT_FAILURE;
+    }
+
     logoTex.width = logo.width / 6;
     logoTex.height = logo.height / 6;
     UnloadImage(logo);
@@ -43,11 +60,17 @@ int main()
 
         if (currentWindowSize.x != previousWindowSize.x || currentWindowSize.y != previousWindowSize.y)
         {
+            // Handle window resize
+            if (currentGameState.currentGameMenu != MenuState::MainMenu)
+            {
+                PixelGame::ReloadAssets(logoTex, canvas);
+            }
+
             previousWindowSize = currentWindowSize;
         }
 
-        renderScale = fminf(currentWindowSize.x / GetScreenWidth(),
-                            currentWindowSize.y / GetScreenHeight());
+        renderScale = fminf(currentWindowSize.x / PixelGameConfig::ScreenWidth,
+                            currentWindowSize.y / PixelGameConfig::ScreenHeight);
 
         Rectangle renderRectangle = WindowSizeScale::calculateRenderRectangle(renderScale);
         VMouse::calcVMouse(renderRectangle, renderScale);
@@ -58,13 +81,17 @@ int main()
 
         // Draw the background GIF scaled to the current window size
         DrawTexturePro(Menu::backgroundTex,
-                       {0, 0, (float) Menu::backgroundTex.width, (float) Menu::backgroundTex.height},
+                       {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
                        {0, 0, currentWindowSize.x, currentWindowSize.y},
                        {0, 0}, 0.0f, WHITE);
 
-        float logoX = GetScreenWidth() / 2.5;
-        float logoY = GetScreenHeight() / 13;
-        DrawTexture(logoTex, logoX, logoY, WHITE);
+        // Update and draw the logo
+        float logoX = (currentWindowSize.x - logoTex.width * renderScale) / 2.0f;
+        float logoY = currentWindowSize.y / 13.0f;
+        DrawTextureEx(logoTex, {logoX, logoY}, 0.0f, renderScale, WHITE);
+
+        // Update button positions and hitboxes
+        Menu::updateButtonPositions(currentWindowSize);
 
         switch (applicationState.currentGameMenu)
         {
@@ -114,10 +141,11 @@ int main()
         }
 
         EndTextureMode();
-        DrawTexturePro(canvas.texture, {0, 0, (float) canvas.texture.width, (float) -canvas.texture.height},
-                       renderRectangle, {0, 0}, 0.0f, WHITE);
+        DrawTexturePro(canvas.texture, {0, 0, (float)canvas.texture.width, (float)-canvas.texture.height},
+                       {0, 0, currentWindowSize.x, currentWindowSize.y}, {0, 0}, 0.0f, WHITE);
         EndDrawing();
     }
+
     UnloadTexture(logoTex);
     Menu::unloadBackgroundGif();
     CloseWindow();
