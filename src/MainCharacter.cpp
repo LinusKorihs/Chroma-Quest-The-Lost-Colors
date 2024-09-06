@@ -252,6 +252,13 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
                 return;
             }
         }
+        for (int i = 1; i < NPC::npcs.size(); ++i)
+        {
+            if(CheckCollisionRecs(newRec, NPC::npcs[i].getRec()))
+            {
+                return;
+            }
+        }
         playerPosX = newPositionX;
         playerPosY = newPositionY;
     }
@@ -275,6 +282,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
                 return;
             }
         }
+
 
 
         Stone *nearestStone = nullptr;

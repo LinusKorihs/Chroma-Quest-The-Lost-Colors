@@ -57,13 +57,16 @@ void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
     }
     else if(overworld)
     {
-        auto layer1 = gameMap.getLayer("Kachelebene 1")->getData();
-        drawLayer(layer1, gameMap, tileTexture);
+        /*auto layer1 = gameMap.getLayer("NPCs")->getData();
+        drawLayer(layer1, gameMap, tileTexture);*/
 
-        auto layer2 = gameMap.getLayer("objekte")->getData();
+        auto layer2 = gameMap.getLayer("Kachelebene 1")->getData();
         drawLayer(layer2, gameMap, tileTexture);
 
-        auto layer3 = gameMap.getLayer("NPCs")->getData();
+        auto layer3 = gameMap.getLayer("objekte")->getData();
+        drawLayer(layer3, gameMap, tileTexture);
+
+
     }
 }
 
