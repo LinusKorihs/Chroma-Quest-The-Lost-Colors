@@ -18,6 +18,7 @@ public:
     void setTargetPos(tson::Map &tileMap);
     bool getDungeon1();
     bool getOverworld();
+    void setOverworld();
 
     bool dungeon1 = false;
     bool overworld = true;

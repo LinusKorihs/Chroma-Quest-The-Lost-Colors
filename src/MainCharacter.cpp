@@ -6,12 +6,13 @@
 #include "Enemy.h"
 
 int MainCharacter::playerHealth = 100;
+double MainCharacter::lastDamageTime = 0.0;
 //int MainCharacter::damagePerFrame = 2;
 bool MainCharacter::isPlayerDead = false;
 bool MainCharacter::canReceiveDamage = true;
 int MainCharacter::playerScore = 0;
 int MainCharacter::playerMana = 5;
-float MainCharacter::playerSpawnPositionX = 43*32; //1120
+float MainCharacter::playerSpawnPositionX = 42*32; //1120
 float MainCharacter::playerSpawnPositionY = 37*32; //2590
 float MainCharacter::playerCharacterTextureScale = 0.425f;
 float MainCharacter::playerCharacterHitBoxScale = 0.425f;
@@ -52,7 +53,7 @@ void MainCharacter::initPlayer(Texture myTexture)
     framesCounter = 0;
     currentFrame = 0;
     framesSpeed = 8;
-    lastDir = LASTRIGHT;
+    lastDir = LASTUP;
 }
 
 void MainCharacter::updateRec()
@@ -160,13 +161,13 @@ void MainCharacter::drawMainCharacter(Texture myTexture, MainCharacter& characte
     // Draw the player sprite
     DrawTextureRec(myTexture, character.frameRec, {character.playerPosX, character.playerPosY}, WHITE);
 
-    DrawRectangleLines(
+    /*DrawRectangleLines(
             playerRec.x,
             playerRec.y,
             playerRec.width,
             playerRec.height,
             PURPLE
-    );
+    );*/
 }
 
 float calculateSquaredDistance(float x1, float y1, float x2, float y2)
@@ -244,67 +245,64 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
     Rectangle newRec = {newPositionX + 4, newPositionY+16, playerRec.width, playerRec.height-12}; //hier hab ich y und height geändert - falls was buggt wieder rückgängig machen
     Rectangle enemyNewRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height}; // für enemy kollision, weil der player sonst komplett den enemy verdecken kann /schaden kein sinn macht
 
-    for (const Rectangle &doorRec : currentGameState.doorRectangles)
-    {
-        if (CheckCollisionRecs(enemyNewRec, doorRec))
-        {
-            return;
+    if(DrawMap::overworld) {
+
+        for (const Rectangle &wallRec: currentGameState.overworldWallRecs) {
+            if (CheckCollisionRecs(newRec, wallRec)) {
+                return;
+            }
         }
-    }
-
-    for (const Rectangle &wallRec : currentGameState.wallRectangles)
-    {
-        if (CheckCollisionRecs(newRec, wallRec))
-        {
-            return;
-        }
-    }
-
-    for (const Rectangle &wallRec : currentGameState.overworldWallRecs)
-    {
-        if (CheckCollisionRecs(newRec, wallRec))
-        {
-            return;
-        }
-    }
-
-    for (const auto &enemy: enemyManager->enemies)
-    {
-        if (CheckCollisionRecs(enemyNewRec, {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,enemy->getHitRec().height - 10}))
-        {
-            return;
-        }
-    }
-
-    Stone* nearestStone = nullptr;
-    float nearestDistanceSquared = std::numeric_limits<float>::max();
-
-    for (Stone &stone : Stone::stoneObjects)
-    {
-        if (CheckCollisionRecs(enemyNewRec, stone.getRectangle()))  //test
-        {
-            nearestStone = &stone;
-            break;
-        }
-    }
-
-    checkCollisions();
-
-    if (nearestStone)
-    {
-        nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles, currentGameState.openDoorRectangles, currentGameState.stoneWallRectangles);
-    }
-    else
-    {
-        // If no stone is to be moved, update player position
         playerPosX = newPositionX;
         playerPosY = newPositionY;
     }
+    else if(DrawMap::dungeon1) {
+        for (const Rectangle &doorRec: currentGameState.doorRectangles) {
+            if (CheckCollisionRecs(enemyNewRec, doorRec)) {
+                return;
+            }
+        }
 
-    // Update all stones
-    for (Stone &stone : Stone::stoneObjects)
-    {
-        stone.update(deltaTime);
+        for (const Rectangle &wallRec: currentGameState.wallRectangles) {
+            if (CheckCollisionRecs(newRec, wallRec)) {
+                return;
+            }
+        }
+
+        for (const auto &enemy: enemyManager->enemies) {
+            if (CheckCollisionRecs(enemyNewRec,
+                                   {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,
+                                    enemy->getHitRec().height - 10})) {
+                return;
+            }
+        }
+
+
+        Stone *nearestStone = nullptr;
+        float nearestDistanceSquared = std::numeric_limits<float>::max();
+
+        for (Stone &stone: Stone::stoneObjects) {
+            if (CheckCollisionRecs(enemyNewRec, stone.getRectangle()))  //test
+            {
+                nearestStone = &stone;
+                break;
+            }
+        }
+
+        checkCollisions();
+
+        if (nearestStone) {
+            nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles,
+                                      currentGameState.openDoorRectangles, currentGameState.stoneWallRectangles);
+        } else {
+            // If no stone is to be moved, update player position
+            playerPosX = newPositionX;
+            playerPosY = newPositionY;
+        }
+
+        // Update all stones
+        for (Stone &stone: Stone::stoneObjects) {
+            stone.update(deltaTime);
+        }
     }
 
     if (!projectile_p->getActive())
@@ -393,7 +391,6 @@ void MainCharacter::receiveDamage()
 
 void MainCharacter::attack()
 {
-    static double lastDamageTime = 0.0;
     double currentTime = GetTime();
     if(currentTime - lastDamageTime >= 0.3)
     {

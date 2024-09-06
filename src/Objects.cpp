@@ -810,8 +810,8 @@ void Chest::init(Texture2D chestTexture)
     chests.emplace_back(16*32, 42*32, chestTexture);
     chests.emplace_back(29*32, 37*32, chestTexture);
     chests.emplace_back(45*32, 48*32, chestTexture);
-    chests.emplace_back(25*32, 14*32, chestTexture);
-    chests.emplace_back(45*32, 14*32, chestTexture);
+    chests.emplace_back(27*32, 8*32, chestTexture);
+    chests.emplace_back(43*32, 8*32, chestTexture);
     chests.emplace_back(59*32, 34*32, chestTexture);
 }
 
@@ -858,8 +858,8 @@ Texture2D Signs::blueRoad;
 Texture2D Signs::redRoad;
 Texture2D Signs::yellowRoad;
 
-Signs::Signs(float posX, float posY, Texture2D signtexture, Texture2D textText, bool bigSign)
-        : signPositionX(posX), signPositionY(posY), bigSign(bigSign), signTexture(signtexture), textTexture(textText)
+Signs::Signs(float posX, float posY, Texture2D textText, bool bigSign)
+        : signPositionX(posX), signPositionY(posY), bigSign(bigSign), textTexture(textText)
 {
     //blueDist = TextureManager::getTexture("blueDist");
     redDist = TextureManager::getTexture("redDist");
@@ -878,23 +878,22 @@ Signs::Signs(float posX, float posY, Texture2D signtexture, Texture2D textText, 
     }
 }
 
-void Signs::init(Texture2D signTexture)
+void Signs::init()
 {
     blueDist = TextureManager::getTexture("blueDist");
-    signs.emplace_back(38*32, 41*32, signTexture, blueDist, false); //blue dist
-    signs.emplace_back(47*32, 33*32, signTexture, redDist, false); //redDist
-    signs.emplace_back(38*32, 30*32, signTexture, yellowDist, false); // yellow dist
-    signs.emplace_back(34*32, 9*32, signTexture, yellowRoad, true); // yellow road
-    signs.emplace_back(17*32, 38*32, signTexture, blueRoad, true); //blue road
-    signs.emplace_back(59*32, 40*32, signTexture, redRoad, true); //red road
+    signs.emplace_back(38*32, 41*32,blueDist, false); //blue dist
+    signs.emplace_back(47*32, 33*32,redDist, false); //redDist
+    signs.emplace_back(38*32, 30*32,yellowDist, false); // yellow dist
+    signs.emplace_back(34*32, 9*32,yellowRoad, true); // yellow road
+    signs.emplace_back(17*32, 38*32,blueRoad, true); //blue road
+    signs.emplace_back(59*32, 40*32,redRoad, true); //red road
 }
 
 void Signs::draw()
 {
     if(active)
     {
-        DrawTexture(signTexture, 280, 10, WHITE);
-        DrawTexture(textTexture, 300, 40, WHITE);
+        DrawTexture(textTexture, 150, 10, WHITE);
     }
 }
 

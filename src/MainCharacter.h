@@ -83,4 +83,5 @@ private:
     static bool canReceiveDamage;
     static bool canGiveDamage;
     static Rectangle playerEnemyRec;
+    static double lastDamageTime;
 };

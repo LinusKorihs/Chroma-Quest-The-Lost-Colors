@@ -99,6 +99,18 @@ void TextureManager::init()
     m_textures["settingsButtonPressed"] = LoadTexture("assets/graphics/Buttons/settings_selected.png");
     m_textures["logo"] = LoadTexture("assets/graphics/Buttons/Logo_official.png");
 
+    //boss
+    m_textures["BossFull"] = LoadTexture("assets/graphics/Enemies/BossFull.png");
+    m_textures["Boss1Shield"] = LoadTexture("assets/graphics/Enemies/Boss1Shield.png");
+    m_textures["BossNoShield"] = LoadTexture("assets/graphics/Enemies/BossNoShield.png");
+    m_textures["Boss-1"] = LoadTexture("assets/graphics/Enemies/Boss-1.png");
+    m_textures["Boss-2"] = LoadTexture("assets/graphics/Enemies/Boss-2.png");
+    m_textures["Boss-3"] = LoadTexture("assets/graphics/Enemies/Boss-3.png");
+    m_textures["Boss-4"] = LoadTexture("assets/graphics/Enemies/Boss-4.png");
+    m_textures["Boss-5"] = LoadTexture("assets/graphics/Enemies/Boss-5.png");
+    m_textures["Boss-6"] = LoadTexture("assets/graphics/Enemies/Boss-6.png");
+    m_textures["BossEmpty"] = LoadTexture("assets/graphics/Enemies/BossEmpty.png");
+
     for (auto &texture : m_textures)
     {
         if (!IsTextureReady(texture.second))

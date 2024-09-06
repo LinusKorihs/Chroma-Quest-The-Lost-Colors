@@ -17,6 +17,11 @@
 #include "DialogBox.h"
 #include "NPC.h"
 
+enum gameLoopState
+        {
+    sequence,
+    gameLoopState
+};
 
 class MiniBoss;
 
@@ -25,12 +30,12 @@ class PixelGame
 public:
     static void gameInit();
     static void gameLoop(tson::Map& tileMap);
+    static void startSequence();
 
     static Enemy enemy;
     static Vector2 position;
     static Texture2D slimeEnemyTexture;
 
-    static bool isPlayerKnocked;
 
     static void runGameOnce(tson::Map &Map);
 
@@ -52,6 +57,9 @@ public:
     static void updateAudio();
 
     static tson::Map currentMap;
+    static bool dialogDone;
+
+    static enum gameLoopState state;
 
 private:
     static void drawObjects();
@@ -68,8 +76,6 @@ private:
     static Vector2 BossRedPosition;
     static Door door;
 
-    static bool doorsErased1;
-    static bool doorsErased2;
     static bool hasAnimated[3];
 
     static Music music;
@@ -79,6 +85,7 @@ private:
     static bool firstLoopOverworld;
     static bool firstLoopDungeon1;
     static bool canMove;
+    static int sentence;
 
 
 };

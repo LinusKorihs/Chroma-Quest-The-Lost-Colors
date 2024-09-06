@@ -72,7 +72,11 @@ int main()
                 Menu::drawMainMenu(applicationState);
                 break;
             case MenuState::GameRunning:
-                PixelGame::gameLoop(PixelGame::getMap());
+                PixelGame::startSequence();
+                if(PixelGame::state == gameLoopState)
+                {
+                    PixelGame::gameLoop(PixelGame::getMap());
+                }
                 if (IsKeyPressed(KEY_ESCAPE))
                 {
                     applicationState.currentGameMenu = MenuState::PauseMenu;

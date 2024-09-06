@@ -117,7 +117,7 @@ void Enemy::updateEnemy(float deltaTime)
     {
         enemyDeath = true;
     }
-    if(getEnemyHits() == 2 && enemyType == SLIMERED)
+    if(getEnemyHits() == 1 && enemyType == SLIMERED)
     {
         enemyDeath = true;
     }

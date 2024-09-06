@@ -92,6 +92,7 @@ private:
 
     bool pathFound = false;
     bool canGiveDamage = true;
+    bool canGiveDamage1 = true;
 
     BossState state; // Aktueller Zustand des Bosses
     float stateTimer; // Timer für den aktuellen Zustand
@@ -102,6 +103,9 @@ private:
     int currentDirection;
     bool plate1Pressed;
     bool plate2Pressed;
+
+    double lastDamageTimer = 0.0;
+    //double lastDamageTime = 0.0;
 };
 
 

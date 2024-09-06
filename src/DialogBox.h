@@ -12,6 +12,7 @@ public:
     void update(Vector2 playerPosition);
     void draw();
     bool isActive();
+    void setActive(bool inactive) { this->active = inactive; }
     static void init(Texture2D mouseTexture, Texture2D frogTexture, Texture2D gekkoTexture, Texture2D owlTexture);
 
     static std::vector<DialogBox> dialogBoxes;
