@@ -28,4 +28,6 @@ public:
     static float stamina;
     static void init();
     static bool controlActive;
+
+    static int gameOverCount;
 };

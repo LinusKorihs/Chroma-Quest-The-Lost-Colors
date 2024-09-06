@@ -377,6 +377,7 @@ void PixelGame::gameLoop(tson::Map &Map)
             }
         }
 
+
         if(CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[10].getRectangle()))
         {
             roomChanger.setTargetPosOverworld();
@@ -395,6 +396,7 @@ void PixelGame::gameLoop(tson::Map &Map)
             canMove = true;
         }
 
+
         EndMode2D();
         drawHud();
         if (!miniboss->getUnload()) {
@@ -404,6 +406,12 @@ void PixelGame::gameLoop(tson::Map &Map)
             DrawRectangle(0, 0, 2500, 3000, BLACK);
             DrawText("You have defeated the boss!\nThanks for playing our Demo!", 90, 100, 20, WHITE);
             canMove = false;
+        }
+        if(MainCharacter::isPlayerDead)
+        {
+            canMove = false;
+        }else{
+            canMove = true;
         }
         //EndDrawing();
     }
@@ -459,9 +467,12 @@ void PixelGame::gameLoop(tson::Map &Map)
             {
                 canMove = true;
             }
-
         }
 
+        if(roomChanger.isTransitioning())
+        {
+            canMove = false;
+        }
 
         MainCharacter::updateRec();
         MainCharacter character1;
@@ -535,6 +546,8 @@ void PixelGame::gameLoop(tson::Map &Map)
 
     updateAudio();
     playerCamera::camera.target = (Vector2) {MainCharacter::playerPosX, MainCharacter::playerPosY};
+    DrawText("Game Over Count: ", 350, 245, 1, WHITE);
+    DrawText(TextFormat("%i", InGameHud::gameOverCount), 450, 245, 1, WHITE);
 
     if (WindowShouldClose()) {
         CloseWindow();

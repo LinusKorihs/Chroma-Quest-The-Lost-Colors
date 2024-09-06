@@ -305,7 +305,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         }
     }
 
-    if (!projectile_p->getActive())
+   /* if (!projectile_p->getActive())
     {
         if (lastDir == LASTLEFT)
         {
@@ -326,7 +326,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         {
             projectile_p->setProjectileDestination(Direction::DOWN);
         }
-    }
+    }*/
 }
 
 void MainCharacter::checkCollisions()
@@ -397,7 +397,7 @@ void MainCharacter::attack()
         canGiveDamage = true;
     }
 
-    if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
+    /*if (IsKeyPressed(KEY_ENTER) && playerMana > 0 && !projectile_p->getActive()) //Projectile wird aktiviert
     {
         Vector2 startPosition;
         playerMana -= 1;
@@ -424,7 +424,7 @@ void MainCharacter::attack()
     {
         enemyManager->checkProjectileEnemyCollision(projectile_p, enemy_p);
     }
-    enemyManager->deleteEnemy();
+    enemyManager->deleteEnemy();*/
 
     if(IsKeyPressed(KEY_SPACE) && punch == none)
     {
