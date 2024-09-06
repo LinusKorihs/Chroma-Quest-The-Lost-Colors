@@ -91,6 +91,14 @@ void TextureManager::init()
     m_textures["central"] = LoadTexture("assets/graphics/HUD/Districts/central.png");
     m_textures["background"] = LoadTexture("assets/background.gif");
 
+    m_textures["exitButton"] = LoadTexture("assets/graphics/Buttons/exit.png");
+    m_textures["exitButtonPressed"] = LoadTexture("assets/graphics/Buttons/exit_selected.png");
+    m_textures["playButton"] = LoadTexture("assets/graphics/Buttons/play.png");
+    m_textures["playButtonPressed"] = LoadTexture("assets/graphics/Buttons/play_selected.png");
+    m_textures["settingsButton"] = LoadTexture("assets/graphics/Buttons/settings.png");
+    m_textures["settingsButtonPressed"] = LoadTexture("assets/graphics/Buttons/settings_selected.png");
+    m_textures["logo"] = LoadTexture("assets/graphics/Buttons/Logo_official.png");
+
     //boss
     m_textures["BossFull"] = LoadTexture("assets/graphics/Enemies/BossFull.png");
     m_textures["Boss1Shield"] = LoadTexture("assets/graphics/Enemies/Boss1Shield.png");

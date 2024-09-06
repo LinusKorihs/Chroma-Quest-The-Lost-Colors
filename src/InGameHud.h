@@ -9,6 +9,10 @@ struct HudImageButton
     Texture2D texture;
     Rectangle rec;
     std::string buttonText;
+    float x;
+    float y;
+    float width;
+    float height;
 };
 
 class InGameHud

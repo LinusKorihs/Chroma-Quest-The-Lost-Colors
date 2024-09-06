@@ -514,6 +514,8 @@ void PressurePlate::initPlates(Texture2D &plateTexture)
     pressurePlates.emplace_back(53*32, 36*32, 32, plateTexture,true); //reset 5. raum
     pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture,true); //reset 5. raum
 
+    pressurePlates.emplace_back(34*32, 19*32, 32, plateTexture,true); //reset Bossraum
+
 
 }
 

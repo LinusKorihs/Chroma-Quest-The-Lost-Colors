@@ -18,7 +18,7 @@ playerCamera::playerCamera()
 {
     camera = { 0 };   // Camera initialisieren
     camera.target = (Vector2){ MainCharacter::playerPosX, MainCharacter::playerPosY };
-    camera.offset = (Vector2){GetScreenWidth()/2.0f, GetScreenHeight()/2.0f};
+    camera.offset = (Vector2){PixelGameConfig::ScreenWidth/2, PixelGameConfig::ScreenHeight/2};
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
     isAnimating = false;
@@ -26,7 +26,7 @@ playerCamera::playerCamera()
     doorPosition = {0, 0};
     doorCam = { 0 };
     doorCam.target = doorPosition;
-    doorCam.offset = (Vector2){GetScreenWidth()/2.0f, GetScreenHeight()/2.0f};
+    doorCam.offset = (Vector2){PixelGameConfig::ScreenWidth/2.0f, PixelGameConfig::ScreenHeight/2.0f};
     doorCam.rotation = 0.0f;
     doorCam.zoom = 1.0f;
     doorTime = 0.0f;
@@ -41,12 +41,10 @@ void playerCamera::animationCam(Vector2 doorPos)
     holdTime = 0.0f;
     isHolding = false;
     isGoingBack = false;
-
 }
 
 void playerCamera::updateCamera(Vector2 playerPos, float deltaTime)
 {
-
     if (isAnimating)
     {
         EndMode2D();
