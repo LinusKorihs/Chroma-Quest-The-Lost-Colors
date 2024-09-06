@@ -18,4 +18,16 @@ public:
 
     static std::vector<float> buttonPos;
     static float sliderSpacing;
+
+    static void initBackgroundGif();
+    static void unloadBackgroundGif();
+    static void updateBackgroundAnimation();
+
+    static Image backgroundPic;
+    static Texture2D backgroundTex;
+private:
+    static int animFrames;
+    static int currentAnimFrame;
+    static int frameDelay;
+    static int frameCounter;
 };

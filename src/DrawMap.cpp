@@ -17,7 +17,8 @@ bool DrawMap::isOpenDoor(float x, float y)
     (x == 1440 && y == 1792) || (x == 1952 && y == 1632) || (x == 1952 && y == 1504) || (x== 1664 && y == 1152) || (x== 1120 && y == 672) || (x == 256 && y == 1216);
 }
 
-bool DrawMap::isDoor(float x, float y) {
+bool DrawMap::isDoor(float x, float y)
+{
     return
     (x == 1120 && y == 2176)  || (x == 1312 && y == 2400) || (x == 1440 && y == 2400) ||
     (x == 384 && y == 1216) || (x == 2112 && y == 1312) || (x == 2240 && y == 1312) || (x == 1120 && y == 1536);
@@ -33,10 +34,8 @@ bool rectangleExists(const std::vector<Rectangle>& rectangles, const Rectangle& 
 
 void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
 {
-
     if(dungeon1)
     {
-
         auto layer1 = gameMap.getLayer("Floor & Walls")->getData();
         drawLayer(layer1, gameMap, tileTexture);
 
@@ -60,22 +59,22 @@ void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
         auto layer2 = gameMap.getLayer("objekte")->getData();
         drawLayer(layer2, gameMap, tileTexture);
     }
-
 }
 
 void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, Texture2D &tileTexture)
 {
-
     const int currentFrame = int(GetTime() * 6) % 4;
     int multiplier = 1;
     float tileWidth;
     int tileSetColumns;
 
-    if(dungeon1) {
+    if(dungeon1)
+    {
        tileWidth = 32; // Old 16x16
        tileSetColumns = 31; // Old 16; rn 8, new 31
     }
-    if(overworld){
+    if(overworld)
+    {
         tileWidth = 32; // Old 16x16
         tileSetColumns = 31; // Old 16; rn 8, new 31
     }
