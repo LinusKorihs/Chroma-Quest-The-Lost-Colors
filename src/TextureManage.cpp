@@ -89,6 +89,7 @@ void TextureManager::init()
     m_textures["yellowRoad"] = LoadTexture("assets/graphics/HUD/Districts/yellow Road.png");
     m_textures["redRoad"] = LoadTexture("assets/graphics/HUD/Districts/Red Road.png");
     m_textures["central"] = LoadTexture("assets/graphics/HUD/Districts/central.png");
+    m_textures["background"] = LoadTexture("assets/background.gif");
 
     for (auto &texture : m_textures)
     {

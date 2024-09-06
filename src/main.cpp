@@ -23,7 +23,6 @@ int main()
     ToggleFullscreen();
 #endif
 
-   // PixelGame::loadMap("assets/graphics/newTileset&Tilemap/newTilemap.tmj");
     PixelGame::loadMap("assets/graphics/newTileset&Tilemap/Overworld.tmj");
 
     SetExitKey(KEY_F4);
@@ -34,25 +33,41 @@ int main()
     TextureManager::init();
     PixelGame::gameInit();
 
-    Vector2 previousWindowSize = { (float)GetScreenWidth(), (float)GetScreenHeight() };
+    Vector2 previousWindowSize = {(float) GetScreenWidth(), (float) GetScreenHeight()};
+
+    // Initialize the background GIF
+    Menu::initBackgroundGif();
 
     while (ConfigNotConst::isGameRunning && !WindowShouldClose())
     {
-        Vector2 currentWindowSize = { (float)GetScreenWidth(), (float)GetScreenHeight() };
+        Vector2 currentWindowSize = {(float) GetScreenWidth(), (float) GetScreenHeight()};
 
         if (currentWindowSize.x != previousWindowSize.x || currentWindowSize.y != previousWindowSize.y)
         {
             previousWindowSize = currentWindowSize; // Update previous window size
         }
 
-        WindowSizeScale::calculateRenderRectangle(renderScale);
-        Rectangle renderRectangle = WindowSizeScale::calculateRenderRectangle(renderScale); // Calculate render rectangle for letterbox
+        // Calculate the render scale based on the current window size
+        renderScale = fminf(currentWindowSize.x / PixelGameConfig::ScreenWidth,
+                            currentWindowSize.y / PixelGameConfig::ScreenHeight);
 
-        VMouse::calcVMouse(renderRectangle, renderScale); // Update virtual mouse position
+        // Calculate the render rectangle for letterboxing
+        Rectangle renderRectangle = WindowSizeScale::calculateRenderRectangle(renderScale);
+
+        // Update virtual mouse position
+        VMouse::calcVMouse(renderRectangle, renderScale);
 
         BeginDrawing();
         ClearBackground(BLACK);
         BeginTextureMode(canvas);
+
+        // Draw the background texture scaled to the current window size
+        DrawTexturePro(canvas.texture,
+                       {0, 0, (float) canvas.texture.width, (float) -canvas.texture.height},
+                       {0, 0, currentWindowSize.x, currentWindowSize.y},
+                       {0, 0},
+                       0.0f,
+                       WHITE);
 
         switch (applicationState.currentGameMenu)
         {
@@ -97,9 +112,13 @@ int main()
         }
 
         EndTextureMode();
-        DrawTexturePro(canvas.texture, {0, 0, (float)canvas.texture.width, (float)-canvas.texture.height}, renderRectangle, {0, 0}, 0.0f, WHITE);
+        DrawTexturePro(canvas.texture, {0, 0, (float) canvas.texture.width, (float) -canvas.texture.height},
+                       renderRectangle, {0, 0}, 0.0f, WHITE);
         EndDrawing();
     }
+
+    // Unload the background GIF
+    Menu::unloadBackgroundGif();
 
     CloseWindow();
     return EXIT_SUCCESS;

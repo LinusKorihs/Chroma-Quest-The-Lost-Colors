@@ -19,6 +19,40 @@ int menuScreenHeight = GetScreenHeight();
 float buttonSpacing = 50.0f; // Adjust this value to increase or decrease the space between buttons
 float Menu::sliderSpacing = 75.0f; // Adjust this value to increase or decrease the space between sliders
 
+Image Menu::backgroundPic;
+Texture2D Menu::backgroundTex;
+int Menu::animFrames = 0;
+int Menu::currentAnimFrame = 0;
+int Menu::frameDelay = 8;
+int Menu::frameCounter = 0;
+
+void Menu::initBackgroundGif()
+{
+    backgroundPic = LoadImageAnim("assets/background.gif", &animFrames);
+    backgroundTex = LoadTextureFromImage(backgroundPic);
+}
+
+void Menu::unloadBackgroundGif()
+{
+    UnloadTexture(backgroundTex);
+    UnloadImage(backgroundPic);
+}
+
+void Menu::updateBackgroundGif()
+{
+    frameCounter++;
+    if (frameCounter >= frameDelay)
+    {
+        currentAnimFrame++;
+        if (currentAnimFrame >= animFrames) currentAnimFrame = 0;
+
+        unsigned int nextFrameDataOffset = backgroundPic.width * backgroundPic.height * 4 * currentAnimFrame;
+        UpdateTexture(backgroundTex, ((unsigned char *)backgroundPic.data) + nextFrameDataOffset);
+
+        frameCounter = 0;
+    }
+}
+
 std::vector<float> Menu::UpdateButtonPositions()
 {
     float upMenuScreenWidth = GetScreenWidth();
@@ -62,6 +96,14 @@ int Menu::drawMainMenu(GameState &currentGameState)
     float newButtonHeight = Menu::buttonPos[1];
     int upMenuScreenWidth = static_cast<int>(Menu::buttonPos[2]);
 
+    // Update the background GIF
+    updateBackgroundGif();
+
+    // Draw the background GIF
+    int currentScreenWidth = GetScreenWidth();
+    float scaleX = (float)currentScreenWidth / backgroundTex.width;
+    DrawTextureEx(backgroundTex, (Vector2){0, 0}, 0.0f, scaleX, WHITE);
+
     startGameButton.texture = TextureManager::getTexture("StartGameButtonTexture");
     Button::updateButtonDimensions(startGameButton, newButtonWidth, newButtonHeight + buttonSpacing * 0, Button::buttonWidth, Button::buttonHeight);
     startGameButton.buttonText = LanguageManager::getLocalizedGameText("Start Game", "Spiel starten");
@@ -73,12 +115,6 @@ int Menu::drawMainMenu(GameState &currentGameState)
     exitGameButton.texture = TextureManager::getTexture("ExitGameButtonTexture");
     Button::updateButtonDimensions(exitGameButton, newButtonWidth, newButtonHeight + buttonSpacing * 2, Button::buttonWidth, Button::buttonHeight);
     exitGameButton.buttonText = LanguageManager::getLocalizedGameText("Quit Game", "Spiel beenden");
-
-    ClearBackground(DARKGRAY);
-
-    DrawText(LanguageManager::getLocalizedGameText("Chroma Quest: The Lost Colors", "Chroma Quest: Die verlorenen Farben"),
-             upMenuScreenWidth / 2 - MeasureText(LanguageManager::getLocalizedGameText("Chroma Quest: The Lost Colors", "Chroma Quest: Die verlorenen Farben"), 20) / 2,
-             50, 20, BLACK);
 
     InGameHud::drawImageButton(startGameButton);
     InGameHud::drawImageButton(settingsMenuButton);

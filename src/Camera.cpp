@@ -14,7 +14,6 @@ float playerCamera::holdTime;
 bool playerCamera::isHolding;
 bool playerCamera::isGoingBack;
 
-
 playerCamera::playerCamera()
 {
     camera = { 0 };   // Camera initialisieren
@@ -47,7 +46,8 @@ void playerCamera::animationCam(Vector2 doorPos)
 
 void playerCamera::updateCamera(Vector2 playerPos, float deltaTime) {
 
-    if (isAnimating) {
+    if (isAnimating)
+    {
         EndMode2D();
         BeginMode2D(doorCam); // Kamera-Modus starten
 
@@ -59,22 +59,26 @@ void playerCamera::updateCamera(Vector2 playerPos, float deltaTime) {
         std::cout << "t: " << t << std::endl;
 
 
-        if (!isGoingBack) {
+        if (!isGoingBack)
+        {
             doorCam.target.y = (1-t) * playerPos.y + t * doorPosition.y;
             doorCam.target.x = (1 - t) * playerPos.x + t * doorPosition.x;
         }
-        if (isGoingBack) {
+        if (isGoingBack)
+        {
             doorCam.target.x = (1 - t) * doorPosition.x + t * playerPos.x;
             doorCam.target.y = (1 - t) * doorPosition.y + t * playerPos.y;
         }
 
 
         // Wenn die Animation zu Ende ist, beginne die Haltezeit
-        if (!isGoingBack && animationTime >= animationDuration) {
+        if (!isGoingBack && animationTime >= animationDuration)
+        {
             holdTime += deltaTime;
             doorCam.target.x = doorPosition.x;
             doorCam.target.y = doorPosition.y;
-            if(holdTime >= 0.5 && !isHolding) {
+            if(holdTime >= 0.5 && !isHolding)
+            {
                 holdTime = 0;
                 isHolding = true;
                 // Setze das Flag, um das Halten zu aktivieren
@@ -82,10 +86,12 @@ void playerCamera::updateCamera(Vector2 playerPos, float deltaTime) {
             }
         }
 
-        if (isHolding) {
+        if (isHolding)
+        {
             // Halte die Kamera für eine bestimmte Zeit auf der Tür
             holdTime += deltaTime;
-            if (holdTime >= 1.3f) { // Haltezeit (z.B. 2 Sekunden)
+            if (holdTime >= 1.3f) // Haltezeit (z.B. 2 Sekunden)
+            {
                 std::cout << "Holding time finished. Resetting camera target." << std::endl;
                 isGoingBack = true;
                 isHolding = false; // Halte das Flag zurück
@@ -94,7 +100,8 @@ void playerCamera::updateCamera(Vector2 playerPos, float deltaTime) {
         }
 
         // Wenn die Rückkehr-Animation abgeschlossen ist, setze die Kamera auf den Spieler
-        if (isGoingBack && animationTime >= animationDuration) {
+        if (isGoingBack && animationTime >= animationDuration)
+        {
             std::cout << "Camera back at player." << std::endl;
             //doorCam.target = playerPos; // Setze die Kamera auf die Spielerposition
             isGoingBack = false;
@@ -104,14 +111,17 @@ void playerCamera::updateCamera(Vector2 playerPos, float deltaTime) {
     camera.target = playerPos;
 }
 
-bool playerCamera::getIsAnimating() {
+bool playerCamera::getIsAnimating()
+{
     return isAnimating;
 }
 
-bool playerCamera::getIsHolding() {
+bool playerCamera::getIsHolding()
+{
     return isHolding;
 }
 
-bool playerCamera::getIsGoingBack() {
+bool playerCamera::getIsGoingBack()
+{
     return isGoingBack;
 }
