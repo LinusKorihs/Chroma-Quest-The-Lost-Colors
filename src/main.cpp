@@ -50,8 +50,9 @@ int main()
         ClearBackground(BLACK);
         BeginTextureMode(canvas);
 
+        // Draw the background GIF scaled to the current window size
         DrawTexturePro(Menu::backgroundTex,
-                       {0, 0, (float) Menu::backgroundTex.width, (float) -Menu::backgroundTex.height},
+                       {0, 0, (float) Menu::backgroundTex.width, (float) Menu::backgroundTex.height},
                        {0, 0, currentWindowSize.x, currentWindowSize.y},
                        {0, 0}, 0.0f, WHITE);
 
