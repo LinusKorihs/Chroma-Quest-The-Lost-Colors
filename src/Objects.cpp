@@ -403,10 +403,8 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 15, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 28, multiple * 12, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 42, multiple * 12, multiple, stoneTexture, stoneSourceRect);
-
-
-
 }
+
 std::vector<PressurePlate> PressurePlate::pressurePlates;
 
 PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture, bool color)
@@ -416,15 +414,21 @@ PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture, b
 
 void PressurePlate::draw() const
 {
-    if(!color) {
+    if(!color)
+    {
         Texture2D plateTexture = pressed ? TextureManager::getTexture("PlatePressed") : TextureManager::getTexture(
                 "PlateNormal");
         DrawTexture(plateTexture, platePositionX, platePositionY, WHITE);
-    }else{
+    }
+    else
+    {
         Texture2D plateTexture = TextureManager::getTexture("RedButton");
-        if(!pressed){
+        if(!pressed)
+        {
             DrawTextureRec(plateTexture, {0,0,32,32},{platePositionX, platePositionY}, WHITE);
-        }else{
+        }
+        else
+        {
             DrawTextureRec(plateTexture, {32,0,32,32},{platePositionX, platePositionY}, WHITE);
         }
     }
@@ -478,7 +482,6 @@ void PressurePlate::update()
     //drawHitboxes();
 }
 
-
 // Hitboxes
 void PressurePlate::drawHitboxes() const
 {
@@ -515,15 +518,13 @@ void PressurePlate::initPlates(Texture2D &plateTexture)
     pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture,true); //reset 5. raum
 
     pressurePlates.emplace_back(34*32, 19*32, 32, plateTexture,true); //reset Bossraum
-
-
 }
 
-void PressurePlate::setPressed(bool pressed) {
+void PressurePlate::setPressed(bool pressed)
+{
     this->pressed = pressed;
 
 }
-
 
 Door::Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum, int step)
         : doorOpen(doorOp), doorTexture(texture), doorPositionX(positionX), doorPositionY(positionY), doorNumber(doorNum), currentStep(step)
@@ -532,27 +533,32 @@ Door::Door(int doorOp, Texture2D texture, float positionX, float positionY, int 
 
 void Door::draw(float deltaTime)
 {
-   /* if (!animationFinished) {
+   /* if (!animationFinished)
+    * {
         frameCounter++;
         int framesPerStep;
         if(doorNumber == 1){
             framesPerStep = 8;
         }
-        else {
+        else
+        {
             framesPerStep = 20; // Anzahl Frames pro Animationsschritt
         }
 
-        if (frameCounter >= framesPerStep) {
+        if (frameCounter >= framesPerStep)
+        {
             currentStep++;
             frameCounter = 0;
 
-            if (currentStep > 2) {
+            if (currentStep > 2)
+            {
                 currentStep = 2;
                 animationFinished = true;
             }
         }
 
-        switch (currentStep) {
+        switch (currentStep)
+        {
             case 0:
                 DrawTextureRec(doorTexture, {32, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
                 break;
@@ -563,30 +569,38 @@ void Door::draw(float deltaTime)
                 DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
                 break;
         }
-    } else {
+    }
+    else
+    {
 
         DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE); //das bleibt dann
     }*/
-    if (!animationFinished) {
-        if(doorNumber == 1){
+    if (!animationFinished)
+    {
+        if(doorNumber == 1)
+        {
             frameSpeed = 8;
         }
-        else {
+        else
+        {
             frameSpeed = 2;
         }
         frameCounter += deltaTime * frameSpeed;
 
-        if (frameCounter >= 1.0f) {
+        if (frameCounter >= 1.0f)
+        {
             frameCounter -= 1;
             currentStep++;
 
-            if (currentStep > 2) {
+            if (currentStep > 2)
+            {
                 currentStep = 2;
                 animationFinished = true;
             }
         }
 
-        switch (currentStep) {
+        switch (currentStep)
+        {
             case 0:
                 DrawTextureRec(doorTexture, {32, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
                 break;
@@ -597,7 +611,9 @@ void Door::draw(float deltaTime)
                 DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
                 break;
         }
-    } else {
+    }
+    else
+    {
 
         DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE); //das bleibt dann
     }

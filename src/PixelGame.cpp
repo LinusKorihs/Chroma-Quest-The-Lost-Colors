@@ -38,6 +38,7 @@ std::vector<Machine> machines;
 RoomChanger roomChanger;
 
 Rectangle MainCharacter::playerRec;
+Rectangle MainCharacter::playerStonePushRec;
 Rectangle MainCharacter::HitRec;
 MiniBoss* PixelGame::miniboss;
 Pathfinder* PixelGame::pathfinder;
@@ -99,7 +100,6 @@ void PixelGame::gameInit()
                                                          "Fehler beim Parsen der Karte, Fehler: ")
                 << currentMap.getStatusMessage() << std::endl;
     }
-
 
     pathfinder = new Pathfinder();
     miniboss = new MiniBoss(BossRedPosition, BossRed, BOSSRED, *pathfinder);
@@ -327,7 +327,8 @@ void PixelGame::gameLoop(tson::Map &Map)
         openDoors();
         openBottomDoorRoom1();
 
-        for (Stone stone: Stone::stoneObjects) {
+        for (Stone stone: Stone::stoneObjects)
+        {
             stone.draw();
             //stone.drawHitboxes();
         }
@@ -335,7 +336,8 @@ void PixelGame::gameLoop(tson::Map &Map)
         drawObjects();
         InGameHud::drawHealthBarTexture();
 
-        if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating() && !DialogBox::dialogBoxes[0].isActive()){
+        if (!roomChanger.isTransitioning() && !playerCamera::getIsAnimating() && !DialogBox::dialogBoxes[0].isActive())
+        {
             MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
         }
         MainCharacter::updateRec();
@@ -348,7 +350,8 @@ void PixelGame::gameLoop(tson::Map &Map)
         projectile_p->update(GetFrameTime(), projectile_p->getProjectileDestination());
         projectile_p->draw();
 
-        if (!miniboss->getUnload()) {
+        if (!miniboss->getUnload())
+        {
             miniboss->updateBoss(GetFrameTime(), MainCharacter::getPosition());
             miniboss->drawBoss();
         }
@@ -363,14 +366,18 @@ void PixelGame::gameLoop(tson::Map &Map)
         MainCharacter::drawMainCharacter(texture, character);
 
         closedDoorTransition();
-        for (Chest &chest: Chest::chests) {
+        for (Chest &chest: Chest::chests)
+        {
             chest.update();
         }
 
-        for (Door &doors: Door::openDoors) {
-            if (doors.isOpen()) {
+        for (Door &doors: Door::openDoors)
+        {
+            if (doors.isOpen())
+            {
                 if (!roomChanger.isTransitioning() &&
-                    CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle())) {
+                    CheckCollisionRecs(MainCharacter::playerRec, doors.getRectangle()))
+                {
                     roomChanger.setTargetPos();
                     Vector2 newPos = roomChanger.getTargetPos();
                     roomChanger.startTransition(newPos); // neue Position und Raum anpassen
@@ -379,14 +386,12 @@ void PixelGame::gameLoop(tson::Map &Map)
             }
         }
 
-
         if(CheckCollisionRecs(MainCharacter::playerRec, Door::openDoors[10].getRectangle()))
         {
             roomChanger.setTargetPosOverworld();
             roomChanger.overworldTransition();
             roomChanger.update();
         }
-
 
         if(DialogBox::dialogBoxes[0].isActive() || roomChanger.isTransitioning() || playerCamera::getIsAnimating())
         {
@@ -398,13 +403,14 @@ void PixelGame::gameLoop(tson::Map &Map)
             canMove = true;
         }
 
-
         EndMode2D();
         drawHud();
-        if (!miniboss->getUnload()) {
+        if (!miniboss->getUnload())
+        {
             miniboss->drawShieldBar();
         }
-        if(miniboss->getUnload()){
+        if(miniboss->getUnload())
+        {
             DrawRectangle(0, 0, 2500, 3000, BLACK);
             DrawText("You have defeated the boss!\nThanks for playing our Demo!", 90, 100, 20, WHITE);
             canMove = false;
@@ -500,12 +506,14 @@ void PixelGame::gameLoop(tson::Map &Map)
             Sign.draw();
         }
     }
-    if (Map.getLayers().empty() || Map.getTilesets().empty()) {
+    if (Map.getLayers().empty() || Map.getTilesets().empty())
+    {
         std::cerr << "Invalid map data" << std::endl;
         return;
     }
 
-    if (IsKeyPressed(KEY_ESCAPE)) {
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
         ConfigNotConst::isGamePaused = true;
     }
 
@@ -516,7 +524,8 @@ void PixelGame::gameLoop(tson::Map &Map)
         //Menu::drawPauseMenu(currentGameState);
     }
 
-    if (IsKeyPressed(KEY_ESCAPE)) {
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
         currentGameState.changeGameState(MenuState::PauseMenu);
         return;
     }
@@ -525,26 +534,32 @@ void PixelGame::gameLoop(tson::Map &Map)
 
         if (canMove)
         {
-
-                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP])) {
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::UP]))
+                {
                     MainCharacter::moveMainCharacter(KEY_UP, GetFrameTime());
                     isMoving = true;
                 }
-                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN])) {
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::DOWN]))
+                {
                     MainCharacter::moveMainCharacter(KEY_DOWN, GetFrameTime());
                     isMoving = true;
                 }
-                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT])) {
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::LEFT]))
+                {
                     MainCharacter::moveMainCharacter(KEY_LEFT, GetFrameTime());
                     isMoving = true;
                 }
-                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT])) {
+                if (IsKeyDown(currentGameState.playerKeyBindings[Direction::RIGHT]))
+                {
                     MainCharacter::moveMainCharacter(KEY_RIGHT, GetFrameTime());
                     isMoving = true;
                 }
-                if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                if (isMoving && !IsSoundPlaying(ConfigNotConst::playerWalkingSound))
+                {
                     PlaySound(ConfigNotConst::playerWalkingSound);
-                } else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound)) {
+                }
+                else if (!isMoving && IsSoundPlaying(ConfigNotConst::playerWalkingSound))
+                {
                     StopSound(ConfigNotConst::playerWalkingSound);
                 }
             }
@@ -554,7 +569,8 @@ void PixelGame::gameLoop(tson::Map &Map)
     DrawText("Game Over Count: ", 350, 245, 1, WHITE);
     DrawText(TextFormat("%i", InGameHud::gameOverCount), 450, 245, 1, WHITE);
 
-    if (WindowShouldClose()) {
+    if (WindowShouldClose())
+    {
         CloseWindow();
         unloadAll();
         exit(0);
@@ -586,8 +602,6 @@ void PixelGame::drawHud()
     InGameHud::drawRGBBarTexture();
     InGameHud::drawHealthBarTexture();
     InGameHud::drawControlBox();
-
-
 }
 
 void PixelGame::openBottomDoorRoom1()
@@ -730,7 +744,8 @@ void PixelGame::updateAudio()
     }
 }
 
-void PixelGame::startSequence() {
+void PixelGame::startSequence()
+{
     DrawRectangle(0,0,500,300,BLACK);
     DrawText("Press 'Enter' to continue", 340, 250, 1, GRAY);
 
@@ -740,13 +755,15 @@ void PixelGame::startSequence() {
                  "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
                  10, 20, 10, WHITE);
     }
-    if(sentence == 1){
+    if(sentence == 1)
+    {
         DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
                  "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
                  10, 20, 10, WHITE);
         DrawText("Each time she awoke, the meaning of them slipped away.",10,90,10,WHITE);
     }
-    if(sentence == 2){
+    if(sentence == 2)
+    {
         DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
                  "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
                  10, 20, 10, WHITE);
@@ -754,7 +771,8 @@ void PixelGame::startSequence() {
 
         DrawText("One night, the pull of these structures became stronger than ever... she could finally see clearly:\nIt was The Three Towers.",10,115,10,WHITE);
     }
-    if(sentence == 3){
+    if(sentence == 3)
+    {
         DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
                  "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
                  10, 20, 10, WHITE);
@@ -764,7 +782,8 @@ void PixelGame::startSequence() {
 
         DrawText("Awakened near the Prismwell at the heart of Chroma City, scared for her world to be lost to shades of grey,\nshe knew she had to act.\nThough the path ahead is unclear, The Three Towers are calling to her.",10,155,10,WHITE);
     }
-    if(sentence == 4){
+    if(sentence == 4)
+    {
         DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
                  "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
                  10, 20, 10, WHITE);
@@ -776,7 +795,8 @@ void PixelGame::startSequence() {
 
         DrawText("But why now? And why her?",10,210,10,WHITE);
     }
-    if(sentence == 5){
+    if(sentence == 5)
+    {
         DrawText("Haunted by strange visions of grand structures and a rush of colors\n"
                  "— in red, blue and yellow — \nstripped from them, a young adventurer's dreams were filled with a soon-to-be reality,\nshe just couldn't understand.",
                  10, 20, 10, WHITE);
@@ -802,12 +822,12 @@ void PixelGame::startSequence() {
         sentence++;
     }
 
-    if (WindowShouldClose()) {
+    if (WindowShouldClose())
+    {
         CloseWindow();
         unloadAll();
         exit(0);
     }
-
 }
 
 void PixelGame::ReloadAssets(Texture2D &logoTex, RenderTexture &canvas)

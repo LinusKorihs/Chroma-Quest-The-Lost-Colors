@@ -52,6 +52,7 @@ public:
     static void setPosition(Vector2 pos);
 
     static Rectangle playerRec;
+    static Rectangle playerStonePushRec;
     static Rectangle HitRec;
     static float playerCharacterHitBoxScale;
     static float playerCharacterTextureScale;
