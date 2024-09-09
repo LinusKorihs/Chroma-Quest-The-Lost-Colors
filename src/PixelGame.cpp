@@ -127,7 +127,7 @@ void PixelGame::rectangle()
     float hitScale = 0.18f;
 
     MainCharacter::playerRec = {x, y, width * playerScale, height * playerScale};
-
+    MainCharacter::playerStonePushRec = MainCharacter::playerRec;
     MainCharacter::HitRec = {x, y, width * hitScale, height * hitScale};
 }
 
@@ -484,6 +484,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         }
 
         MainCharacter::updateRec();
+
         MainCharacter character1;
         Texture texture = TextureManager::getTexture("MainCharacter");
         MainCharacter::drawMainCharacter(texture, character1);

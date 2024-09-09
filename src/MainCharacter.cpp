@@ -70,31 +70,60 @@ void MainCharacter::updateRec()
             width,
             height
     };
+
+    //Rec für stein schieben
+    playerStonePushRec = {
+            xPos,
+            yPos,
+            width - 3,
+            height - 3
+    };
     //Rec zum hitten von enemies
     if(lastDir == LASTRIGHT || lastDir == LASTLEFT)
     {
         HitRec = {
                 playerPosX - 4,
-                playerPosY + 12,
+                playerPosY + 14,
                 40,
-                18
+                16
+        };
+        playerStonePushRec = {
+                xPos + 1,
+                yPos + 17,
+                width,
+                height - 20
         };
     }
     if(lastDir == LASTUP || lastDir == LASTDOWN)
     {
         HitRec = {
-                playerPosX+4,
+                playerPosX+3,
                 playerPosY-4,
-                25,
+                26,
                 40
+        };
+        playerStonePushRec = {
+                xPos + 5,
+                yPos,
+                width - 8,
+                height - 2
         };
     }
     playerEnemyRec = {
-            playerPosX,
-            playerPosY,
-            32,
-            32
+            playerPosX+2,
+            playerPosY+2,
+            28,
+            28
     };
+
+    // für Gegner Schlagen kollision
+    //DrawRectangleLines(HitRec.x, HitRec.y, HitRec.width, HitRec.height, YELLOW);
+    // für player kollision
+    //DrawRectangleLines(playerRec.x, playerRec.y, playerRec.width, playerRec.height, GREEN);
+    // für enemy kollision
+    //DrawRectangleLines(playerEnemyRec.x, playerEnemyRec.y, playerEnemyRec.width, playerEnemyRec.height, ORANGE);
+    // für Stein Kollision
+    //DrawRectangleLines(playerStonePushRec.x, playerStonePushRec.y, playerStonePushRec.width, playerStonePushRec.height, RED);
 }
 
 void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
@@ -303,11 +332,10 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         }
 
         Stone *nearestStone = nullptr;
-        float nearestDistanceSquared = std::numeric_limits<float>::max();
 
         for (Stone &stone: Stone::stoneObjects)
         {
-            if (CheckCollisionRecs(enemyNewRec, stone.getRectangle()))  //test
+            if (CheckCollisionRecs(playerStonePushRec, stone.getRectangle()))  //test
             {
                 nearestStone = &stone;
                 break;
