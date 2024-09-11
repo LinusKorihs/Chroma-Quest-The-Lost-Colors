@@ -111,24 +111,6 @@ void InGameHud::drawHealthBarTexture()
 
 void InGameHud::drawRGBBarTexture()
 {
-    /*int hudHealthBarX = 1700;
-    int hudHealthBarY = 110;
-    int hudHealthBarWidth = 100;
-    int hudHealthBarHeight = 20;
-    int hudPadding = 25;
-
-    int rgbBarX = hudHealthBarX;
-    int rgbBarY = hudHealthBarY - hudHealthBarHeight - hudPadding;
-    int rgbBarWidth = hudHealthBarWidth;
-    int rgbBarHeight = 20;
-
-    int rgbBarColorWidth = rgbBarWidth / 3;
-
-    DrawRectangle(rgbBarX, rgbBarY, rgbBarColorWidth, rgbBarHeight, RED);
-    DrawRectangle(rgbBarX + rgbBarColorWidth, rgbBarY, rgbBarColorWidth, rgbBarHeight, GREEN);
-    DrawRectangle(rgbBarX + 2 * rgbBarColorWidth, rgbBarY, rgbBarColorWidth, rgbBarHeight, BLUE);
-
-    DrawText(LanguageManager::getLocalizedGameText("RGB:", "RGB:"), rgbBarX, rgbBarY - 20, 20, BLACK);*/
     Texture2D hudgray = TextureManager::getTexture("grayHUD");
     DrawTexture(hudgray, -10, -20, WHITE);
 }
@@ -170,26 +152,26 @@ void InGameHud::drawControlBox() {
 void InGameHud::drawTutorial() {
     if(CheckCollisionRecs(MainCharacter::playerRec, { 34*32, 74*32, 32, 96 })){
         Texture2D redBlocks = TextureManager::getTexture("redBlocks");
-        DrawTexture(redBlocks, 150, 60, WHITE);
+        DrawTexture(redBlocks, 160, 10, WHITE);
     }
-    if(CheckCollisionRecs(MainCharacter::playerRec, { 28*32, 75*32, 32, 32 })){
+    if(CheckCollisionRecs(MainCharacter::playerRec, { 29*32, 74*32, 32, 96 })){
         Texture2D greyBlocks = TextureManager::getTexture("greyBlocks");
-        DrawTexture(greyBlocks, 150, 60, WHITE);
+        DrawTexture(greyBlocks, 160, 10, WHITE);
     }
     if(CheckCollisionRecs(MainCharacter::playerRec, { 46*32, 74*32, 64, 96 })){
         Texture2D orb = TextureManager::getTexture("orb");
-        DrawTexture(orb, 150, 60, WHITE);
+        DrawTexture(orb, 160, 10, WHITE);
     }
     if(CheckCollisionRecs(MainCharacter::playerRec, { 21*32, 75*32, 32, 32 })){
         Texture2D chests = TextureManager::getTexture("chests");
-        DrawTexture(chests, 150, 60, WHITE);
+        DrawTexture(chests, 160, 10, WHITE);
     }
     if(CheckCollisionRecs(MainCharacter::playerRec, { 35*32, 69*32, 64, 64 })){
         Texture2D placeOrb = TextureManager::getTexture("placeOrb");
-        DrawTexture(placeOrb, 150, 60, WHITE);
+        DrawTexture(placeOrb, 160, 10, WHITE);
     }
-    if(CheckCollisionRecs(MainCharacter::playerRec, { 34*32, 71*32, 96, 64 })){
+    if(CheckCollisionRecs(MainCharacter::playerRec, { 34*32, 72*32, 96, 32 })){
         Texture2D redButton = TextureManager::getTexture("redButton");
-        DrawTexture(redButton, 150, 60, WHITE);
+        DrawTexture(redButton, 160, 10, WHITE);
     }
 }

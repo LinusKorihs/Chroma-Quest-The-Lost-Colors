@@ -736,7 +736,7 @@ void PixelGame::updateAudio()
 
 void PixelGame::startSequence() {
     DrawRectangle(0,0,500,300,BLACK);
-    DrawText("Press 'Enter' to continue", 340, 250, 1, GRAY);
+    DrawText("Press 'LFT MOUSE' to continue", 310, 250, 1, GRAY);
 
     if(sentence == 0)
     {
@@ -795,7 +795,7 @@ void PixelGame::startSequence() {
         DrawText("This is where Aurora's journey begins...",10,225,10,WHITE);
     }
 
-    if(IsKeyPressed(KEY_ENTER))
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
         sentence++;
     }

@@ -84,4 +84,6 @@ private:
     static bool canGiveDamage;
     static Rectangle playerEnemyRec;
     static double lastDamageTime;
+    static bool damageAnim;
+    static int damageDirection;
 };
