@@ -52,14 +52,16 @@ tson::Map& PixelGame::getMap()
 
 void PixelGame::createEnemies()
 {
-    enemyManager.createEnemy({40 * 32, 75 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
-    enemyManager.createEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICAL, Direction::DOWN, 0, 0, 2358, 2440);
+    enemyManager.createEnemy({35 * 32, 73 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+   // enemyManager.createEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICAL, Direction::DOWN, 0, 0, 2358, 2440);
     enemyManager.createEnemy({19 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
-    enemyManager.createEnemy({34 * 32, 53 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
-    enemyManager.createEnemy({35 * 32, 51 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({34 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({35 * 32, 54 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
     enemyManager.createEnemy({56 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
     enemyManager.createEnemy({29 * 32, 28 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
-    enemyManager.createEnemy({36 * 32, 53 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({36 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({35 * 32, 58 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({40 * 32, 32 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
 }
 
 void PixelGame::gameInit()
@@ -180,6 +182,7 @@ void PixelGame::openDoors()
                 }
             }
             eraseDoor(45*32,75*32);
+            eraseDoor(41*32,75*32);
         }
         if(PressurePlate::pressurePlates[1].isPressed())
         {
@@ -586,6 +589,7 @@ void PixelGame::drawHud()
     InGameHud::drawRGBBarTexture();
     InGameHud::drawHealthBarTexture();
     InGameHud::drawControlBox();
+    InGameHud::drawTutorial();
 
 
 }

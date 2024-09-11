@@ -25,6 +25,7 @@ public:
     static void drawMana();
     static void drawStamina();
     static void drawRGBBarTexture();
+    static void drawTutorial();
     static void drawImageButton(HudImageButton& button);
     static std::vector<HudImageButton> hudImagebuttons;
     static float health;

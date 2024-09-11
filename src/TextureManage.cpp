@@ -111,6 +111,14 @@ void TextureManager::init()
     m_textures["Boss-6"] = LoadTexture("assets/graphics/Enemies/Boss-6.png");
     m_textures["BossEmpty"] = LoadTexture("assets/graphics/Enemies/BossEmpty.png");
 
+    //tutorial
+    m_textures["greyBlocks"] = LoadTexture("assets/graphics/HUD/Tutorial/greyBlocks.png");
+    m_textures["redBlocks"] = LoadTexture("assets/graphics/HUD/Tutorial/redBlocks.png");
+    m_textures["orb"] = LoadTexture("assets/graphics/HUD/Tutorial/orb.png");
+    m_textures["chests"] = LoadTexture("assets/graphics/HUD/Tutorial/chests.png");
+    m_textures["placeOrb"] = LoadTexture("assets/graphics/HUD/Tutorial/placeOrb.png");
+    m_textures["redButton"] = LoadTexture("assets/graphics/HUD/Tutorial/redButton.png");
+
     for (auto &texture : m_textures)
     {
         if (!IsTextureReady(texture.second))
