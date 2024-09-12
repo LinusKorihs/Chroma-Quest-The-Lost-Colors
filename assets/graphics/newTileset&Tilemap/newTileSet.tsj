@@ -903,7 +903,7 @@
          "id":322,
          "properties":[
                 {
-                 "name":"StoneWall",
+                 "name":"Wall",
                  "type":"bool",
                  "value":true
                 }]

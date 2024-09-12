@@ -181,3 +181,23 @@ private:
     static Texture2D redDist;
     static Texture2D yellowDist;
 };
+
+class Journal {
+public:
+    Journal(float jposX, float jposY, Texture2D& texture);
+
+    void draw();
+    void update();
+    static void init(Texture2D journalTexture);
+    static std::vector<Journal> journals;
+
+private:
+    float journalPositionX;
+    float journalPositionY;
+    Texture2D journalTexture;
+    Rectangle journalRec;
+    bool pickedUp;
+    Rectangle frameRec;
+    int currentFrame;
+    float frameCounter;
+};

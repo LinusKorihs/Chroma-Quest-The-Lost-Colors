@@ -617,11 +617,12 @@ void Door::draw(float deltaTime)
     }*/
     if (!animationFinished) {
         if(doorNumber == 1){
-            frameSpeed = 8;
+            frameSpeed = 3;
         }
         else {
             frameSpeed = 2;
         }
+
         frameCounter += deltaTime * frameSpeed;
 
         if (frameCounter >= 1.0f) {
@@ -951,6 +952,8 @@ void Signs::init()
     signs.emplace_back(34*32, 9*32,yellowRoad, true); // yellow road
     signs.emplace_back(17*32, 38*32,blueRoad, true); //blue road
     signs.emplace_back(59*32, 40*32,redRoad, true); //red road
+    signs.emplace_back(114*32, 54*32,redRoad, true); //red road
+    signs.emplace_back(111*32, 39*32,redRoad, false); //red road
 }
 
 void Signs::draw()
@@ -969,5 +972,49 @@ void Signs::update()
     else
     {
         active = false;
+    }
+}
+
+std::vector<Journal> Journal::journals;
+
+Journal::Journal(float posX, float posY, Texture2D& texture)
+        : journalPositionX(posX), journalPositionY(posY), journalTexture(texture)
+{
+    journalRec = {journalPositionX-4, journalPositionY-4, 40, 40};
+    frameRec = {float(currentFrame)*32, 0, 32, 32};
+    pickedUp = false;
+    frameCounter = 0;
+    currentFrame = 0;
+}
+
+void Journal::init(Texture2D journalTexture)
+{
+    //dungeon
+    journals.emplace_back(45*32, 48*32, journalTexture);
+    //overworld
+    journals.emplace_back(101*32, 45*32, journalTexture);
+}
+
+void Journal::draw()
+{
+    if (!pickedUp) {
+        UniversalMethods::updateAnimation(GetFrameTime(), frameCounter, currentFrame, 0, 4, frameRec.x, object);
+        DrawTextureRec(journalTexture, frameRec, {journalPositionX, journalPositionY}, WHITE);
+    }
+}
+
+void Journal::update()
+{
+    if (CheckCollisionRecs(journalRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E)) {
+        pickedUp = true;
+    }
+    if(journals[0].pickedUp && !journals[1].pickedUp){
+        InGameHud::journalPhase = second;
+    }
+    if(journals[1].pickedUp && !journals[0].pickedUp){
+        InGameHud::journalPhase = first;
+    }
+    if(journals[0].pickedUp && journals[1].pickedUp){
+        InGameHud::journalPhase = firstAndSecond;
     }
 }

@@ -7,6 +7,10 @@ float InGameHud::health;
 std::vector<HudImageButton> InGameHud::hudImagebuttons;
 bool InGameHud::controlActive = true;
 int InGameHud::gameOverCount = 0;
+bool InGameHud::journalActive = false;
+journalPhase InGameHud::journalPhase = journalPhase::empty;
+bool InGameHud::firstText = false;
+bool InGameHud::secondText = false;
 
 InGameHud::InGameHud()
 {
@@ -175,3 +179,60 @@ void InGameHud::drawTutorial() {
         DrawTexture(redButton, 160, 10, WHITE);
     }
 }
+
+void InGameHud::drawJournal()
+{
+    if(IsKeyPressed(KEY_J))
+    {
+        journalActive = !journalActive;
+    }
+
+    if(journalActive)
+    {
+        if(journalPhase == journalPhase::empty)
+        {
+            Texture2D journal = TextureManager::getTexture("emptyJournal");
+            DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
+            DrawTexture(journal, 100, 20, WHITE);
+            DrawText("nothing here", 280, 100, 1, BLACK);
+        }
+        if(journalPhase == journalPhase::first)
+        {
+            Texture2D journal = TextureManager::getTexture("page1");
+            DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
+            DrawTexture(journal, 100, 20, WHITE);
+            DrawText("first page", 280, 100, 1, BLACK);
+        }
+        if(journalPhase == journalPhase::second)
+        {
+            Texture2D journal = TextureManager::getTexture("page2");
+            DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
+            DrawTexture(journal, 100, 20, WHITE);
+            DrawText("second page", 280, 100, 1, BLACK);
+        }
+        if(journalPhase == journalPhase::firstAndSecond)
+        {
+            Texture2D journal = TextureManager::getTexture("page1+2");
+            DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
+            DrawTexture(journal, 100, 20, WHITE);
+            if(CheckCollisionPointRec(VMouse::pos(), { 140, 50, 100, 15 }) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            {
+               firstText = true;
+               secondText = false;
+            }
+            if(CheckCollisionPointRec(VMouse::pos(), { 140, 70, 100, 15 }) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            {
+               secondText = true;
+               firstText = false;
+            }
+            if(firstText)
+            {
+                DrawText("first page", 280, 100, 1, BLACK);
+            }
+            if(secondText)
+            {
+                DrawText("second page", 280, 100, 1, BLACK);
+            }
+        }
+    }
+ }

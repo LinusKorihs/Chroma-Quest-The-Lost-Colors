@@ -39,7 +39,7 @@ void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
         auto layer1 = gameMap.getLayer("Barrier Boss")->getData();
         drawLayer(layer1, gameMap, tileTexture);
 
-        auto layer5 = gameMap.getLayer("NPC's & Enemies")->getData();
+        auto layer5 = gameMap.getLayer("npcs&enemies")->getData();
         drawLayer(layer5, gameMap, tileTexture);
 
         auto layer2 = gameMap.getLayer("Floor & Walls")->getData();
@@ -57,7 +57,7 @@ void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
     }
     else if(overworld)
     {
-        /*auto layer1 = gameMap.getLayer("NPCs")->getData();
+        /*auto layer1 = gameMap.getLayer("Journal")->getData();
         drawLayer(layer1, gameMap, tileTexture);*/
 
         auto layer2 = gameMap.getLayer("Kachelebene 1")->getData();

@@ -117,6 +117,7 @@ void PixelGame::gameInit()
     NPC::init(TextureManager::getTexture("mouse"),TextureManager::getTexture("frog"),TextureManager::getTexture("owl"), TextureManager::getTexture("gekko"));
     DialogBox::init(TextureManager::getTexture("MouseBubble"), TextureManager::getTexture("FrogBubble"), TextureManager::getTexture("GekkoBubble"), TextureManager::getTexture("OwlBubble"));
     Signs::init();
+    Journal::init(TextureManager::getTexture("journalidle"));
 }
 
 void PixelGame::rectangle()
@@ -362,13 +363,13 @@ void PixelGame::gameLoop(tson::Map &Map)
             miniboss->drawBoss();
         }
 
-        NPC::npcs[0].update(GetFrameTime());
-        NPC::npcs[0].draw();
-        NPC::npcs[1].update(GetFrameTime());
-        NPC::npcs[1].draw();
-
-        DialogBox::dialogBoxes[0].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
-        DialogBox::dialogBoxes[1].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
+        for(int i = 0; i < 2; i++){
+            NPC::npcs[i].update(GetFrameTime());
+            NPC::npcs[i].draw();
+        }
+        for(int i = 0; i < 2; i++){
+            DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
+        }
 
         MainCharacter::attack();
         MainCharacter::receiveDamage();
@@ -400,7 +401,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         }
 
 
-        if(DialogBox::dialogBoxes[0].isActive() || roomChanger.isTransitioning() || playerCamera::getIsAnimating())
+        if(DialogBox::dialogBoxes[0].isActive() || DialogBox::dialogBoxes[1].isActive() || roomChanger.isTransitioning() || playerCamera::getIsAnimating() || InGameHud::journalActive)
         {
             canMove = false;
             InGameHud::controlActive = false;
@@ -410,6 +411,8 @@ void PixelGame::gameLoop(tson::Map &Map)
             canMove = true;
         }
 
+        Journal::journals[0].update();
+        Journal::journals[0].draw();
 
         EndMode2D();
         drawHud();
@@ -470,7 +473,7 @@ void PixelGame::gameLoop(tson::Map &Map)
         for (int i = 2; i < DialogBox::dialogBoxes.size(); ++i)
         {
             DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
-            if(DialogBox::dialogBoxes[i].isActive())
+            if(DialogBox::dialogBoxes[i].isActive() || InGameHud::journalActive)
             {
                 dialogCounter = 1;
                 controlBoxWasActive = InGameHud::controlActive;
@@ -503,6 +506,10 @@ void PixelGame::gameLoop(tson::Map &Map)
             //roomChanger.dungeon1Transition();
             roomChanger.update();
         }
+
+        Journal::journals[1].update();
+        Journal::journals[1].draw();
+
 
         EndMode2D();
         drawHud();
@@ -599,6 +606,7 @@ void PixelGame::drawHud()
     InGameHud::drawHealthBarTexture();
     InGameHud::drawControlBox();
     InGameHud::drawTutorial();
+    InGameHud::drawJournal();
 
 
 }

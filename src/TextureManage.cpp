@@ -121,6 +121,13 @@ void TextureManager::init()
     m_textures["placeOrb"] = LoadTexture("assets/graphics/HUD/Tutorial/placeOrb.png");
     m_textures["redButton"] = LoadTexture("assets/graphics/HUD/Tutorial/redButton.png");
 
+    //journal
+    m_textures["emptyJournal"] = LoadTexture("assets/graphics/Journal/empty.png");
+    m_textures["page1"] = LoadTexture("assets/graphics/Journal/page1.png");
+    m_textures["page1+2"] = LoadTexture("assets/graphics/Journal/page1+2.png");
+    m_textures["page2"] = LoadTexture("assets/graphics/Journal/page2.png");
+    m_textures["journalidle"] = LoadTexture("assets/graphics/Journal/journalidle.png");
+
     for (auto &texture : m_textures)
     {
         if (!IsTextureReady(texture.second))
