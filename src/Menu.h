@@ -22,6 +22,7 @@ public:
     static void initBackgroundGif();
     static void unloadBackgroundGif();
     static void updateBackgroundAnimation();
+    static void reloadBackgroundGif();
 
     static Image backgroundPic;
     static Texture2D backgroundTex;

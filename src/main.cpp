@@ -2,6 +2,7 @@
 #include "config.h"
 #include "Configuration.h"
 #include "TextureManage.h"
+#include <math.h>
 #include "Menu.h"
 #include "PixelGame.h"
 #include "raylib.h"
@@ -65,6 +66,10 @@ int main()
             {
                 PixelGame::ReloadAssets(logoTex, canvas);
             }
+            else
+            {
+                Menu::reloadBackgroundGif();
+            }
 
             previousWindowSize = currentWindowSize;
         }
@@ -77,13 +82,24 @@ int main()
 
         BeginDrawing();
         ClearBackground(BLACK);
-        BeginTextureMode(canvas);
 
         // Draw the background GIF scaled to the current window size
-        DrawTexturePro(Menu::backgroundTex,
-                       {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
-                       {0, 0, currentWindowSize.x, currentWindowSize.y},
-                       {0, 0}, 0.0f, WHITE);
+        if (GetScreenWidth() == 1920 && GetScreenHeight() == 1057)
+        {
+            DrawTexturePro(Menu::backgroundTex,
+                           {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
+                           {0, 0, 1920, 1080},
+                           {0, 0}, 0.0f, WHITE);
+        }
+        else
+        {
+            DrawTexturePro(Menu::backgroundTex,
+                           {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
+                           {0, 0, currentWindowSize.x, currentWindowSize.y},
+                           {0, 0}, 0.0f, WHITE);
+        }
+
+        BeginTextureMode(canvas);
 
         // Update and draw the logo
         float logoX = (currentWindowSize.x - logoTex.width * renderScale) / 2.0f;

@@ -863,7 +863,4 @@ void PixelGame::ReloadAssets(Texture2D &logoTex, RenderTexture &canvas)
     logoTex.width = logo.width / 6;
     logoTex.height = logo.height / 6;
     UnloadImage(logo);
-
-    // Reload background GIF
-    Menu::initBackgroundGif();
 }

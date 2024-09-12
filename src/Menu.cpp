@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "GameState.h"
 #include "Audio.h"
 #include "config.h"
@@ -27,22 +28,31 @@ int Menu::frameCounter = 0;
 
 void Menu::initBackgroundGif()
 {
-    backgroundPic = LoadImageAnim("assets/background.gif", &animFrames);
+    if (GetScreenWidth() > 480 && GetScreenHeight() > 270)
+    {
+        backgroundPic = LoadImageAnim("assets/backgroundBig.gif", &animFrames);
+    }
+    else
+    {
+        backgroundPic = LoadImageAnim("assets/background.gif", &animFrames);
+    }
     backgroundTex = LoadTextureFromImage(backgroundPic);
 
     // Update the background GIF
     updateBackgroundAnimation();
-
-    // Draw the background GIF
-    int currentScreenWidth = GetScreenWidth();
-    float scaleX = (float)currentScreenWidth / backgroundTex.width;
-    DrawTextureEx(backgroundTex, (Vector2){0, 0}, 0.0f, scaleX, WHITE);
 }
+
 
 void Menu::unloadBackgroundGif()
 {
     UnloadTexture(backgroundTex);
     UnloadImage(backgroundPic);
+}
+
+void Menu::reloadBackgroundGif()
+{
+    unloadBackgroundGif();
+    initBackgroundGif();
 }
 
 void Menu::updateBackgroundAnimation()
