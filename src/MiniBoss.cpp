@@ -449,6 +449,7 @@ void MiniBoss::giveDamage()
     {
         if (canGiveDamage) {
             InGameHud::health -= 0.5;
+            MainCharacter::damageAnim = true;
             canGiveDamage = false;
             lastDamageTime = currentTime;
         }

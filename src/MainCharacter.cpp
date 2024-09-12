@@ -153,10 +153,10 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         }
 
         switch (damageDirection) {
-            case LASTDOWN:  startFrame = 48; endFrame = 51; break;
-            case LASTRIGHT: startFrame = 52; endFrame = 55; break;
-            case LASTUP:    startFrame = 56; endFrame = 59; break;
-            case LASTLEFT:  startFrame = 60; endFrame = 63; break;
+            case LASTDOWN:  startFrame = 48; endFrame = 49; break;
+            case LASTRIGHT: startFrame = 52; endFrame = 53; break;
+            case LASTUP:    startFrame = 56; endFrame = 57; break;
+            case LASTLEFT:  startFrame = 60; endFrame = 61; break;
             default:        startFrame = 0;  endFrame = 0;  break;
         }
 

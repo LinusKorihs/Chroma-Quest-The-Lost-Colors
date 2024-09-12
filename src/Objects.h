@@ -29,6 +29,7 @@ public:
     static bool roomTwo;
     static bool roomThree;
     static bool roomFour;
+    static bool roomFive;
 
 private:
     float stonePositionX;
@@ -127,6 +128,10 @@ private:
     int currentStep;
     bool animationFinished;
     int frameCounter;
+
+    float frameCounterOrb;
+    int currentFrameOrb;
+    Rectangle frameRecOrb;
 };
 
 class Chest {
@@ -144,6 +149,10 @@ private:
     float chestPositionY;
     Texture2D chestTexture;
     Rectangle chestRec;
+    float frameCounter;
+    int currentFrame;
+    bool animationFinished;
+    Rectangle frameRec;
 
 };
 

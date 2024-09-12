@@ -31,6 +31,7 @@ void NPC::init(Texture2D mouse, Texture2D frog, Texture2D owl, Texture2D gekko)
 {
     //dungeon
     npcs.emplace_back(Vector2{ 38*32, 75*32 }, mouse);
+    npcs.emplace_back(Vector2{ 33*32, 50*32 }, mouse);
     //overworld
     npcs.emplace_back(Vector2{ 30*32, 49*32 }, frog);
     npcs.emplace_back(Vector2{ 33*32, 17*32 }, owl);

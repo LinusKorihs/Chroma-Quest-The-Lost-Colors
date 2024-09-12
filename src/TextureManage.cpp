@@ -70,6 +70,8 @@ void TextureManager::init()
     m_textures["OwlBubble"] = LoadTexture("assets/graphics/NPC/owlBubble.png");
     m_textures["GekkoBubble"] = LoadTexture("assets/graphics/NPC/gekkoBubble.png");
     m_textures["FrogBubble"] = LoadTexture("assets/graphics/NPC/frogBubble.png");
+    m_textures["redButtonDark"] = LoadTexture("assets/graphics/Tiles/redButtonDark.png");
+
 
     //hud
     m_textures["grayHUD"] = LoadTexture("assets/graphics/HUD/greyHud.png");

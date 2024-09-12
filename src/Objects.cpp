@@ -9,6 +9,7 @@ bool Stone::roomOne = false;
 bool Stone::roomTwo = false;
 bool Stone::roomThree = false;
 bool Stone::roomFour = false;
+bool Stone::roomFive = false;
 
 Stone::Stone(float stoneX, float stoneY, float stoneSize, Texture2D& stoneTexture, Rectangle& sourceRectangle)
         : stonePositionX(stoneX), stonePositionY(stoneY), stoneSize(stoneSize), stoneTexture(stoneTexture),
@@ -295,6 +296,47 @@ void Stone::resetStones()
         Stone::stoneObjects[40].stonePositionX = 59*32;
         Stone::stoneObjects[40].stonePositionY = 35*32;
     }
+    if(roomFive)
+    {
+        Stone::stoneObjects[65].stonePositionX = 32*32;
+        Stone::stoneObjects[65].stonePositionY = 9*32;
+        Stone::stoneObjects[66].stonePositionX = 32*32;
+        Stone::stoneObjects[66].stonePositionY = 16*32;
+        Stone::stoneObjects[67].stonePositionX = 38*32;
+        Stone::stoneObjects[67].stonePositionY = 9*32;
+        Stone::stoneObjects[68].stonePositionX = 38*32;
+        Stone::stoneObjects[68].stonePositionY = 16*32;
+        Stone::stoneObjects[69].stonePositionX = 29*32;
+        Stone::stoneObjects[69].stonePositionY = 10*32;
+        Stone::stoneObjects[70].stonePositionX = 29*32;
+        Stone::stoneObjects[70].stonePositionY = 11*32;
+        Stone::stoneObjects[71].stonePositionX = 29*32;
+        Stone::stoneObjects[71].stonePositionY = 13*32;
+        Stone::stoneObjects[72].stonePositionX = 29*32;
+        Stone::stoneObjects[72].stonePositionY = 14*32;
+        Stone::stoneObjects[73].stonePositionX = 26*32;
+        Stone::stoneObjects[73].stonePositionY = 10*32;
+        Stone::stoneObjects[74].stonePositionX = 26*32;
+        Stone::stoneObjects[74].stonePositionY = 12*32;
+        Stone::stoneObjects[75].stonePositionX = 26*32;
+        Stone::stoneObjects[75].stonePositionY = 14*32;
+        Stone::stoneObjects[76].stonePositionX = 41*32;
+        Stone::stoneObjects[76].stonePositionY = 10*32;
+        Stone::stoneObjects[77].stonePositionX = 41*32;
+        Stone::stoneObjects[77].stonePositionY = 11*32;
+        Stone::stoneObjects[78].stonePositionX = 41*32;
+        Stone::stoneObjects[78].stonePositionY = 13*32;
+        Stone::stoneObjects[79].stonePositionX = 41*32;
+        Stone::stoneObjects[79].stonePositionY = 14*32;
+        Stone::stoneObjects[80].stonePositionX = 44*32;
+        Stone::stoneObjects[80].stonePositionY = 10*32;
+        Stone::stoneObjects[81].stonePositionX = 44*32;
+        Stone::stoneObjects[81].stonePositionY = 12*32;
+        Stone::stoneObjects[82].stonePositionX = 44*32;
+        Stone::stoneObjects[82].stonePositionY = 14*32;
+
+
+    }
 }
 
 void Stone::deleteStones()
@@ -381,16 +423,8 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
 
     Stone::stoneObjects.emplace_back(multiple * 22, multiple * 28, multiple, stoneTexture, stoneSourceRect);
 
-    Stone::stoneObjects.emplace_back(multiple * 29, multiple * 10, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 27, multiple * 10, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 25, multiple * 10, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 41, multiple * 10, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 43, multiple * 10, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 45, multiple * 10, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 27, multiple * 11, multiple, stoneTexture, stoneSourceRect);
-    Stone::stoneObjects.emplace_back(multiple * 43, multiple * 11, multiple, stoneTexture, stoneSourceRect);
 
-    //test steine für bossraum
+    // steine für bossraum
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 9, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 32, multiple * 16, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 38, multiple * 9, multiple, stoneTexture, stoneSourceRect);
@@ -427,7 +461,15 @@ void PressurePlate::draw() const
                 "PlateNormal");
         DrawTexture(plateTexture, platePositionX, platePositionY, WHITE);
     }else{
-        Texture2D plateTexture = TextureManager::getTexture("RedButton");
+        Texture2D plateTexture;
+        if(platePositionX == 61*32)
+        {
+            plateTexture = TextureManager::getTexture("redButtonDark");
+        }
+        else
+        {
+            plateTexture = TextureManager::getTexture("RedButton");
+        }
         if(!pressed){
             DrawTextureRec(plateTexture, {0,0,32,32},{platePositionX, platePositionY}, WHITE);
         }else{
@@ -731,6 +773,9 @@ Machine::Machine(float posX, float posY, float oposX, float oposY, Texture2D tex
         : machinePositionX(posX), machinePositionY(posY), machineTexture(texture), filled(false), pickedUp(false), orbPositionX(oposX), orbPositionY(oposY), currentStep(step), animationFinished(false), frameCounter(0)
 {
     machineRec = {machinePositionX, machinePositionY, 34, 34};
+    frameCounterOrb = 0;
+    currentFrameOrb = 0;
+    frameRecOrb = {float(currentFrameOrb)*32, 0, 32, 32};
 }
 
 void Machine::draw()
@@ -772,8 +817,9 @@ void Machine::drawOrb()
 
     if(!pickedUp)
     {
-        Rectangle orbSourceRec = {0, 0, 32, 32};
-        DrawTextureRec(TextureManager::getTexture("Orb"),orbSourceRec, {orbPositionX, orbPositionY}, WHITE);
+       // Rectangle orbSourceRec = {0, 0, 32, 32};
+        UniversalMethods::updateAnimation(GetFrameTime(), frameCounterOrb, currentFrameOrb, 0, 3, frameRecOrb.x, object);
+        DrawTextureRec(TextureManager::getTexture("Orb"),frameRecOrb, {orbPositionX, orbPositionY}, WHITE);
     }
 }
 
@@ -810,13 +856,14 @@ Chest::Chest(float cposX, float cposY, Texture2D texture)
     chestTexture = texture;
     opened = false;
     chestRec = {chestPositionX-4, chestPositionY-8, 40, 48};
+    animationFinished = false;
+    frameRec = {float(currentFrame)*32, 0, 32, 32};
 }
 
 void Chest::init(Texture2D chestTexture)
 {
     chests.emplace_back(20*32, 75*32, chestTexture);
     chests.emplace_back(16*32, 42*32, chestTexture);
-    chests.emplace_back(29*32, 37*32, chestTexture);
     chests.emplace_back(59*32, 34*32, chestTexture);
     chests.emplace_back(4*32, 38*32, chestTexture);
     chests.emplace_back(74*32, 41*32, chestTexture);
@@ -825,15 +872,22 @@ void Chest::init(Texture2D chestTexture)
     chests.emplace_back(49*32, 75*32, chestTexture);
 }
 
-void Chest::draw()
-{
-    if(opened)
-    {
-        DrawTextureRec(chestTexture, {32, 0, 32, 32}, {chestPositionX, chestPositionY}, WHITE);
+void Chest::draw() {
+
+    if (opened) {
+        if (!animationFinished) {
+            UniversalMethods::updateAnimation(GetFrameTime(), frameCounter, currentFrame, 0, 5, frameRec.x, chest);
+            if (currentFrame == 5) {
+                animationFinished = true;
+            }
+        }
+        if(animationFinished){
+            frameRec.x = 128;
+        }
+        DrawTextureRec(chestTexture, frameRec, {chestPositionX, chestPositionY}, WHITE);
     }
-    else
-    {
-        //DrawRectangleLines(chestRec.x,chestRec.y,chestRec.width,chestRec.height, RED);
+    else {
+        animationFinished = false;
         DrawTextureRec(chestTexture, {0, 0, 32, 32}, {chestPositionX, chestPositionY}, WHITE);
     }
 }

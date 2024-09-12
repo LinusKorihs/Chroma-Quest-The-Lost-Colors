@@ -6,7 +6,9 @@
 enum type {
     npc,
     enemy,
-    player
+    player,
+    object,
+    chest
 };
 
 class UniversalMethods {

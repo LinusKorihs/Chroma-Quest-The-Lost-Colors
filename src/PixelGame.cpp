@@ -287,6 +287,12 @@ void PixelGame::drawObjects()
         PressurePlate::pressurePlates[9].setPressed(false);
         PressurePlate::pressurePlates[10].setPressed(false);
     }
+    if(PressurePlate::pressurePlates[11].isPressed()){
+        Stone::roomFive = true;
+        Stone::resetStones();
+        Stone::roomFive = false;
+        PressurePlate::pressurePlates[11].setPressed(false);
+    }
     for(Chest& chest : Chest::chests)
     {
         chest.draw();
@@ -358,8 +364,11 @@ void PixelGame::gameLoop(tson::Map &Map)
 
         NPC::npcs[0].update(GetFrameTime());
         NPC::npcs[0].draw();
+        NPC::npcs[1].update(GetFrameTime());
+        NPC::npcs[1].draw();
 
         DialogBox::dialogBoxes[0].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
+        DialogBox::dialogBoxes[1].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
 
         MainCharacter::attack();
         MainCharacter::receiveDamage();
@@ -452,13 +461,13 @@ void PixelGame::gameLoop(tson::Map &Map)
 
         MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
 
-        for (int i = 1; i < NPC::npcs.size(); ++i)
+        for (int i = 2; i < NPC::npcs.size(); ++i)
         {
             NPC::npcs[i].update(GetFrameTime());
             NPC::npcs[i].draw();
         }
 
-        for (int i = 1; i < DialogBox::dialogBoxes.size(); ++i)
+        for (int i = 2; i < DialogBox::dialogBoxes.size(); ++i)
         {
             DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
             if(DialogBox::dialogBoxes[i].isActive())
@@ -801,7 +810,7 @@ void PixelGame::startSequence() {
     }
     if( sentence == 6)
     {
-        DialogBox::dialogBoxes[4].setActive(true);
+        DialogBox::dialogBoxes[5].setActive(true);
         state = gameLoopState;
         sentence++;
     }

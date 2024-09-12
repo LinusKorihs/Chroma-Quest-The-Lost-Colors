@@ -26,6 +26,18 @@ void UniversalMethods::updateAnimation(float deltaTime, float &frameCounter, int
         textureWidth = totalFrames*tileWidth;
         framesSpeed = 6;
     }
+    else if(type == chest)
+    {
+        totalFrames = 5;
+        textureWidth = totalFrames*tileWidth;
+        framesSpeed = 11;
+    }
+    else if(type == object)
+    {
+        totalFrames = 4;
+        textureWidth = totalFrames*tileWidth;
+        framesSpeed = 6;
+    }
     else
     {
         framesSpeed = 0;
