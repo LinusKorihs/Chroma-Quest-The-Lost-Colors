@@ -26,7 +26,7 @@ void InGameHud::init() {
 }
 void InGameHud::drawHealthBarTexture()
 {
-    Texture2D heart = TextureManager::getTexture("newHeart");
+    /*Texture2D heart = TextureManager::getTexture("newHeart");
     Texture2D redOrb = TextureManager::getTexture("redOrb");
     Texture2D heartHalf = TextureManager::getTexture("newHeartHalf");
 
@@ -92,6 +92,36 @@ void InGameHud::drawHealthBarTexture()
 
     if(health == 0.5){
         DrawTexture(heartHalf, 33, 22, WHITE);
+    }*/
+    if(health == 5){
+        DrawTexture(TextureManager::getTexture("full"), 0, 0, WHITE);
+    }
+    if(health == 4.5){
+        DrawTexture(TextureManager::getTexture("HB4,5"), 0, 0, WHITE);
+    }
+    if(health == 4){
+        DrawTexture(TextureManager::getTexture("HB4"), 0, 0, WHITE);
+    }
+    if(health == 3.5){
+        DrawTexture(TextureManager::getTexture("HB3,5"), 0, 0, WHITE);
+    }
+    if(health == 3){
+        DrawTexture(TextureManager::getTexture("HB3"), 0, 0, WHITE);
+    }
+    if(health == 2.5){
+        DrawTexture(TextureManager::getTexture("HB2,5"), 0, 0, WHITE);
+    }
+    if(health == 2){
+        DrawTexture(TextureManager::getTexture("HB2"), 0, 0, WHITE);
+    }
+    if(health == 1.5){
+        DrawTexture(TextureManager::getTexture("HB1,5"), 0, 0, WHITE);
+    }
+    if(health == 1){
+        DrawTexture(TextureManager::getTexture("HB1"), 0, 0, WHITE);
+    }
+    if(health == 0.5){
+        DrawTexture(TextureManager::getTexture("HB0,5"), 0, 0, WHITE);
     }
 
     if(health <= 0){

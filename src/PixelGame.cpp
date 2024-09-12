@@ -602,7 +602,7 @@ void PixelGame::drawHud()
             DialogBox::dialogBoxes[i].draw();
         }
     }
-    InGameHud::drawRGBBarTexture();
+   // InGameHud::drawRGBBarTexture();
     InGameHud::drawHealthBarTexture();
     InGameHud::drawControlBox();
     InGameHud::drawTutorial();
