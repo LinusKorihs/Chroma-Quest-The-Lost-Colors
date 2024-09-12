@@ -594,6 +594,7 @@ void PixelGame::drawHud()
     if(roomChanger.getDungeon1() && !roomChanger.getOverworld())
     {
         DialogBox::dialogBoxes[0].draw();
+        DialogBox::dialogBoxes[1].draw();
     }
     if(roomChanger.getOverworld() && !roomChanger.getDungeon1())
     {
