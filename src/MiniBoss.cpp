@@ -402,34 +402,34 @@ void MiniBoss::drawShieldBar()
     if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400))
     {
         if(shieldHits == 0){
-            DrawTexture(TextureManager::getTexture("BossFull"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("BossFull"),115, 190, WHITE);
         }
         if(shieldHits == 1){
-            DrawTexture(TextureManager::getTexture("Boss1Shield"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss1Shield"),115, 190, WHITE);
         }
         if(!hasShield && barHits == 0){
-            DrawTexture(TextureManager::getTexture("BossNoShield"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("BossNoShield"),115, 190, WHITE);
         }
         if(barHits == 1){
-            DrawTexture(TextureManager::getTexture("Boss-1"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-1"),115, 190, WHITE);
         }
         if(barHits == 2){
-            DrawTexture(TextureManager::getTexture("Boss-2"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-2"),115, 190, WHITE);
         }
         if(barHits == 3){
-            DrawTexture(TextureManager::getTexture("Boss-3"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-3"),115, 190, WHITE);
         }
         if(barHits == 4){
-            DrawTexture(TextureManager::getTexture("Boss-4"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-4"),115, 190, WHITE);
         }
         if(barHits == 5){
-            DrawTexture(TextureManager::getTexture("Boss-5"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-5"),115, 190, WHITE);
         }
         if(barHits == 6){
-            DrawTexture(TextureManager::getTexture("Boss-6"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("Boss-6"),115, 190, WHITE);
         }
         if(barHits >= 7){
-            DrawTexture(TextureManager::getTexture("BossEmpty"),186, 5, WHITE);
+            DrawTexture(TextureManager::getTexture("BossEmpty"),115, 190, WHITE);
         }
 
     }

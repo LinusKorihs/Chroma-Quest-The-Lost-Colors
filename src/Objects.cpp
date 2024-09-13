@@ -449,18 +449,24 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
 }
 std::vector<PressurePlate> PressurePlate::pressurePlates;
 
-PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture, bool color)
+PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture, int color)
         : platePositionX(x), platePositionY(y), plateSize(size), plateTexture(texture), pressed(false), color(color)
 {
 }
 
 void PressurePlate::draw() const
 {
-    if(!color) {
+    if(color == 0) {
         Texture2D plateTexture = pressed ? TextureManager::getTexture("PlatePressed") : TextureManager::getTexture(
                 "PlateNormal");
         DrawTexture(plateTexture, platePositionX, platePositionY, WHITE);
-    }else{
+    }
+    if(color == 1){
+        Texture2D plateTexture = pressed ? TextureManager::getTexture("platePressedDark") : TextureManager::getTexture(
+                "plateNormalDark");
+        DrawTexture(plateTexture, platePositionX, platePositionY, WHITE);
+    }
+    if(color == 2){
         Texture2D plateTexture;
         if(platePositionX == 61*32)
         {
@@ -548,21 +554,21 @@ void MainCharacter::drawHitboxes() const
 
 void PressurePlate::initPlates(Texture2D &plateTexture)
 {
-    pressurePlates.emplace_back(800, 2400, 32, plateTexture,false);//1. raum
-    pressurePlates.emplace_back(22*32, 37*32, 32, plateTexture,false);//raum links
-    pressurePlates.emplace_back(59*32, 37*32, 32, plateTexture,false);//raum rechts
+    pressurePlates.emplace_back(800, 2400, 32, plateTexture,0);//1. raum
+    pressurePlates.emplace_back(22*32, 37*32, 32, plateTexture,0);//raum links
+    pressurePlates.emplace_back(59*32, 37*32, 32, plateTexture,0);//raum rechts
 
-    pressurePlates.emplace_back(27*32, 12*32, 32, plateTexture,false); //boss links
-    pressurePlates.emplace_back(43*32, 12*32, 32, plateTexture,false); // boss rechts
+    pressurePlates.emplace_back(27*32, 12*32, 32, plateTexture,1); //boss links
+    pressurePlates.emplace_back(43*32, 12*32, 32, plateTexture,1); // boss rechts
 
-    pressurePlates.emplace_back(35*32, 71*32, 32, plateTexture,true); //reset 1. raum
-    pressurePlates.emplace_back(35*32, 61*32, 32, plateTexture,true); //reset 2. raum
-    pressurePlates.emplace_back(13*32, 41*32, 32, plateTexture,true); //reset 3. raum
-    pressurePlates.emplace_back(32*32, 40*32, 32, plateTexture,true); //reset 4. raum
-    pressurePlates.emplace_back(53*32, 36*32, 32, plateTexture,true); //reset 5. raum
-    pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture,true); //reset 5. raum
+    pressurePlates.emplace_back(35*32, 71*32, 32, plateTexture,2); //reset 1. raum
+    pressurePlates.emplace_back(35*32, 61*32, 32, plateTexture,2); //reset 2. raum
+    pressurePlates.emplace_back(13*32, 41*32, 32, plateTexture,2); //reset 3. raum
+    pressurePlates.emplace_back(32*32, 40*32, 32, plateTexture,2); //reset 4. raum
+    pressurePlates.emplace_back(53*32, 36*32, 32, plateTexture,2); //reset 5. raum
+    pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture,2); //reset 5. raum
 
-    pressurePlates.emplace_back(34*32, 19*32, 32, plateTexture,true); //reset Bossraum
+    pressurePlates.emplace_back(34*32, 19*32, 32, plateTexture,2); //reset Bossraum
 
 
 }
@@ -922,6 +928,7 @@ Texture2D Signs::yellowDist;
 Texture2D Signs::blueRoad;
 Texture2D Signs::redRoad;
 Texture2D Signs::yellowRoad;
+Texture2D Signs::redTower;
 
 Signs::Signs(float posX, float posY, Texture2D textText, bool bigSign)
         : signPositionX(posX), signPositionY(posY), bigSign(bigSign), textTexture(textText)
@@ -932,6 +939,8 @@ Signs::Signs(float posX, float posY, Texture2D textText, bool bigSign)
     blueRoad = TextureManager::getTexture("blueRoad");
     redRoad = TextureManager::getTexture("redRoad");
     yellowRoad = TextureManager::getTexture("yellowRoad");
+    redTower = TextureManager::getTexture("redTower");
+
 
     if(bigSign)
     {
@@ -953,7 +962,7 @@ void Signs::init()
     signs.emplace_back(17*32, 38*32,blueRoad, true); //blue road
     signs.emplace_back(59*32, 40*32,redRoad, true); //red road
     signs.emplace_back(114*32, 54*32,redRoad, true); //red road
-    signs.emplace_back(111*32, 39*32,redRoad, false); //red road
+    signs.emplace_back(111*32, 39*32,redTower, false); //red road
 }
 
 void Signs::draw()

@@ -175,7 +175,7 @@ void InGameHud::drawImageButton(HudImageButton& button)
 void InGameHud::drawControlBox() {
     if(controlActive){
         Texture2D controlBox = TextureManager::getTexture("controlBox");
-        DrawTexture(controlBox, 3, 180, WHITE);
+        DrawTexture(controlBox, 3, 175, WHITE);
 
     }
     if(IsKeyPressed(KEY_C)){
