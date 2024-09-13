@@ -64,6 +64,7 @@ public:
     static void checkCollisions();
 
     static EnemyManager* enemyManager;
+    static bool damageAnim;
 private:
     static std::shared_ptr<Projectile> projectile_p;
     static std::shared_ptr<Enemy> enemy_p;
@@ -85,4 +86,6 @@ private:
     static bool canGiveDamage;
     static Rectangle playerEnemyRec;
     static double lastDamageTime;
+
+    static int damageDirection;
 };

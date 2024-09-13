@@ -57,6 +57,8 @@ void DialogBox::init(Texture2D mouseTexture, Texture2D frogTexture, Texture2D ge
 {
     //font = LoadFont("assets/graphics/HUD/Fipps-Regular.otf");
     dialogBoxes.emplace_back(mouseTexture, std::vector<std::string>{ "Hello Aurora!\nGood to see you.", "It seems like the\ndoor is closed..." });
+    dialogBoxes.emplace_back(mouseTexture, std::vector<std::string>{ "The Boss waits behind\nthis door","You need to break his\nshield first, or you won´t\nbe able to hurt him." });
+
     dialogBoxes.emplace_back(frogTexture, std::vector<std::string>{ "You´re Aurora, right?", "I´m Lily,\n nice to meet you!", "Unfortunately all my other frog\ncompanions left the city already..." });
     dialogBoxes.emplace_back(owlTexture, std::vector<std::string>{ "Hello there!", "Did you come to save us?", "I´m counting on you!"});
     dialogBoxes.emplace_back(gekkoTexture, std::vector<std::string>{ "If you follow this road,\nyou will reach the blue tower."});

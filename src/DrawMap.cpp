@@ -39,25 +39,25 @@ void DrawMap::drawTiles(tson::Map &gameMap, Texture2D &tileTexture)
         auto layer1 = gameMap.getLayer("Barrier Boss")->getData();
         drawLayer(layer1, gameMap, tileTexture);
 
+        auto layer5 = gameMap.getLayer("npcs&enemies")->getData();
+        drawLayer(layer5, gameMap, tileTexture);
+
         auto layer2 = gameMap.getLayer("Floor & Walls")->getData();
         drawLayer(layer2, gameMap, tileTexture);
 
-        auto layer3 = gameMap.getLayer("Wall with energy")->getData();
+        auto layer3 = gameMap.getLayer("Objekte")->getData();
         drawLayer(layer3, gameMap, tileTexture);
 
-        auto layer4 = gameMap.getLayer("Blocks Grey")->getData();
+        auto layer4 = gameMap.getLayer("Graue Blocks")->getData();
         drawLayer(layer4, gameMap, tileTexture);
 
-        auto layer5 = gameMap.getLayer("Objects")->getData();
-        drawLayer(layer5, gameMap, tileTexture);
 
-        auto layer6 = gameMap.getLayer("Torches")->getData();
-        drawLayer(layer6, gameMap, tileTexture);
+
 
     }
     else if(overworld)
     {
-        /*auto layer1 = gameMap.getLayer("NPCs")->getData();
+        /*auto layer1 = gameMap.getLayer("Journal")->getData();
         drawLayer(layer1, gameMap, tileTexture);*/
 
         auto layer2 = gameMap.getLayer("Kachelebene 1")->getData();

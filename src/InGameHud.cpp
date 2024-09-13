@@ -7,6 +7,10 @@ float InGameHud::health;
 std::vector<HudImageButton> InGameHud::hudImagebuttons;
 bool InGameHud::controlActive = true;
 int InGameHud::gameOverCount = 0;
+bool InGameHud::journalActive = false;
+journalPhase InGameHud::journalPhase = journalPhase::empty;
+bool InGameHud::firstText = false;
+bool InGameHud::secondText = false;
 
 InGameHud::InGameHud()
 {
@@ -22,7 +26,7 @@ void InGameHud::init() {
 }
 void InGameHud::drawHealthBarTexture()
 {
-    Texture2D heart = TextureManager::getTexture("newHeart");
+    /*Texture2D heart = TextureManager::getTexture("newHeart");
     Texture2D redOrb = TextureManager::getTexture("redOrb");
     Texture2D heartHalf = TextureManager::getTexture("newHeartHalf");
 
@@ -88,6 +92,36 @@ void InGameHud::drawHealthBarTexture()
 
     if(health == 0.5){
         DrawTexture(heartHalf, 33, 22, WHITE);
+    }*/
+    if(health == 5){
+        DrawTexture(TextureManager::getTexture("full"), 0, 0, WHITE);
+    }
+    if(health == 4.5){
+        DrawTexture(TextureManager::getTexture("HB4,5"), 0, 0, WHITE);
+    }
+    if(health == 4){
+        DrawTexture(TextureManager::getTexture("HB4"), 0, 0, WHITE);
+    }
+    if(health == 3.5){
+        DrawTexture(TextureManager::getTexture("HB3,5"), 0, 0, WHITE);
+    }
+    if(health == 3){
+        DrawTexture(TextureManager::getTexture("HB3"), 0, 0, WHITE);
+    }
+    if(health == 2.5){
+        DrawTexture(TextureManager::getTexture("HB2,5"), 0, 0, WHITE);
+    }
+    if(health == 2){
+        DrawTexture(TextureManager::getTexture("HB2"), 0, 0, WHITE);
+    }
+    if(health == 1.5){
+        DrawTexture(TextureManager::getTexture("HB1,5"), 0, 0, WHITE);
+    }
+    if(health == 1){
+        DrawTexture(TextureManager::getTexture("HB1"), 0, 0, WHITE);
+    }
+    if(health == 0.5){
+        DrawTexture(TextureManager::getTexture("HB0,5"), 0, 0, WHITE);
     }
 
     if(health <= 0){
@@ -111,24 +145,6 @@ void InGameHud::drawHealthBarTexture()
 
 void InGameHud::drawRGBBarTexture()
 {
-    /*int hudHealthBarX = 1700;
-    int hudHealthBarY = 110;
-    int hudHealthBarWidth = 100;
-    int hudHealthBarHeight = 20;
-    int hudPadding = 25;
-
-    int rgbBarX = hudHealthBarX;
-    int rgbBarY = hudHealthBarY - hudHealthBarHeight - hudPadding;
-    int rgbBarWidth = hudHealthBarWidth;
-    int rgbBarHeight = 20;
-
-    int rgbBarColorWidth = rgbBarWidth / 3;
-
-    DrawRectangle(rgbBarX, rgbBarY, rgbBarColorWidth, rgbBarHeight, RED);
-    DrawRectangle(rgbBarX + rgbBarColorWidth, rgbBarY, rgbBarColorWidth, rgbBarHeight, GREEN);
-    DrawRectangle(rgbBarX + 2 * rgbBarColorWidth, rgbBarY, rgbBarColorWidth, rgbBarHeight, BLUE);
-
-    DrawText(LanguageManager::getLocalizedGameText("RGB:", "RGB:"), rgbBarX, rgbBarY - 20, 20, BLACK);*/
     Texture2D hudgray = TextureManager::getTexture("grayHUD");
     DrawTexture(hudgray, -10, -20, WHITE);
 }
@@ -175,3 +191,94 @@ void InGameHud::drawControlBox()
         controlActive = !controlActive;
     }
 }
+
+void InGameHud::drawTutorial()
+{
+    if(CheckCollisionRecs(MainCharacter::playerRec, { 34*32, 74*32, 32, 96 }))
+    {
+        Texture2D redBlocks = TextureManager::getTexture("redBlocks");
+        DrawTexture(redBlocks, 160, 10, WHITE);
+    }
+    if(CheckCollisionRecs(MainCharacter::playerRec, { 29*32, 74*32, 32, 96 }))
+    {
+        Texture2D greyBlocks = TextureManager::getTexture("greyBlocks");
+        DrawTexture(greyBlocks, 160, 10, WHITE);
+    }
+    if(CheckCollisionRecs(MainCharacter::playerRec, { 46*32, 74*32, 64, 96 }))
+    {
+        Texture2D orb = TextureManager::getTexture("orb");
+        DrawTexture(orb, 160, 10, WHITE);
+    }
+    if(CheckCollisionRecs(MainCharacter::playerRec, { 21*32, 75*32, 32, 32 }))
+    {
+        Texture2D chests = TextureManager::getTexture("chests");
+        DrawTexture(chests, 160, 10, WHITE);
+    }
+    if(CheckCollisionRecs(MainCharacter::playerRec, { 35*32, 69*32, 64, 64 }))
+    {
+        Texture2D placeOrb = TextureManager::getTexture("placeOrb");
+        DrawTexture(placeOrb, 160, 10, WHITE);
+    }
+    if(CheckCollisionRecs(MainCharacter::playerRec, { 34*32, 72*32, 96, 32 }))
+    {
+        Texture2D redButton = TextureManager::getTexture("redButton");
+        DrawTexture(redButton, 160, 10, WHITE);
+    }
+}
+
+void InGameHud::drawJournal()
+{
+    if(IsKeyPressed(KEY_J))
+    {
+        journalActive = !journalActive;
+    }
+
+    if(journalActive)
+    {
+        if(journalPhase == journalPhase::empty)
+        {
+            Texture2D journal = TextureManager::getTexture("emptyJournal");
+            DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
+            DrawTexture(journal, 100, 20, WHITE);
+            DrawText("nothing here", 280, 100, 1, BLACK);
+        }
+        if(journalPhase == journalPhase::first)
+        {
+            Texture2D journal = TextureManager::getTexture("page1");
+            DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
+            DrawTexture(journal, 100, 20, WHITE);
+            DrawText("first page", 280, 100, 1, BLACK);
+        }
+        if(journalPhase == journalPhase::second)
+        {
+            Texture2D journal = TextureManager::getTexture("page2");
+            DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
+            DrawTexture(journal, 100, 20, WHITE);
+            DrawText("second page", 280, 100, 1, BLACK);
+        }
+        if(journalPhase == journalPhase::firstAndSecond)
+        {
+            Texture2D journal = TextureManager::getTexture("page1+2");
+            DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
+            DrawTexture(journal, 100, 20, WHITE);
+            if(CheckCollisionPointRec(VMouse::pos(), { 140, 50, 100, 15 }) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            {
+               firstText = true;
+               secondText = false;
+            }
+            if(CheckCollisionPointRec(VMouse::pos(), { 140, 70, 100, 15 }) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+            {
+               secondText = true;
+               firstText = false;
+            }
+            if(firstText)
+            {
+                DrawText("first page", 280, 100, 1, BLACK);
+            }
+            if(secondText)
+            {
+                DrawText("second page", 280, 100, 1, BLACK);
+            }
+        }
+    }
+ }

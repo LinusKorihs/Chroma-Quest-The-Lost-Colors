@@ -70,6 +70,8 @@ void TextureManager::init()
     m_textures["OwlBubble"] = LoadTexture("assets/graphics/NPC/owlBubble.png");
     m_textures["GekkoBubble"] = LoadTexture("assets/graphics/NPC/gekkoBubble.png");
     m_textures["FrogBubble"] = LoadTexture("assets/graphics/NPC/frogBubble.png");
+    m_textures["redButtonDark"] = LoadTexture("assets/graphics/Tiles/redButtonDark.png");
+
 
     //hud
     m_textures["grayHUD"] = LoadTexture("assets/graphics/HUD/greyHud.png");
@@ -118,6 +120,35 @@ void TextureManager::init()
     m_textures["Boss-5"] = LoadTexture("assets/graphics/Enemies/Boss-5.png");
     m_textures["Boss-6"] = LoadTexture("assets/graphics/Enemies/Boss-6.png");
     m_textures["BossEmpty"] = LoadTexture("assets/graphics/Enemies/BossEmpty.png");
+
+    //tutorial
+    m_textures["greyBlocks"] = LoadTexture("assets/graphics/HUD/Tutorial/greyBlocks.png");
+    m_textures["redBlocks"] = LoadTexture("assets/graphics/HUD/Tutorial/redBlocks.png");
+    m_textures["orb"] = LoadTexture("assets/graphics/HUD/Tutorial/orb.png");
+    m_textures["chests"] = LoadTexture("assets/graphics/HUD/Tutorial/chests.png");
+    m_textures["placeOrb"] = LoadTexture("assets/graphics/HUD/Tutorial/placeOrb.png");
+    m_textures["redButton"] = LoadTexture("assets/graphics/HUD/Tutorial/redButton.png");
+
+    //journal
+    m_textures["emptyJournal"] = LoadTexture("assets/graphics/Journal/empty.png");
+    m_textures["page1"] = LoadTexture("assets/graphics/Journal/page1.png");
+    m_textures["page1+2"] = LoadTexture("assets/graphics/Journal/page1+2.png");
+    m_textures["page2"] = LoadTexture("assets/graphics/Journal/page2.png");
+    m_textures["journalidle"] = LoadTexture("assets/graphics/Journal/journalidle.png");
+
+    //newHUD
+    m_textures["full"] = LoadTexture("assets/graphics/HUD/HealthBar/HBFull.png");
+    m_textures["HB4,5"] = LoadTexture("assets/graphics/HUD/HealthBar/HB4,5.png");
+    m_textures["HB4"] = LoadTexture("assets/graphics/HUD/HealthBar/HB4.png");
+    m_textures["HB3,5"] = LoadTexture("assets/graphics/HUD/HealthBar/HB3,5.png");
+    m_textures["HB3"] = LoadTexture("assets/graphics/HUD/HealthBar/HB3.png");
+    m_textures["HB2,5"] = LoadTexture("assets/graphics/HUD/HealthBar/HB2,5.png");
+    m_textures["HB2"] = LoadTexture("assets/graphics/HUD/HealthBar/HB2.png");
+    m_textures["HB1,5"] = LoadTexture("assets/graphics/HUD/HealthBar/HB1,5.png");
+    m_textures["HB1"] = LoadTexture("assets/graphics/HUD/HealthBar/HB1.png");
+    m_textures["HB0,5"] = LoadTexture("assets/graphics/HUD/HealthBar/HB0,5.png");
+    m_textures["HB0"] = LoadTexture("assets/graphics/HUD/HealthBar/HB0.png");
+
 
     for (auto &texture : m_textures)
     {

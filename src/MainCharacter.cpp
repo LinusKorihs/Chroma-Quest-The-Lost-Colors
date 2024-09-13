@@ -6,6 +6,8 @@
 #include "Enemy.h"
 
 int MainCharacter::playerHealth = 100;
+int MainCharacter::damageDirection = -1;
+bool MainCharacter::damageAnim = false;
 double MainCharacter::lastDamageTime = 0.0;
 //int MainCharacter::damagePerFrame = 2;
 bool MainCharacter::isPlayerDead = false;
@@ -139,7 +141,7 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
         moving = false;
     }
 
-    if (punch == none && moving)
+    if (punch == none && moving && !damageAnim)
     {
         if (IsKeyDown(KEY_D))
         {
@@ -180,6 +182,29 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
             punch = none;
         }
     }
+    else if (damageAnim) {
+        int startFrame, endFrame;
+
+        if (damageDirection == -1) {
+            damageDirection = lastDir;
+        }
+
+        switch (damageDirection) {
+            case LASTDOWN:  startFrame = 48; endFrame = 49; break;
+            case LASTRIGHT: startFrame = 52; endFrame = 53; break;
+            case LASTUP:    startFrame = 56; endFrame = 57; break;
+            case LASTLEFT:  startFrame = 60; endFrame = 61; break;
+            default:        startFrame = 0;  endFrame = 0;  break;
+        }
+
+        UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, startFrame, endFrame, frameRec.x, player);
+
+        if (currentFrame == endFrame) {
+            damageAnim = false;
+            damageDirection = -1;
+        }
+    }
+
     else if (!moving && punch == none)
     {
         switch (lastDir)
@@ -438,6 +463,7 @@ void MainCharacter::receiveDamage()
             if (canReceiveDamage)
             {
                 InGameHud::health -= 0.5;
+                damageAnim = true;
                 canReceiveDamage = false;
                 lastDamageTime = currentTime;
             }

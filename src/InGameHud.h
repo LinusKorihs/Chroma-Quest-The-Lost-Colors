@@ -2,6 +2,7 @@
 
 #include "GameState.h"
 #include "config.h"
+#include "VMouse.h"
 #include <string>
 #include <iostream>
 #include "raylib.h"
@@ -37,6 +38,12 @@ public:
     }
 };
 
+enum journalPhase{
+    empty,
+    first,
+    second,
+    firstAndSecond
+};
 class InGameHud
 {
 public:
@@ -47,9 +54,19 @@ public:
     static void drawRGBBarTexture();
     static void drawSmallButton(HudImageButton& button);
     static void drawBigButton(HudImageButton& button);
+    static void drawTutorial();
+    static void drawImageButton(HudImageButton& button);
+    static void drawJournal();
     static std::vector<HudImageButton> hudImagebuttons;
     static float health;
     static void init();
     static bool controlActive;
+    static bool journalActive;
+    static bool firstText;
+    static bool secondText;
+
+    static journalPhase journalPhase;
+
+
     static int gameOverCount;
 };

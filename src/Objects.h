@@ -29,6 +29,7 @@ public:
     static bool roomTwo;
     static bool roomThree;
     static bool roomFour;
+    static bool roomFive;
 
 private:
     float stonePositionX;
@@ -127,6 +128,10 @@ private:
     int currentStep;
     bool animationFinished;
     int frameCounter;
+
+    float frameCounterOrb;
+    int currentFrameOrb;
+    Rectangle frameRecOrb;
 };
 
 class Chest {
@@ -144,6 +149,10 @@ private:
     float chestPositionY;
     Texture2D chestTexture;
     Rectangle chestRec;
+    float frameCounter;
+    int currentFrame;
+    bool animationFinished;
+    Rectangle frameRec;
 
 };
 
@@ -171,4 +180,24 @@ private:
     static Texture2D blueDist;
     static Texture2D redDist;
     static Texture2D yellowDist;
+};
+
+class Journal {
+public:
+    Journal(float jposX, float jposY, Texture2D& texture);
+
+    void draw();
+    void update();
+    static void init(Texture2D journalTexture);
+    static std::vector<Journal> journals;
+
+private:
+    float journalPositionX;
+    float journalPositionY;
+    Texture2D journalTexture;
+    Rectangle journalRec;
+    bool pickedUp;
+    Rectangle frameRec;
+    int currentFrame;
+    float frameCounter;
 };

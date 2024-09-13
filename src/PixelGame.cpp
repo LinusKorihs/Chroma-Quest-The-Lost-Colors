@@ -53,14 +53,16 @@ tson::Map& PixelGame::getMap()
 
 void PixelGame::createEnemies()
 {
-    enemyManager.createEnemy({40 * 32, 75 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
-    enemyManager.createEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICAL, Direction::DOWN, 0, 0, 2358, 2440);
+    enemyManager.createEnemy({35 * 32, 73 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+   // enemyManager.createEnemy({1060, 2395}, slimeEnemyTexture, SLIMERED, WALKVERTICAL, Direction::DOWN, 0, 0, 2358, 2440);
     enemyManager.createEnemy({19 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
-    enemyManager.createEnemy({34 * 32, 53 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
-    enemyManager.createEnemy({35 * 32, 51 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({34 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({35 * 32, 54 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
     enemyManager.createEnemy({56 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
     enemyManager.createEnemy({29 * 32, 28 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
-    enemyManager.createEnemy({36 * 32, 53 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({36 * 32, 56 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({35 * 32, 58 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
+    enemyManager.createEnemy({40 * 32, 32 * 32}, slimeEnemyTexture, SLIMERED, STAND, Direction::NONE, 0, 0, 0, 0);
 }
 
 void PixelGame::gameInit()
@@ -115,6 +117,7 @@ void PixelGame::gameInit()
     NPC::init(TextureManager::getTexture("mouse"),TextureManager::getTexture("frog"),TextureManager::getTexture("owl"), TextureManager::getTexture("gekko"));
     DialogBox::init(TextureManager::getTexture("MouseBubble"), TextureManager::getTexture("FrogBubble"), TextureManager::getTexture("GekkoBubble"), TextureManager::getTexture("OwlBubble"));
     Signs::init();
+    Journal::init(TextureManager::getTexture("journalidle"));
 }
 
 void PixelGame::rectangle()
@@ -180,6 +183,7 @@ void PixelGame::openDoors()
                 }
             }
             eraseDoor(45*32,75*32);
+            eraseDoor(41*32,75*32);
         }
         if(PressurePlate::pressurePlates[1].isPressed())
         {
@@ -284,6 +288,12 @@ void PixelGame::drawObjects()
         PressurePlate::pressurePlates[9].setPressed(false);
         PressurePlate::pressurePlates[10].setPressed(false);
     }
+    if(PressurePlate::pressurePlates[11].isPressed()){
+        Stone::roomFive = true;
+        Stone::resetStones();
+        Stone::roomFive = false;
+        PressurePlate::pressurePlates[11].setPressed(false);
+    }
     for(Chest& chest : Chest::chests)
     {
         chest.draw();
@@ -356,10 +366,13 @@ void PixelGame::gameLoop(tson::Map &Map)
             miniboss->drawBoss();
         }
 
-        NPC::npcs[0].update(GetFrameTime());
-        NPC::npcs[0].draw();
-
-        DialogBox::dialogBoxes[0].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
+        for(int i = 0; i < 2; i++){
+            NPC::npcs[i].update(GetFrameTime());
+            NPC::npcs[i].draw();
+        }
+        for(int i = 0; i < 2; i++){
+            DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
+        }
 
         MainCharacter::attack();
         MainCharacter::receiveDamage();
@@ -393,7 +406,7 @@ void PixelGame::gameLoop(tson::Map &Map)
             roomChanger.update();
         }
 
-        if(DialogBox::dialogBoxes[0].isActive() || roomChanger.isTransitioning() || playerCamera::getIsAnimating())
+        if(DialogBox::dialogBoxes[0].isActive() || DialogBox::dialogBoxes[1].isActive() || roomChanger.isTransitioning() || playerCamera::getIsAnimating() || InGameHud::journalActive)
         {
             canMove = false;
             InGameHud::controlActive = false;
@@ -402,6 +415,9 @@ void PixelGame::gameLoop(tson::Map &Map)
         {
             canMove = true;
         }
+
+        Journal::journals[0].update();
+        Journal::journals[0].draw();
 
         EndMode2D();
         drawHud();
@@ -455,16 +471,16 @@ void PixelGame::gameLoop(tson::Map &Map)
 
         MainCharacter::updatePlayer(TextureManager::getTexture("MainCharacter"), GetFrameTime());
 
-        for (int i = 1; i < NPC::npcs.size(); ++i)
+        for (int i = 2; i < NPC::npcs.size(); ++i)
         {
             NPC::npcs[i].update(GetFrameTime());
             NPC::npcs[i].draw();
         }
 
-        for (int i = 1; i < DialogBox::dialogBoxes.size(); ++i)
+        for (int i = 2; i < DialogBox::dialogBoxes.size(); ++i)
         {
             DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
-            if(DialogBox::dialogBoxes[i].isActive())
+            if(DialogBox::dialogBoxes[i].isActive() || InGameHud::journalActive)
             {
                 dialogCounter = 1;
                 controlBoxWasActive = InGameHud::controlActive;
@@ -498,6 +514,10 @@ void PixelGame::gameLoop(tson::Map &Map)
             //roomChanger.dungeon1Transition();
             roomChanger.update();
         }
+
+        Journal::journals[1].update();
+        Journal::journals[1].draw();
+
 
         EndMode2D();
         drawHud();
@@ -592,6 +612,7 @@ void PixelGame::drawHud()
     if(roomChanger.getDungeon1() && !roomChanger.getOverworld())
     {
         DialogBox::dialogBoxes[0].draw();
+        DialogBox::dialogBoxes[1].draw();
     }
     if(roomChanger.getOverworld() && !roomChanger.getDungeon1())
     {
@@ -600,9 +621,11 @@ void PixelGame::drawHud()
             DialogBox::dialogBoxes[i].draw();
         }
     }
-    InGameHud::drawRGBBarTexture();
+   // InGameHud::drawRGBBarTexture();
     InGameHud::drawHealthBarTexture();
     InGameHud::drawControlBox();
+    InGameHud::drawTutorial();
+    InGameHud::drawJournal();
 }
 
 void PixelGame::openBottomDoorRoom1()
@@ -748,7 +771,7 @@ void PixelGame::updateAudio()
 void PixelGame::startSequence()
 {
     DrawRectangle(0,0,500,300,BLACK);
-    DrawText("Press 'Enter' to continue", 340, 250, 1, GRAY);
+    DrawText("Press 'LFT MOUSE' to continue", 310, 250, 1, GRAY);
 
     if(sentence == 0)
     {
@@ -812,13 +835,13 @@ void PixelGame::startSequence()
         DrawText("This is where Aurora's journey begins...",10,225,10,WHITE);
     }
 
-    if(IsKeyPressed(KEY_ENTER))
+    if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
         sentence++;
     }
     if( sentence == 6)
     {
-        DialogBox::dialogBoxes[4].setActive(true);
+        DialogBox::dialogBoxes[5].setActive(true);
         state = gameLoopState;
         sentence++;
     }
