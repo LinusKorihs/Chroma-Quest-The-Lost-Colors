@@ -199,6 +199,24 @@ int Menu::drawMainMenu(GameState &currentGameState)
         InGameHud::drawBigButton(settingsButtonFull);
         InGameHud::drawBigButton(exitButtonFull);
 
+        if (CheckCollisionPointRec(GetMousePosition(), startButtonFull.rec))
+        {
+            startButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5), Button::buttonWidthBig, Button::buttonHeightBig};
+            InGameHud::drawBigButton(startButtonHoverFull);
+        }
+
+        if (CheckCollisionPointRec(GetMousePosition(), settingsButtonFull.rec))
+        {
+            settingsButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing), Button::buttonWidthBig, Button::buttonHeightBig};
+            InGameHud::drawBigButton(settingsButtonHoverFull);
+        }
+
+        if (CheckCollisionPointRec(GetMousePosition(), exitButtonFull.rec))
+        {
+            exitButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing * 2), Button::buttonWidthBig, Button::buttonHeightBig};
+            InGameHud::drawBigButton(exitButtonHoverFull);
+        }
+
         // Check button clicks for the full-size button
         if (CheckCollisionPointRec(GetMousePosition(), startButtonFull.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
         {
@@ -252,6 +270,24 @@ int Menu::drawMainMenu(GameState &currentGameState)
         InGameHud::drawSmallButton(startButtonNormal);
         InGameHud::drawSmallButton(settingsButtonNormal);
         InGameHud::drawSmallButton(exitButtonNormal);
+
+        if (CheckCollisionPointRec(GetMousePosition(), startButtonNormal.rec))
+        {
+            startButtonHover.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5 - smallSpacing), Button::buttonWidthSmall, Button::buttonHeightSmall};
+            InGameHud::drawSmallButton(startButtonHover);
+        }
+
+        if (CheckCollisionPointRec(GetMousePosition(), settingsButtonNormal.rec))
+        {
+            settingsButtonHover.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5), Button::buttonWidthSmall, Button::buttonHeightSmall};
+            InGameHud::drawSmallButton(settingsButtonHover);
+        }
+
+        if (CheckCollisionPointRec(GetMousePosition(), exitButtonNormal.rec))
+        {
+            exitButtonHover.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5 + smallSpacing), Button::buttonWidthSmall, Button::buttonHeightSmall};
+            InGameHud::drawSmallButton(exitButtonHover);
+        }
 
         // Check button clicks for the normal mode buttons
         if (CheckCollisionPointRec(GetMousePosition(), startButtonNormal.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
