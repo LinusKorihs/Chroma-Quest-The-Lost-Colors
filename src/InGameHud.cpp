@@ -240,21 +240,21 @@ void InGameHud::drawJournal()
             Texture2D journal = TextureManager::getTexture("emptyJournal");
             DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
             DrawTexture(journal, 100, 20, WHITE);
-            DrawText("nothing here", 280, 100, 1, BLACK);
+            DrawText("nothing here", 270, 80, 1, BLACK);
         }
         if(journalPhase == journalPhase::first)
         {
             Texture2D journal = TextureManager::getTexture("page1");
             DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
             DrawTexture(journal, 100, 20, WHITE);
-            DrawText("first page", 280, 100, 1, BLACK);
+            DrawText("Today I spoke\nto the machine in\nthe red tower. I\nhope we can find \na way to help\nLyra...", 270, 80, 1, BLACK);
         }
         if(journalPhase == journalPhase::second)
         {
             Texture2D journal = TextureManager::getTexture("page2");
             DrawRectangle(0, 0, 500, 400, Fade(BLACK, 0.7f));
             DrawTexture(journal, 100, 20, WHITE);
-            DrawText("second page", 280, 100, 1, BLACK);
+            DrawText("Lyra is getting\nweaker, the only\nchance is the\ncolour energy,\nbut it´s\ndangerous...", 270, 80, 1, BLACK);
         }
         if(journalPhase == journalPhase::firstAndSecond)
         {
@@ -275,15 +275,15 @@ void InGameHud::drawJournal()
             }
             if(firstText)
             {
-                DrawText("first page", 280, 100, 1, BLACK);
+                DrawText("Today I spoke\nto the machine in\nthe red tower. I\nhope we can find \na way to help\nLyra...", 270, 80, 1, BLACK);
             }
             if(secondText)
             {
-                DrawText("second page", 280, 100, 1, BLACK);
+                DrawText("Lyra is getting\nweaker, the only\nchance is the\ncolour energy,\nbut it´s\ndangerous...", 270, 80,1, BLACK);
             }
         }
     }
- }
+}
 void InGameHud::drawTutJournal()
 {
     Texture2D tutJournal = TextureManager::getTexture("tutJournal");
