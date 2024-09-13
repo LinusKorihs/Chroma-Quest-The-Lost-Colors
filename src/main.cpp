@@ -49,6 +49,7 @@ int main()
 
     PixelGame::loadMap("assets/graphics/newTileset&Tilemap/Overworld.tmj");
     SetExitKey(KEY_F4);
+    ToggleFullscreen();
 
     RenderTexture canvasSmall = LoadRenderTexture(480, 270);
     if (canvasSmall.id == 0)
