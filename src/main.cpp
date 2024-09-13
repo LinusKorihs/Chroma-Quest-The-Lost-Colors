@@ -16,58 +16,33 @@ Texture2D logoTexBig;
 
 void loadAssetsBasedOnWindowSize()
 {
-    if (GetScreenWidth() == 1920 && GetScreenHeight() == 1057)
-    {
-        // Load large versions of assets
-        Menu::initBackgroundGifLarge();
-        Menu::initButtonsFull();
+    // Load large versions of assets
+    Menu::initBackgroundGifLarge();
+    Menu::initButtonsFull();
 
-        Image logoBig = LoadImage("assets/graphics/Buttons/LogoBig.png");
-        if (logoBig.data == nullptr)
-        {
-            // Handle error
-            return;
-        }
-        logoTexBig = LoadTextureFromImage(logoBig);
-        if (logoTexBig.id == 0)
-        {
-            // Handle error
-            UnloadImage(logoBig);
-            return;
-        }
-        logoTexBig.width = logoBig.width / 6;
-        logoTexBig.height = logoBig.height / 6;
+    Image logoBig = LoadImage("assets/graphics/Buttons/LogoBig.png");
+    if (logoBig.data == nullptr)
+    {
+        // Handle error
+        return;
+    }
+
+    logoTexBig = LoadTextureFromImage(logoBig);
+    if (logoTexBig.id == 0)
+    {
+        // Handle error
         UnloadImage(logoBig);
+        return;
     }
-    else
-    {
-        // Load small versions of assets
-        Menu::initBackgroundGif();
-        Menu::initButtonsSmall();
-
-        Image logoSmall = LoadImage("assets/graphics/Buttons/LogoSmall.png");
-        if (logoSmall.data == nullptr)
-        {
-            // Handle error
-            return;
-        }
-        logoTexSmall = LoadTextureFromImage(logoSmall);
-        if (logoTexSmall.id == 0)
-        {
-            // Handle error
-            UnloadImage(logoSmall);
-            return;
-        }
-        logoTexSmall.width = logoSmall.width / 6;
-        logoTexSmall.height = logoSmall.height / 6;
-        UnloadImage(logoSmall);
-    }
+    logoTexBig.width = logoBig.width / 4;
+    logoTexBig.height = logoBig.height / 4;
+    UnloadImage(logoBig);
 }
 
 int main()
 {
     GameState applicationState;
-    InitWindow(480, 270, PixelGameConfig::PROJECT_NAME); // Start with small window size
+    InitWindow(1920, 1057, PixelGameConfig::PROJECT_NAME); // Start with small window size
     SetTargetFPS(ConfigConst::targetFPS);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     InitAudioDevice();
@@ -107,24 +82,23 @@ int main()
         BeginDrawing();
         ClearBackground(BLACK);
 
-        BeginTextureMode(canvasSmall);
-
         // Draw the background GIF scaled to the small canvas size
         DrawTexturePro(Menu::backgroundTex,
                        {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
-                       {0, 0, 480, 270},
+                       {0, 0, 1920, 1057},
                        {0, 0}, 0.0f, WHITE);
-
         // Update and draw the logo
-        Texture2D logoTex = (GetScreenWidth() == 1920 && GetScreenHeight() == 1057) ? logoTexBig : logoTexSmall;
-        float logoWidth = (GetScreenWidth() == 1920 && GetScreenHeight() == 1057) ? logoTexBig.width : logoTexSmall.width;
-        float logoX = (480 - logoWidth) / 2.0f;
-        float logoY = 270 / 13.0f;
+        Texture2D logoTex = logoTexBig;
+        float logoWidth = logoTexBig.width;
+        float logoX = (1920 - logoWidth) / 2.0f;
+        float logoY = 1057 / 13.0f;
         DrawTextureEx(logoTex, {logoX, logoY}, 0.0f, 1.0f, WHITE);
 
         // Update button positions and hitboxes
-        Menu::updateButtonPositions({480, 270});
+        Menu::updateButtonPositions({1920, 1057});
 
+        std::cout << "Current window size: " << currentWindowSize.x << "x" << currentWindowSize.y << std::endl;
+        BeginTextureMode(canvasSmall);
         switch (applicationState.currentGameMenu)
         {
             case MenuState::MainMenu:

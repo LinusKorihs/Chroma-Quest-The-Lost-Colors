@@ -18,9 +18,6 @@ RenderTexture Menu::canvas = {0};
 
 HudImageButton startGameButton, settingsMenuButton, exitGameButton, resumeGameButton, quitGameButton, volumeSettingsButton, controlSettingsButton, languageSettingsButton, keyBoardSettingsButton, controllerSettingsButton, englishLanguageButton, germanLanguageButton;
 
-HudImageButton startButtonNormal, settingsButtonNormal, exitButtonNormal;
-HudImageButton startButtonHover, settingsButtonHover, exitButtonHover;
-
 HudImageButton startButtonFull, settingsButtonFull, exitButtonFull;
 HudImageButton startButtonHoverFull, settingsButtonHoverFull, exitButtonHoverFull;
 
@@ -84,9 +81,9 @@ void Menu::updateButtonPositions(Vector2 windowSize)
     float startY = (windowSize.y - (buttonHeight + spacing) * 3) / 2.0f;
 
     // Assuming you have buttons like playButton, settingsButton, etc.
-    startButtonNormal.rec = {startX, startY, buttonWidth, buttonHeight};
-    settingsButtonNormal.rec = {startX, startY + buttonHeight + spacing, buttonWidth, buttonHeight};
-    exitButtonNormal.rec = {startX, startY + 2 * (buttonHeight + spacing), buttonWidth, buttonHeight};
+    startButtonFull.rec = {startX, startY, buttonWidth, buttonHeight};
+    settingsButtonFull.rec = {startX, startY + buttonHeight + spacing, buttonWidth, buttonHeight};
+    exitButtonFull.rec = {startX, startY + 2 * (buttonHeight + spacing), buttonWidth, buttonHeight};
 }
 
 void Menu::updateBackgroundAnimation()
@@ -112,18 +109,6 @@ void Menu::butRec()
     }
 }
 
-void Menu::initButtonsSmall()
-{
-    // Initialize small sized buttons
-    startButtonNormal.texture = TextureManager::getTexture("playSmall");
-    settingsButtonNormal.texture = TextureManager::getTexture("settingsSmall");
-    exitButtonNormal.texture = TextureManager::getTexture("exitSmall");
-
-    startButtonHover.texture = TextureManager::getTexture("playSmallPressed");
-    settingsButtonHover.texture = TextureManager::getTexture("settingsSmallPressed");
-    exitButtonHover.texture = TextureManager::getTexture("exitSmallPressed");
-}
-
 void Menu::initButtonsFull()
 {
     // Initialize full sized buttons
@@ -134,39 +119,6 @@ void Menu::initButtonsFull()
     startButtonHoverFull.texture = TextureManager::getTexture("playBigPressed");
     settingsButtonHoverFull.texture = TextureManager::getTexture("settingsBigPressed");
     exitButtonHoverFull.texture = TextureManager::getTexture("exitBigPressed");
-}
-
-void Menu::unloadButtonsSmall()
-{
-    if (startButtonNormal.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(startButtonNormal);
-    }
-
-    if (settingsButtonNormal.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(settingsButtonNormal);
-    }
-
-    if (exitButtonNormal.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(exitButtonNormal);
-    }
-
-    if (startButtonHover.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(startButtonHover);
-    }
-
-    if (settingsButtonHover.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(settingsButtonHover);
-    }
-
-    if (exitButtonHover.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(exitButtonHover);
-    }
 }
 
 void Menu::unloadButtonsFull()
@@ -205,146 +157,76 @@ void Menu::unloadButtonsFull()
 int Menu::drawMainMenu(GameState &currentGameState)
 {
     Vector2 windowSize = {(float) GetScreenWidth(), (float) GetScreenHeight()};
-    if (GetScreenWidth() == 1920 && GetScreenHeight() == 1057)
+    
+    initButtonsFull();
+
+    // Use full-size mode buttons
+    startButtonFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2,
+                           static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5), Button::buttonWidthBig,
+                           Button::buttonHeightBig};
+    settingsButtonFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2,
+                              static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing),
+                              Button::buttonWidthBig, Button::buttonHeightBig};
+    exitButtonFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2,
+                          static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing * 2),
+                          Button::buttonWidthBig, Button::buttonHeightBig};
+
+    InGameHud::drawBigButton(startButtonFull);
+    InGameHud::drawBigButton(settingsButtonFull);
+    InGameHud::drawBigButton(exitButtonFull);
+
+    if (CheckCollisionPointRec(GetMousePosition(), startButtonFull.rec))
     {
-        if(startButtonNormal.texture.id + settingsButtonNormal.texture.id + exitButtonNormal.texture.id + startButtonHover.texture.id + settingsButtonHover.texture.id + exitButtonHover.texture.id > 0)
-        {
-            unloadButtonsSmall();
-            DrawTexturePro(Menu::backgroundTex,
-                           {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
-                           {0, 0, 1920, 1080},
-                           {0, 0}, 0.0f, WHITE);
-            initButtonsFull();
-        }
-
-        // Use full-size mode buttons
-        startButtonFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5), Button::buttonWidthBig, Button::buttonHeightBig};
-        settingsButtonFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing), Button::buttonWidthBig, Button::buttonHeightBig};
-        exitButtonFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing * 2), Button::buttonWidthBig, Button::buttonHeightBig};
-
-        InGameHud::drawBigButton(startButtonFull);
-        InGameHud::drawBigButton(settingsButtonFull);
-        InGameHud::drawBigButton(exitButtonFull);
-
-        if (CheckCollisionPointRec(GetMousePosition(), startButtonFull.rec))
-        {
-            startButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5), Button::buttonWidthBig, Button::buttonHeightBig};
-            InGameHud::drawBigButton(startButtonHoverFull);
-        }
-
-        if (CheckCollisionPointRec(GetMousePosition(), settingsButtonFull.rec))
-        {
-            settingsButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing), Button::buttonWidthBig, Button::buttonHeightBig};
-            InGameHud::drawBigButton(settingsButtonHoverFull);
-        }
-
-        if (CheckCollisionPointRec(GetMousePosition(), exitButtonFull.rec))
-        {
-            exitButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing * 2), Button::buttonWidthBig, Button::buttonHeightBig};
-            InGameHud::drawBigButton(exitButtonHoverFull);
-        }
-
-        // Check button clicks for the full-size button
-        if (CheckCollisionPointRec(GetMousePosition(), startButtonFull.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        {
-            currentGameState.changeGameState(MenuState::GameRunning);
-            ConfigNotConst::isGameRunning = true;
-            unloadBackgroundGif();
-        }
-
-        if (CheckCollisionPointRec(GetMousePosition(), settingsButtonFull.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        {
-            currentGameState.changeGameState(MenuState::SettingsMenu);
-        }
-
-        if (CheckCollisionPointRec(GetMousePosition(), exitButtonFull.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        {
-            ConfigNotConst::isGameRunning = false;
-        }
-
-        if (IsKeyPressed(KEY_ESCAPE))
-        {
-            ConfigNotConst::isGameRunning = false;
-        }
-
-        if (showButtonRectangles)
-        {
-            DrawRectangleLinesEx(startButtonFull.rec, 1, BLUE);
-            DrawRectangleLinesEx(settingsButtonFull.rec, 1, BLUE);
-            DrawRectangleLinesEx(exitButtonFull.rec, 1, BLUE);
-        }
+        startButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2,
+                                    static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5),
+                                    Button::buttonWidthBig, Button::buttonHeightBig};
+        InGameHud::drawBigButton(startButtonHoverFull);
     }
-    else
+
+    if (CheckCollisionPointRec(GetMousePosition(), settingsButtonFull.rec))
     {
-        if(startButtonFull.texture.id + settingsButtonFull.texture.id + exitButtonFull.texture.id + startButtonHoverFull.texture.id + settingsButtonHoverFull.texture.id + exitButtonHoverFull.texture.id > 0)
-        {
-            unloadButtonsFull();
-            ClearBackground(DARKGRAY);
-            float currentWidth = GetScreenWidth();
-            float currentHeight = GetScreenHeight();
-            DrawTexturePro(Menu::backgroundTex,
-                           {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
-                           {0, 0, currentWidth, currentHeight},
-                           {0, 0}, 0.0f, WHITE);
-            initButtonsSmall();
-        }
+        settingsButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2,
+                                       static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing),
+                                       Button::buttonWidthBig, Button::buttonHeightBig};
+        InGameHud::drawBigButton(settingsButtonHoverFull);
+    }
 
-        // Use normal mode buttons
-        startButtonNormal.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5 - smallSpacing), Button::buttonWidthSmall, Button::buttonHeightSmall};
-        settingsButtonNormal.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5), Button::buttonWidthSmall, Button::buttonHeightSmall};
-        exitButtonNormal.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5 + smallSpacing), Button::buttonWidthSmall, Button::buttonHeightSmall};
+    if (CheckCollisionPointRec(GetMousePosition(), exitButtonFull.rec))
+    {
+        exitButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2,
+                                   static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5 + bigSpacing * 2),
+                                   Button::buttonWidthBig, Button::buttonHeightBig};
+        InGameHud::drawBigButton(exitButtonHoverFull);
+    }
 
-        InGameHud::drawSmallButton(startButtonNormal);
-        InGameHud::drawSmallButton(settingsButtonNormal);
-        InGameHud::drawSmallButton(exitButtonNormal);
+    // Check button clicks for the full-size button
+    if (CheckCollisionPointRec(GetMousePosition(), startButtonFull.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        currentGameState.changeGameState(MenuState::GameRunning);
+        ConfigNotConst::isGameRunning = true;
+        unloadBackgroundGif();
+    }
 
-        if (CheckCollisionPointRec(GetMousePosition(), startButtonNormal.rec))
-        {
-            startButtonHover.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5 - smallSpacing), Button::buttonWidthSmall, Button::buttonHeightSmall};
-            InGameHud::drawSmallButton(startButtonHover);
-        }
+    if (CheckCollisionPointRec(GetMousePosition(), settingsButtonFull.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        currentGameState.changeGameState(MenuState::SettingsMenu);
+    }
 
-        if (CheckCollisionPointRec(GetMousePosition(), settingsButtonNormal.rec))
-        {
-            settingsButtonHover.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5), Button::buttonWidthSmall, Button::buttonHeightSmall};
-            InGameHud::drawSmallButton(settingsButtonHover);
-        }
+    if (CheckCollisionPointRec(GetMousePosition(), exitButtonFull.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        ConfigNotConst::isGameRunning = false;
+    }
 
-        if (CheckCollisionPointRec(GetMousePosition(), exitButtonNormal.rec))
-        {
-            exitButtonHover.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5 + smallSpacing), Button::buttonWidthSmall, Button::buttonHeightSmall};
-            InGameHud::drawSmallButton(exitButtonHover);
-        }
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        ConfigNotConst::isGameRunning = false;
+    }
 
-        // Check button clicks for the normal mode buttons
-        if (CheckCollisionPointRec(GetMousePosition(), startButtonNormal.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        {
-            currentGameState.changeGameState(MenuState::GameRunning);
-            ConfigNotConst::isGameRunning = true;
-            unloadBackgroundGif();
-        }
-
-        if (CheckCollisionPointRec(GetMousePosition(), settingsButtonNormal.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        {
-            currentGameState.changeGameState(MenuState::SettingsMenu);
-        }
-
-        if (CheckCollisionPointRec(GetMousePosition(), exitButtonNormal.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-        {
-            ConfigNotConst::isGameRunning = false;
-        }
-
-        if (IsKeyPressed(KEY_ESCAPE))
-        {
-            ConfigNotConst::isGameRunning = false;
-        }
-
-        if (showButtonRectangles)
-        {
-            DrawRectangleLinesEx(startButtonNormal.rec, 1, RED);
-            DrawRectangleLinesEx(settingsButtonNormal.rec, 1, RED);
-            DrawRectangleLinesEx(exitButtonNormal.rec, 1, RED);
-        }
+    if (showButtonRectangles)
+    {
+        DrawRectangleLinesEx(startButtonFull.rec, 1, BLUE);
+        DrawRectangleLinesEx(settingsButtonFull.rec, 1, BLUE);
+        DrawRectangleLinesEx(exitButtonFull.rec, 1, BLUE);
     }
 
     updateBackgroundAnimation();
@@ -360,7 +242,6 @@ void Menu::drawSettingsMenu(GameState &currentGameState)
         if(playButtonNormal.texture.id + playButtonHover.texture.id > 0)
         {
             // Unload small buttons if they are loaded
-            unloadButtonsSmall();
             DrawTexturePro(Menu::backgroundTex,
                            {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
                            {0, 0, 1920, 1080},
