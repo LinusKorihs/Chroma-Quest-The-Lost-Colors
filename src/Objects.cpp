@@ -938,6 +938,7 @@ Texture2D Signs::yellowDist;
 Texture2D Signs::blueRoad;
 Texture2D Signs::redRoad;
 Texture2D Signs::yellowRoad;
+Texture2D Signs::redTower;
 
 Signs::Signs(float posX, float posY, Texture2D textText, bool bigSign)
         : signPositionX(posX), signPositionY(posY), bigSign(bigSign), textTexture(textText)
@@ -948,6 +949,7 @@ Signs::Signs(float posX, float posY, Texture2D textText, bool bigSign)
     blueRoad = TextureManager::getTexture("blueRoad");
     redRoad = TextureManager::getTexture("redRoad");
     yellowRoad = TextureManager::getTexture("yellowRoad");
+    redTower = TextureManager::getTexture("redTower");
 
     if(bigSign)
     {
@@ -969,7 +971,7 @@ void Signs::init()
     signs.emplace_back(17*32, 38*32,blueRoad, true); //blue road
     signs.emplace_back(59*32, 40*32,redRoad, true); //red road
     signs.emplace_back(114*32, 54*32,redRoad, true); //red road
-    signs.emplace_back(111*32, 39*32,redRoad, false); //red road
+    signs.emplace_back(111*32, 39*32,redTower, false); //red road
 }
 
 void Signs::draw()
@@ -1016,6 +1018,7 @@ void Journal::draw()
     if (!pickedUp) {
         UniversalMethods::updateAnimation(GetFrameTime(), frameCounter, currentFrame, 0, 4, frameRec.x, object);
         DrawTextureRec(journalTexture, frameRec, {journalPositionX, journalPositionY}, WHITE);
+
     }
 }
 

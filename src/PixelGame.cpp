@@ -626,6 +626,13 @@ void PixelGame::drawHud()
     InGameHud::drawControlBox();
     InGameHud::drawTutorial();
     InGameHud::drawJournal();
+    for(auto &Journal : Journal::journals)
+    {
+        if(!Journal.pickedUp && CheckCollisionRecs(MainCharacter::playerRec, Journal.journalRec))
+        {
+            InGameHud::drawTutJournal();
+        }
+    }
 }
 
 void PixelGame::openBottomDoorRoom1()

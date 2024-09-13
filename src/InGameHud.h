@@ -64,6 +64,7 @@ public:
     static bool journalActive;
     static bool firstText;
     static bool secondText;
+    static void drawTutJournal();
 
     static journalPhase journalPhase;
 
