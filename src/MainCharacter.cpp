@@ -72,29 +72,41 @@ void MainCharacter::updateRec()
             width,
             height
     };
+
     //Rec zum hitten von enemies
-    if(lastDir == LASTRIGHT || lastDir == LASTLEFT) {
+    if(lastDir == LASTRIGHT || lastDir == LASTLEFT)
+    {
         HitRec = {
                 playerPosX - 4,
-                playerPosY + 12,
+                playerPosY + 14,
                 40,
-                18
+                16
         };
     }
-    if(lastDir == LASTUP || lastDir == LASTDOWN){
+    if(lastDir == LASTUP || lastDir == LASTDOWN)
+    {
         HitRec = {
-                playerPosX+4,
+                playerPosX+3,
                 playerPosY-4,
-                25,
+                26,
                 40
         };
     }
     playerEnemyRec = {
-            playerPosX,
-            playerPosY,
-            32,
-            32
+            playerPosX+2,
+            playerPosY+2,
+            28,
+            28
     };
+
+    // für Gegner Schlagen kollision
+    //DrawRectangleLines(HitRec.x, HitRec.y, HitRec.width, HitRec.height, YELLOW);
+    // für player kollision
+    //DrawRectangleLines(playerRec.x, playerRec.y, playerRec.width, playerRec.height, GREEN);
+    // für enemy kollision
+    //DrawRectangleLines(playerEnemyRec.x, playerEnemyRec.y, playerEnemyRec.width, playerEnemyRec.height, ORANGE);
+    // für Stein Kollision
+    //DrawRectangleLines(playerStonePushRec.x, playerStonePushRec.y, playerStonePushRec.width, playerStonePushRec.height, RED);
 }
 
 void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
@@ -104,23 +116,28 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
     if(IsKeyDown(KEY_W) || IsKeyDown(KEY_A) || IsKeyDown(KEY_S) || IsKeyDown(KEY_D))
     {
         moving = true;
-    }else if(!IsKeyDown(KEY_W) && !IsKeyDown(KEY_A) && !IsKeyDown(KEY_S) && !IsKeyDown(KEY_D))
+    }
+    else if(!IsKeyDown(KEY_W) && !IsKeyDown(KEY_A) && !IsKeyDown(KEY_S) && !IsKeyDown(KEY_D))
     {
         moving = false;
     }
 
     if (punch == none && moving && !damageAnim)
     {
-        if (IsKeyDown(KEY_D)) {
+        if (IsKeyDown(KEY_D))
+        {
             UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 4, 7, frameRec.x, player);
         }
-        else if (IsKeyDown(KEY_A)) {
+        else if (IsKeyDown(KEY_A))
+        {
             UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 12, 15, frameRec.x, player);
         }
-        else if (IsKeyDown(KEY_W)) {
+        else if (IsKeyDown(KEY_W))
+        {
             UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 8, 11, frameRec.x, player);
         }
-        else if (IsKeyDown(KEY_S)) {
+        else if (IsKeyDown(KEY_S))
+        {
             UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, 0, 3, frameRec.x, player);
         }
 
@@ -140,7 +157,8 @@ void MainCharacter::updatePlayer(Texture myTexture, float deltaTime)
 
         UniversalMethods::updateAnimation(deltaTime, framesCounter, currentFrame, startFrame, endFrame, frameRec.x, player);
 
-        if (currentFrame == endFrame) {
+        if (currentFrame == endFrame)
+        {
             animationFinished = true;
             punch = none;
         }
@@ -270,11 +288,14 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
     Rectangle newRec = {newPositionX + 4, newPositionY+16, playerRec.width, playerRec.height-12}; //hier hab ich y und height geändert - falls was buggt wieder rückgängig machen
     Rectangle enemyNewRec = {newPositionX + 4, newPositionY, playerRec.width, playerRec.height}; // für enemy kollision, weil der player sonst komplett den enemy verdecken kann /schaden kein sinn macht
+    //DrawRectangleLines(enemyNewRec.x, enemyNewRec.y, enemyNewRec.width, enemyNewRec.height, PURPLE);
 
-    if(DrawMap::overworld) {
-
-        for (const Rectangle &wallRec: currentGameState.overworldWallRecs) {
-            if (CheckCollisionRecs(newRec, wallRec)) {
+    if(DrawMap::overworld)
+    {
+        for (const Rectangle &wallRec: currentGameState.overworldWallRecs)
+        {
+            if (CheckCollisionRecs(newRec, wallRec))
+            {
                 return;
             }
         }
@@ -289,33 +310,38 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
         playerPosX = newPositionX;
         playerPosY = newPositionY;
     }
-    else if(DrawMap::dungeon1) {
-        for (const Rectangle &doorRec: currentGameState.doorRectangles) {
-            if (CheckCollisionRecs(enemyNewRec, doorRec)) {
+    else if(DrawMap::dungeon1)
+    {
+        for (const Rectangle &doorRec: currentGameState.doorRectangles)
+        {
+            if (CheckCollisionRecs(enemyNewRec, doorRec))
+            {
                 return;
             }
         }
 
-        for (const Rectangle &wallRec: currentGameState.wallRectangles) {
-            if (CheckCollisionRecs(newRec, wallRec)) {
+        for (const Rectangle &wallRec: currentGameState.wallRectangles)
+        {
+            if (CheckCollisionRecs(newRec, wallRec))
+            {
                 return;
             }
         }
 
-        for (const auto &enemy: enemyManager->enemies) {
+        for (const auto &enemy: enemyManager->enemies)
+        {
             if (CheckCollisionRecs(enemyNewRec,
                                    {enemy->getHitRec().x + 4, enemy->getHitRec().y, enemy->getHitRec().width - 8,
-                                    enemy->getHitRec().height - 10})) {
+                                    enemy->getHitRec().height - 10}))
+            {
                 return;
             }
         }
 
-
-
         Stone *nearestStone = nullptr;
-        float nearestDistanceSquared = std::numeric_limits<float>::max();
 
-        for (Stone &stone: Stone::stoneObjects) {
+        for (Stone &stone: Stone::stoneObjects)
+        {
             if (CheckCollisionRecs(enemyNewRec, stone.getRectangle()))  //test
             {
                 nearestStone = &stone;
@@ -325,17 +351,21 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
         checkCollisions();
 
-        if (nearestStone) {
+        if (nearestStone)
+        {
             nearestStone->moveOneTile(moveDirection, currentGameState.wallRectangles,
                                       currentGameState.openDoorRectangles, currentGameState.stoneWallRectangles);
-        } else {
+        }
+        else
+        {
             // If no stone is to be moved, update player position
             playerPosX = newPositionX;
             playerPosY = newPositionY;
         }
 
         // Update all stones
-        for (Stone &stone: Stone::stoneObjects) {
+        for (Stone &stone: Stone::stoneObjects)
+        {
             stone.update(deltaTime);
         }
     }
