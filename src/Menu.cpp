@@ -22,6 +22,8 @@ HudImageButton startButtonHover, settingsButtonHover, exitButtonHover;
 HudImageButton startButtonFull, settingsButtonFull, exitButtonFull;
 HudImageButton startButtonHoverFull, settingsButtonHoverFull, exitButtonHoverFull;
 
+HudImageButton playButtonNormal, playButtonHover, playButtonFull, playButtonHoverFull;
+
 float smallSpacing = 50.0f; // Adjust this value to increase or decrease the space between buttons
 float bigSpacing = 150.0f; // Adjust this value to increase or decrease the space between buttons
 
@@ -325,54 +327,100 @@ int Menu::drawMainMenu(GameState &currentGameState)
     return ConfigNotConst::isProgramRunning ? 1 : 0;
 }
 
-void Menu::updateButtonPositions(Vector2 windowSize)
-{
-
-}
-
 void Menu::drawSettingsMenu(GameState &currentGameState)
 {
-    updateButtonPositions({(float) GetScreenWidth(), (float) GetScreenHeight()});
-    float newButtonWidth = Menu::buttonPos[0];
-    float newButtonHeight = Menu::buttonPos[1];
-
-    volumeSettingsButton.texture = TextureManager::getTexture("VolumeButtonTexture");
-    Button::updateButtonDimensions(volumeSettingsButton, newButtonWidth, newButtonHeight + smallSpacing * 0, Button::buttonWidthSmall, Button::buttonHeightSmall);
-    volumeSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Sound", "Ton");
-
-    controlSettingsButton.texture = TextureManager::getTexture("ControlButtonTexture");
-    Button::updateButtonDimensions(controlSettingsButton, newButtonWidth, newButtonHeight + smallSpacing * 1, Button::buttonWidthSmall, Button::buttonHeightSmall);
-    controlSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Controls", "Steuerung");
-
-    languageSettingsButton.texture = TextureManager::getTexture("LanguageButtonTexture");
-    Button::updateButtonDimensions(languageSettingsButton, newButtonWidth, newButtonHeight + smallSpacing * 2, Button::buttonWidthSmall, Button::buttonHeightSmall);
-    languageSettingsButton.buttonText = LanguageManager::getLocalizedGameText("Language", "Sprache");
-
-    ClearBackground(DARKGRAY);
-
-    InGameHud::drawSmallButton(volumeSettingsButton);
-    InGameHud::drawSmallButton(controlSettingsButton);
-    InGameHud::drawSmallButton(languageSettingsButton);
-
-    if (Button::checkButtonClick(volumeSettingsButton.rec, "Sound", "Ton"))
+    Vector2 windowSize = {(float) GetScreenWidth(), (float) GetScreenHeight()};
+    if (GetScreenWidth() == 1920 && GetScreenHeight() == 1057)
     {
-        currentGameState.currentGameMenu = MenuState::VolumeSliders;
+        if(playButtonNormal.texture.id + playButtonHover.texture.id > 0)
+        {
+            // Unload small buttons if they are loaded
+            unloadButtonsSmall();
+            DrawTexturePro(Menu::backgroundTex,
+                           {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
+                           {0, 0, 1920, 1080},
+                           {0, 0}, 0.0f, WHITE);
+            // Initialize full-size button
+            playButtonFull.texture = TextureManager::getTexture("playBig");
+            playButtonHoverFull.texture = TextureManager::getTexture("playBigPressed");
+        }
+
+        // Use full-size mode button
+        playButtonFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5), Button::buttonWidthBig, Button::buttonHeightBig};
+        InGameHud::drawBigButton(playButtonFull);
+
+        if (CheckCollisionPointRec(GetMousePosition(), playButtonFull.rec))
+        {
+            playButtonHoverFull.rec = {(windowSize.x - Button::buttonWidthBig) / 2, static_cast<float>((windowSize.y - Button::buttonHeightBig) / 1.5), Button::buttonWidthBig, Button::buttonHeightBig};
+            InGameHud::drawBigButton(playButtonHoverFull);
+        }
+
+        // Check button clicks for the full-size button
+        if (CheckCollisionPointRec(GetMousePosition(), playButtonFull.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            currentGameState.changeGameState(MenuState::GameRunning);
+            ConfigNotConst::isGameRunning = true;
+            unloadBackgroundGif();
+        }
+
+        if (IsKeyPressed(KEY_ESCAPE))
+        {
+            currentGameState.currentGameMenu = MenuState::MainMenu;
+        }
+
+        if (showButtonRectangles)
+        {
+            DrawRectangleLinesEx(playButtonFull.rec, 1, BLUE);
+        }
+    }
+    else
+    {
+        if(playButtonFull.texture.id + playButtonHoverFull.texture.id > 0)
+        {
+            // Unload full-size buttons if they are loaded
+            unloadButtonsFull();
+            ClearBackground(DARKGRAY);
+            float currentWidth = GetScreenWidth();
+            float currentHeight = GetScreenHeight();
+            DrawTexturePro(Menu::backgroundTex,
+                           {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
+                           {0, 0, currentWidth, currentHeight},
+                           {0, 0}, 0.0f, WHITE);
+            // Initialize small-size button
+            playButtonNormal.texture = TextureManager::getTexture("playSmall");
+            playButtonHover.texture = TextureManager::getTexture("playSmallPressed");
+        }
+
+        // Use normal mode button
+        playButtonNormal.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5), Button::buttonWidthSmall, Button::buttonHeightSmall};
+        InGameHud::drawSmallButton(playButtonNormal);
+
+        if (CheckCollisionPointRec(GetMousePosition(), playButtonNormal.rec))
+        {
+            playButtonHover.rec = {(windowSize.x - Button::buttonWidthSmall) / 2, static_cast<float>((windowSize.y - Button::buttonHeightSmall) / 1.5), Button::buttonWidthSmall, Button::buttonHeightSmall};
+            InGameHud::drawSmallButton(playButtonHover);
+        }
+
+        // Check button clicks for the normal mode button
+        if (CheckCollisionPointRec(GetMousePosition(), playButtonNormal.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+        {
+            currentGameState.changeGameState(MenuState::GameRunning);
+            ConfigNotConst::isGameRunning = true;
+            unloadBackgroundGif();
+        }
+
+        if (IsKeyPressed(KEY_ESCAPE))
+        {
+            currentGameState.currentGameMenu = MenuState::MainMenu;
+        }
+
+        if (showButtonRectangles)
+        {
+            DrawRectangleLinesEx(playButtonNormal.rec, 1, RED);
+        }
     }
 
-    if (Button::checkButtonClick(controlSettingsButton.rec, "Controls", "Steuerung"))
-    {
-        currentGameState.currentGameMenu = MenuState::Control;
-    }
-
-    if (Button::checkButtonClick(languageSettingsButton.rec, "Language", "Sprache"))
-    {
-        currentGameState.currentGameMenu = MenuState::Language;
-    }
-
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        currentGameState.currentGameMenu = MenuState::MainMenu;
-    }
+    updateBackgroundAnimation();
 }
 
 void Menu::drawVolumeSlidersMenu(GameState &currentGameState)
