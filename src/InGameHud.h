@@ -52,10 +52,8 @@ public:
     static void drawHealthBarTexture();
     static void drawControlBox();
     static void drawRGBBarTexture();
-    static void drawSmallButton(HudImageButton& button);
     static void drawBigButton(HudImageButton& button);
     static void drawTutorial();
-    static void drawImageButton(HudImageButton& button);
     static void drawJournal();
     static std::vector<HudImageButton> hudImagebuttons;
     static float health;

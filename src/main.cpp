@@ -100,6 +100,7 @@ int main()
 
         std::cout << "Current window size: " << currentWindowSize.x << "x" << currentWindowSize.y << std::endl;
         BeginTextureMode(canvasSmall);
+
         switch (applicationState.currentGameMenu)
         {
             case MenuState::MainMenu:
@@ -119,9 +120,6 @@ int main()
             case MenuState::SettingsMenu:
                 Menu::drawSettingsMenu(applicationState);
                 break;
-            case MenuState::KeyBindingsMenu:
-                Menu::drawKeyBindingsMenu(applicationState);
-                break;
             case MenuState::PauseMenu:
                 Menu::drawPauseMenu(applicationState);
                 break;
@@ -133,14 +131,8 @@ int main()
             case MenuState::VolumeSliders:
                 Menu::drawVolumeSlidersMenu(applicationState);
                 break;
-            case MenuState::Control:
-                Menu::drawControlMenu(applicationState);
-                break;
             case MenuState::Language:
                 Menu::drawLanguageMenu(applicationState);
-                break;
-            case MenuState::ControllerMenu:
-                Menu::drawControllerMenu(applicationState);
                 break;
             case MenuState::None:
                 ConfigNotConst::isGameRunning = false;
@@ -156,7 +148,6 @@ int main()
         EndDrawing();
     }
 
-    UnloadTexture(logoTexSmall);
     UnloadTexture(logoTexBig);
     Menu::unloadBackgroundGif();
     CloseWindow();

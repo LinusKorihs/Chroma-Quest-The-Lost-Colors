@@ -32,10 +32,10 @@ void SetKeyBindings::settingTheKeyButtons(GameState &currentGameState)
 
 void SetKeyBindings::drawKeyBindingsMenu(GameState &currentGameState)
 {
-    InGameHud::drawSmallButton(upKeySettingsButton);
-    InGameHud::drawSmallButton(downKeySettingsButton);
-    InGameHud::drawSmallButton(leftKeySettingsButton);
-    InGameHud::drawSmallButton(rightKeySettingsButton);
+    //InGameHud::drawSmallButton(upKeySettingsButton);
+    //InGameHud::drawSmallButton(downKeySettingsButton);
+    //InGameHud::drawSmallButton(leftKeySettingsButton);
+    //InGameHud::drawSmallButton(rightKeySettingsButton);
 
     if (Button::checkButtonClick(upKeySettingsButton.rec,
                                  TextFormat("Up: %c", currentGameState.playerKeyBindings[Direction::UP]),

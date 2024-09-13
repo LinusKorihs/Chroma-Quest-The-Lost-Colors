@@ -140,7 +140,6 @@ void InGameHud::drawHealthBarTexture()
 
         }
     }
-
 }
 
 void InGameHud::drawRGBBarTexture()
@@ -149,21 +148,10 @@ void InGameHud::drawRGBBarTexture()
     DrawTexture(hudgray, -10, -20, WHITE);
 }
 
-void InGameHud::drawSmallButton(HudImageButton& button)
-{
-    float buttonCenterX = button.rec.x + button.rec.width / 2;
-    float buttonCenterY = button.rec.y + button.rec.height / 2;
-
-    float buttonTextureX = buttonCenterX - button.texture.width / 2;
-    float buttonTextureY = buttonCenterY - button.texture.height / 2;
-
-    DrawTextureRec(button.texture, {0.0f, 0.0f, (float)button.texture.width, (float)button.texture.height}, {buttonTextureX, buttonTextureY }, WHITE);
-}
-
 void InGameHud::drawBigButton(HudImageButton& button)
 {
-    float newWidth = button.rec.width / 2;
-    float newHeight = button.rec.height / 2;
+    float newWidth = button.rec.width;
+    float newHeight = button.rec.height;
 
     float buttonCenterX = button.rec.x + newWidth / 2;
     float buttonCenterY = button.rec.y + newHeight / 2;
@@ -175,6 +163,7 @@ void InGameHud::drawBigButton(HudImageButton& button)
                    {0.0f, 0.0f, (float)button.texture.width, (float)button.texture.height},
                    {buttonTextureX, buttonTextureY, newWidth, newHeight},
                    {0.0f, 0.0f}, 0.0f, WHITE);
+    std::cout << "Button texture id: " << button.texture.id << " Button texture x: " << buttonTextureX << " Button texture y: " << buttonTextureY << " Button texture width: " << newWidth << " Button texture height: " << newHeight << std::endl;
     button.rec = {buttonTextureX, buttonTextureY, newWidth, newHeight};
 }
 
