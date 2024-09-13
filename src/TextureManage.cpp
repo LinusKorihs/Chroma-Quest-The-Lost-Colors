@@ -91,13 +91,21 @@ void TextureManager::init()
     m_textures["central"] = LoadTexture("assets/graphics/HUD/Districts/central.png");
     m_textures["background"] = LoadTexture("assets/background.gif");
 
-    m_textures["exitButton"] = LoadTexture("assets/graphics/Buttons/exit.png");
-    m_textures["exitButtonPressed"] = LoadTexture("assets/graphics/Buttons/exit_selected.png");
-    m_textures["playButton"] = LoadTexture("assets/graphics/Buttons/play.png");
-    m_textures["playButtonPressed"] = LoadTexture("assets/graphics/Buttons/play_selected.png");
-    m_textures["settingsButton"] = LoadTexture("assets/graphics/Buttons/settings.png");
-    m_textures["settingsButtonPressed"] = LoadTexture("assets/graphics/Buttons/settings_selected.png");
-    m_textures["logo"] = LoadTexture("assets/graphics/Buttons/Logo_official.png");
+    m_textures["logo"] = LoadTexture("assets/graphics/Buttons/LogoSmall.png");
+    m_textures["logoBig"] = LoadTexture("assets/graphics/Buttons/LogoBig.png");
+    m_textures["settingsSmall"] = LoadTexture("assets/graphics/Buttons/smallButtons/settings.png");
+    m_textures["settingsSmallPressed"] = LoadTexture("assets/graphics/Buttons/smallButtons/settingsRGB.png");
+    m_textures["exitSmall"] = LoadTexture("assets/graphics/Buttons/smallButtons/exit.png");
+    m_textures["exitSmallPressed"] = LoadTexture("assets/graphics/Buttons/smallButtons/exitRGB.png");
+    m_textures["playSmall"] = LoadTexture("assets/graphics/Buttons/smallButtons/play.png");
+    m_textures["playSmallPressed"] = LoadTexture("assets/graphics/Buttons/smallButtons/playRGB.png");
+
+    m_textures["playBig"] = LoadTexture("assets/graphics/Buttons/bigButtons/play.png");
+    m_textures["playBigPressed"] = LoadTexture("assets/graphics/Buttons/bigButtons/playRGB.png");
+    m_textures["settingsBig"] = LoadTexture("assets/graphics/Buttons/bigButtons/settings.png");
+    m_textures["settingsBigPressed"] = LoadTexture("assets/graphics/Buttons/bigButtons/settingsRGB.png");
+    m_textures["exitBig"] = LoadTexture("assets/graphics/Buttons/bigButtons/exit.png");
+    m_textures["exitBigPressed"] = LoadTexture("assets/graphics/Buttons/bigButtons/exitRGB.png");
 
     //boss
     m_textures["BossFull"] = LoadTexture("assets/graphics/Enemies/BossFull.png");

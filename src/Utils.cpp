@@ -28,14 +28,6 @@ void Button::drawPromptText(const char* englishDirection, const char* germanDire
              screenHeight / 2 - 150, 20, BLACK);
 }
 
-void Button::updateAllButtonDimensions(float posX, float posY, float width, float height)
-{
-    for (HudImageButton& button : InGameHud::hudImagebuttons)
-    {
-        updateButtonDimensions(button, posX, posY, width, height);
-    }
-}
-
 void Button::updateButtonDimensions(HudImageButton &button, float x, float y, float width, float height)
 {
     button.x = x;

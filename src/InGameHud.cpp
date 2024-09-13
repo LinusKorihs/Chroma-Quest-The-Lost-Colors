@@ -133,11 +133,7 @@ void InGameHud::drawRGBBarTexture()
     DrawTexture(hudgray, -10, -20, WHITE);
 }
 
-void InGameHud::drawMana(){}
-
-void InGameHud::drawStamina(){}
-
-void InGameHud::drawImageButton(HudImageButton& button)
+void InGameHud::drawSmallButton(HudImageButton& button)
 {
     float buttonCenterX = button.rec.x + button.rec.width / 2;
     float buttonCenterY = button.rec.y + button.rec.height / 2;
@@ -145,24 +141,37 @@ void InGameHud::drawImageButton(HudImageButton& button)
     float buttonTextureX = buttonCenterX - button.texture.width / 2;
     float buttonTextureY = buttonCenterY - button.texture.height / 2;
 
-    DrawTextureRec(button.texture, { 0.0f, 0.0f, (float)button.texture.width, (float)button.texture.height }, {buttonTextureX, buttonTextureY }, WHITE);
-
-    int buttonTextWidth = MeasureText(button.buttonText.c_str(), 20);
-    int buttonTextHeight = 20;
-
-    float buttonTextX = buttonCenterX - buttonTextWidth / 2;
-    float buttonTextY = buttonCenterY - buttonTextHeight / 2;
-
-    DrawText(button.buttonText.c_str(), buttonTextX, buttonTextY, 20, BLACK);
+    DrawTextureRec(button.texture, {0.0f, 0.0f, (float)button.texture.width, (float)button.texture.height}, {buttonTextureX, buttonTextureY }, WHITE);
 }
 
-void InGameHud::drawControlBox() {
-    if(controlActive){
+void InGameHud::drawBigButton(HudImageButton& button)
+{
+    float newWidth = button.rec.width / 2;
+    float newHeight = button.rec.height / 2;
+
+    float buttonCenterX = button.rec.x + newWidth / 2;
+    float buttonCenterY = button.rec.y + newHeight / 2;
+
+    float buttonTextureX = buttonCenterX;
+    float buttonTextureY = buttonCenterY / 1.25;
+
+    DrawTexturePro(button.texture,
+                   {0.0f, 0.0f, (float)button.texture.width, (float)button.texture.height},
+                   {buttonTextureX, buttonTextureY, newWidth, newHeight},
+                   {0.0f, 0.0f}, 0.0f, WHITE);
+    button.rec = {buttonTextureX, buttonTextureY, newWidth, newHeight};
+}
+
+void InGameHud::drawControlBox()
+{
+    if(controlActive)
+    {
         Texture2D controlBox = TextureManager::getTexture("controlBox");
         DrawTexture(controlBox, 3, 180, WHITE);
 
     }
-    if(IsKeyPressed(KEY_C)){
+    if(IsKeyPressed(KEY_C))
+    {
         controlActive = !controlActive;
     }
 }

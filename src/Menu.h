@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameState.h"
+#include "InGameHud.h"
 
 class Menu
 {
@@ -15,6 +16,11 @@ public:
     static void drawControllerMenu(GameState &currentGameState);
     static void drawVolumeSlidersMenu(GameState &currentGameState);
     static void drawVolumeSlidersPauseMenu();
+    static void initButtonsSmall();
+    static void initButtonsFull();
+    static void unloadButtonsSmall();
+    static void unloadButtonsFull();
+    static int checkDrawing;
 
     static std::vector<float> buttonPos;
     static float sliderSpacing;
@@ -23,9 +29,13 @@ public:
     static void unloadBackgroundGif();
     static void updateBackgroundAnimation();
     static void reloadBackgroundGif();
+    static void butRec();
 
     static Image backgroundPic;
     static Texture2D backgroundTex;
+    static bool showButtonRectangles;
+    static RenderTexture canvas;
+
 private:
     static int animFrames;
     static int currentAnimFrame;

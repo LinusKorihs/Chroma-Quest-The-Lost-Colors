@@ -10,32 +10,32 @@ HudImageButton upKeySettingsButton, downKeySettingsButton, leftKeySettingsButton
 void SetKeyBindings::settingTheKeyButtons(GameState &currentGameState)
 {
     upKeySettingsButton.texture = TextureManager::getTexture("upKeyButtonTexture");
-    upKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2 - 100, Button::buttonWidth, Button::buttonHeight};
+    upKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2 - 100, Button::buttonWidthSmall, Button::buttonHeightSmall};
     upKeySettingsButton.buttonText = TextFormat("Up: %c", currentGameState.playerKeyBindings[Direction::UP]),
             TextFormat("Hoch: %c", currentGameState.playerKeyBindings[Direction::UP]);
 
     downKeySettingsButton.texture = TextureManager::getTexture("downKeyButtonTexture");
-    downKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2 - 50, Button::buttonWidth, Button::buttonHeight};
+    downKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2 - 50, Button::buttonWidthSmall, Button::buttonHeightSmall};
     downKeySettingsButton.buttonText = TextFormat("Down: %c", currentGameState.playerKeyBindings[Direction::DOWN]),
             TextFormat("Runter: %c", currentGameState.playerKeyBindings[Direction::DOWN]);
 
     leftKeySettingsButton.texture = TextureManager::getTexture("leftKeyButtonTexture");
-    leftKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2, Button::buttonWidth, Button::buttonHeight};
+    leftKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2, Button::buttonWidthSmall, Button::buttonHeightSmall};
     leftKeySettingsButton.buttonText = TextFormat("Left: %c", currentGameState.playerKeyBindings[Direction::LEFT]),
             TextFormat("Links: %c", currentGameState.playerKeyBindings[Direction::LEFT]);
 
     rightKeySettingsButton.texture = TextureManager::getTexture("rightKeyButtonTexture");
-    rightKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2 + 50, Button::buttonWidth, Button::buttonHeight};
+    rightKeySettingsButton.rec = {(float)Button::buttonScreenWidth, (float)PixelGameConfig::ScreenHeight / 2 + 50, Button::buttonWidthSmall, Button::buttonHeightSmall};
     rightKeySettingsButton.buttonText = TextFormat("Right: %c", currentGameState.playerKeyBindings[Direction::RIGHT]),
             TextFormat("Rechts: %c", currentGameState.playerKeyBindings[Direction::RIGHT]);
 }
 
 void SetKeyBindings::drawKeyBindingsMenu(GameState &currentGameState)
 {
-    InGameHud::drawImageButton(upKeySettingsButton);
-    InGameHud::drawImageButton(downKeySettingsButton);
-    InGameHud::drawImageButton(leftKeySettingsButton);
-    InGameHud::drawImageButton(rightKeySettingsButton);
+    InGameHud::drawSmallButton(upKeySettingsButton);
+    InGameHud::drawSmallButton(downKeySettingsButton);
+    InGameHud::drawSmallButton(leftKeySettingsButton);
+    InGameHud::drawSmallButton(rightKeySettingsButton);
 
     if (Button::checkButtonClick(upKeySettingsButton.rec,
                                  TextFormat("Up: %c", currentGameState.playerKeyBindings[Direction::UP]),

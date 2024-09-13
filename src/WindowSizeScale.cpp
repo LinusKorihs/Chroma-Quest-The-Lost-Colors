@@ -14,7 +14,6 @@ Rectangle WindowSizeScale::calculateRenderRectangle(float& renderScale)
     renderRectangle.x = ((float)GetScreenWidth() - renderRectangle.width) / 2;
     renderRectangle.y = ((float)GetScreenHeight() - renderRectangle.height) / 2;
 
-    Button::updateAllButtonDimensions(renderScale, renderScale, renderScale, renderScale);
     Audio::updateSliderPositions(Audio::index);
 
     return renderRectangle;

@@ -831,21 +831,21 @@ void PixelGame::startSequence()
     }
 }
 
-void PixelGame::ReloadAssets(Texture2D &logoTex, RenderTexture &canvas)
+void PixelGame::ReloadAssets(Texture2D &logoTex)
 {
     // Unload current assets
     UnloadTexture(logoTex);
-    UnloadRenderTexture(canvas);
+    UnloadRenderTexture(Menu::canvas);
 
     // Reload assets with new window size
-    canvas = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
-    if (canvas.id == 0)
+    Menu::canvas = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+    if (Menu::canvas.id == 0)
     {
         // Handle error
         exit(EXIT_FAILURE);
     }
 
-    Image logo = LoadImage("assets/graphics/Buttons/Logo_official.png");
+    Image logo = LoadImage("assets/graphics/Buttons/LogoSmall.png");
     if (logo.data == nullptr)
     {
         // Handle error

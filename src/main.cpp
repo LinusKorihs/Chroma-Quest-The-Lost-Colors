@@ -11,6 +11,8 @@
 #include "VMouse.h"
 #include "WindowSizeScale.h"
 
+RenderTexture Menu::canvas = {0};
+
 int main()
 {
     GameState applicationState;
@@ -22,8 +24,8 @@ int main()
     PixelGame::loadMap("assets/graphics/newTileset&Tilemap/Overworld.tmj");
     SetExitKey(KEY_F4);
 
-    RenderTexture canvas = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
-    if (canvas.id == 0)
+    Menu::canvas = LoadRenderTexture(GetScreenWidth(), GetScreenHeight());
+    if (Menu::canvas.id == 0)
     {
         // Handle error
         return EXIT_FAILURE;
@@ -35,25 +37,43 @@ int main()
     Vector2 previousWindowSize = {(float) GetScreenWidth(), (float) GetScreenHeight()};
 
     Menu::initBackgroundGif();
+    Menu::initButtonsSmall();
 
-    Image logo = LoadImage("assets/graphics/Buttons/Logo_official.png");
-    if (logo.data == nullptr)
+    Image logoSmall = LoadImage("assets/graphics/Buttons/LogoSmall.png");
+    if (logoSmall.data == nullptr)
     {
         // Handle error
         return EXIT_FAILURE;
     }
 
-    Texture2D logoTex = LoadTextureFromImage(logo);
-    if (logoTex.id == 0)
+    Texture2D logoTexSmall = LoadTextureFromImage(logoSmall);
+    if (logoTexSmall.id == 0)
     {
         // Handle error
-        UnloadImage(logo);
+        UnloadImage(logoSmall);
         return EXIT_FAILURE;
     }
 
-    logoTex.width = logo.width / 6;
-    logoTex.height = logo.height / 6;
-    UnloadImage(logo);
+    logoTexSmall.width = logoSmall.width / 6;
+    logoTexSmall.height = logoSmall.height / 6;
+    UnloadImage(logoSmall);
+
+    Image logoBig = LoadImage("assets/graphics/Buttons/LogoBig.png");
+    if (logoBig.data == nullptr)
+    {
+        // Handle error
+        return EXIT_FAILURE;
+    }
+    Texture2D logoTexBig = LoadTextureFromImage(logoBig);
+    if (logoTexBig.id == 0)
+    {
+        // Handle error
+        UnloadImage(logoBig);
+        return EXIT_FAILURE;
+    }
+    logoTexBig.width = logoBig.width / 6;
+    logoTexBig.height = logoBig.height / 6;
+    UnloadImage(logoBig);
 
     while (ConfigNotConst::isGameRunning && !WindowShouldClose())
     {
@@ -64,7 +84,7 @@ int main()
             // Handle window resize
             if (currentGameState.currentGameMenu != MenuState::MainMenu)
             {
-                PixelGame::ReloadAssets(logoTex, canvas);
+                PixelGame::ReloadAssets(logoTexSmall);
             }
             else
             {
@@ -99,22 +119,21 @@ int main()
                            {0, 0}, 0.0f, WHITE);
         }
 
-        BeginTextureMode(canvas);
-
-        // Update and draw the logo
-        float logoX = (currentWindowSize.x - logoTex.width * renderScale) / 2.0f;
+        // Update and draw the logoSmall
+        Texture2D logoTex = (GetScreenWidth() == 1920 && GetScreenHeight() == 1057) ? logoTexBig : logoTexSmall;
+        float logoWidth = (GetScreenWidth() == 1920 && GetScreenHeight() == 1057) ? logoTexBig.width : logoTexSmall.width;
+        float logoX = (currentWindowSize.x - logoWidth * renderScale) / 2.0f;
         float logoY = currentWindowSize.y / 13.0f;
         DrawTextureEx(logoTex, {logoX, logoY}, 0.0f, renderScale, WHITE);
-
-        // Update button positions and hitboxes
-        Menu::updateButtonPositions(currentWindowSize);
 
         switch (applicationState.currentGameMenu)
         {
             case MenuState::MainMenu:
                 Menu::drawMainMenu(applicationState);
+                Menu::butRec();
                 break;
             case MenuState::GameRunning:
+                BeginTextureMode(Menu::canvas);
                 PixelGame::startSequence();
                 if(PixelGame::state == gameLoopState)
                 {
@@ -124,6 +143,7 @@ int main()
                 {
                     applicationState.currentGameMenu = MenuState::PauseMenu;
                 }
+                EndTextureMode();
                 break;
             case MenuState::SettingsMenu:
                 Menu::drawSettingsMenu(applicationState);
@@ -156,13 +176,12 @@ int main()
                 break;
         }
 
-        EndTextureMode();
-        DrawTexturePro(canvas.texture, {0, 0, (float)canvas.texture.width, (float)-canvas.texture.height},
+        DrawTexturePro(Menu::canvas.texture, {0, 0, (float)Menu::canvas.texture.width, (float)-Menu::canvas.texture.height},
                        {0, 0, currentWindowSize.x, currentWindowSize.y}, {0, 0}, 0.0f, WHITE);
         EndDrawing();
     }
 
-    UnloadTexture(logoTex);
+    UnloadTexture(logoTexSmall);
     Menu::unloadBackgroundGif();
     CloseWindow();
     return EXIT_SUCCESS;

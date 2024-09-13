@@ -55,7 +55,7 @@ public:
     static void unloadMap();
     static tson::Map& getMap();
     static void updateAudio();
-    static void ReloadAssets(Texture2D &logoTex, RenderTexture &canvas);
+    static void ReloadAssets(Texture2D &logoTex);
 
     static tson::Map currentMap;
     static bool dialogDone;
