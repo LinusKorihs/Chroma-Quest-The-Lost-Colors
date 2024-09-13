@@ -11,7 +11,6 @@
 #include "VMouse.h"
 #include "WindowSizeScale.h"
 
-Texture2D logoTexSmall;
 Texture2D logoTexBig;
 
 void loadAssetsBasedOnWindowSize()
@@ -49,7 +48,7 @@ int main()
 
     PixelGame::loadMap("assets/graphics/newTileset&Tilemap/Overworld.tmj");
     SetExitKey(KEY_F4);
-    ToggleFullscreen();
+    //ToggleFullscreen();
 
     RenderTexture canvasSmall = LoadRenderTexture(480, 270);
     if (canvasSmall.id == 0)
@@ -100,6 +99,11 @@ int main()
 
         std::cout << "Current window size: " << currentWindowSize.x << "x" << currentWindowSize.y << std::endl;
         BeginTextureMode(canvasSmall);
+
+        Texture2D playButton = LoadTexture("assets/graphics/Buttons/bigButtons/play.png");
+        playButton.width = 128;
+        playButton.height = 48;
+        DrawTexture(playButton, 200, 0, WHITE);
 
         switch (applicationState.currentGameMenu)
         {

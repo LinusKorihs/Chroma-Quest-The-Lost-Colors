@@ -80,6 +80,8 @@ void Menu::updateBackgroundAnimation()
 
 void Menu::initButtonsFull()
 {
+    unloadButtonsFull();
+
     startButtonFull.texture = LoadTexture("assets/graphics/Buttons/bigButtons/play.png");
     settingsButtonFull.texture = LoadTexture("assets/graphics/Buttons/bigButtons/settings.png");
     exitButtonFull.texture = LoadTexture("assets/graphics/Buttons/bigButtons/exit.png");
@@ -87,13 +89,19 @@ void Menu::initButtonsFull()
     startButtonHoverFull.texture = LoadTexture("assets/graphics/Buttons/bigButtons/playRGB.png");
     settingsButtonHoverFull.texture = LoadTexture("assets/graphics/Buttons/bigButtons/settingsRGB.png");
     exitButtonHoverFull.texture = LoadTexture("assets/graphics/Buttons/bigButtons/exitRGB.png");
+
+    DrawTextureRec(startButtonFull.texture, {0, 0, (float)startButtonFull.texture.width, (float)startButtonFull.texture.height}, {startButtonFull.rec.x, startButtonFull.rec.y}, WHITE);
+
+    std::cout << "Start button texture ID: " << startButtonFull.texture.id << std::endl;
+    std::cout << "Settings button texture ID: " << settingsButtonFull.texture.id << std::endl;
+    std::cout << "Exit button texture ID: " << exitButtonFull.texture.id << std::endl;
 }
 
 void Menu::updateButtonPositions(Vector2 windowSize)
 {
-    float buttonWidth = 200.0f; // Adjust the button width
-    float buttonHeight = 100.0f; // Adjust the button height
-    float spacing = 20.0f; // Adjust the spacing between buttons
+    float buttonWidth = 400.0f;
+    float buttonHeight = 200.0f;
+    float spacing = 20.0f;
 
     float startX = (windowSize.x - buttonWidth) / 2.0f;
     float startY = (windowSize.y - (buttonHeight + spacing) * 3) / 2.0f;
@@ -101,39 +109,10 @@ void Menu::updateButtonPositions(Vector2 windowSize)
     startButtonFull.rec = {startX, startY, buttonWidth, buttonHeight};
     settingsButtonFull.rec = {startX, startY + buttonHeight + spacing, buttonWidth, buttonHeight};
     exitButtonFull.rec = {startX, startY + 2 * (buttonHeight + spacing), buttonWidth, buttonHeight};
-}
 
-void Menu::unloadButtonsFull()
-{
-    if (startButtonFull.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(startButtonFull);
-    }
-
-    if (settingsButtonFull.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(settingsButtonFull);
-    }
-
-    if (exitButtonFull.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(exitButtonFull);
-    }
-
-    if (startButtonHoverFull.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(startButtonHoverFull);
-    }
-
-    if (settingsButtonHoverFull.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(settingsButtonHoverFull);
-    }
-
-    if (exitButtonHoverFull.texture.id != 0)
-    {
-        HudImageButton::unloadImageButton(exitButtonHoverFull);
-    }
+    std::cout << "Start button rectangle: " << startButtonFull.rec.x << ", " << startButtonFull.rec.y << ", " << startButtonFull.rec.width << ", " << startButtonFull.rec.height << std::endl;
+    std::cout << "Settings button rectangle: " << settingsButtonFull.rec.x << ", " << settingsButtonFull.rec.y << ", " << settingsButtonFull.rec.width << ", " << settingsButtonFull.rec.height << std::endl;
+    std::cout << "Exit button rectangle: " << exitButtonFull.rec.x << ", " << exitButtonFull.rec.y << ", " << exitButtonFull.rec.width << ", " << exitButtonFull.rec.height << std::endl;
 }
 
 int Menu::drawMainMenu(GameState &currentGameState)
@@ -144,16 +123,10 @@ int Menu::drawMainMenu(GameState &currentGameState)
 
     updateButtonPositions(windowSize);
 
-    // Draw buttons
-    //DrawTextureRec(startButtonFull.texture, {0, 0, (float)startButtonFull.texture.width, (float)startButtonFull.texture.height}, {startButtonFull.rec.x, startButtonFull.rec.y}, WHITE);
-    //DrawTextureRec(settingsButtonFull.texture, {0, 0, (float)settingsButtonFull.texture.width, (float)settingsButtonFull.texture.height}, {settingsButtonFull.rec.x, settingsButtonFull.rec.y}, WHITE);
-    //DrawTextureRec(exitButtonFull.texture, {0, 0, (float)exitButtonFull.texture.width, (float)exitButtonFull.texture.height}, {exitButtonFull.rec.x, exitButtonFull.rec.y}, WHITE);
+    DrawTextureRec(startButtonFull.texture, {0, 0, (float)startButtonFull.texture.width, (float)startButtonFull.texture.height}, {startButtonFull.rec.x, startButtonFull.rec.y}, WHITE);
+    DrawTextureRec(settingsButtonFull.texture, {0, 0, (float)settingsButtonFull.texture.width, (float)settingsButtonFull.texture.height}, {settingsButtonFull.rec.x, settingsButtonFull.rec.y}, WHITE);
+    DrawTextureRec(exitButtonFull.texture, {0, 0, (float)exitButtonFull.texture.width, (float)exitButtonFull.texture.height}, {exitButtonFull.rec.x, exitButtonFull.rec.y}, WHITE);
 
-    InGameHud::drawBigButton(startButtonFull);
-    InGameHud::drawBigButton(settingsButtonFull);
-    InGameHud::drawBigButton(exitButtonFull);
-
-    // Draw hover states if necessary
     if (CheckCollisionPointRec(GetMousePosition(), startButtonFull.rec))
     {
         DrawTextureRec(startButtonHoverFull.texture, {0, 0, (float)startButtonHoverFull.texture.width, (float)startButtonHoverFull.texture.height}, {startButtonFull.rec.x, startButtonFull.rec.y}, WHITE);
@@ -167,7 +140,6 @@ int Menu::drawMainMenu(GameState &currentGameState)
         DrawTextureRec(exitButtonHoverFull.texture, {0, 0, (float)exitButtonHoverFull.texture.width, (float)exitButtonHoverFull.texture.height}, {exitButtonFull.rec.x, exitButtonFull.rec.y}, WHITE);
     }
 
-    // Check button clicks
     if (CheckCollisionPointRec(GetMousePosition(), startButtonFull.rec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
         currentGameState.changeGameState(MenuState::GameRunning);
@@ -188,19 +160,11 @@ int Menu::drawMainMenu(GameState &currentGameState)
         ConfigNotConst::isGameRunning = false;
     }
 
-    if (IsKeyPressed(KEY_H))
-    {
-        showButtonRectangles = !showButtonRectangles;
-    }
-
     if (showButtonRectangles)
     {
         DrawRectangleLinesEx(startButtonFull.rec, 3, BLUE);
-        std::cout << "Start button rectangle: " << startButtonFull.rec.x << ", " << startButtonFull.rec.y << ", " << startButtonFull.rec.width << ", " << startButtonFull.rec.height << std::endl;
-        DrawRectangleLinesEx(settingsButtonFull.rec, 4, BLUE);
-        std::cout << "Settings button rectangle: " << settingsButtonFull.rec.x << ", " << settingsButtonFull.rec.y << ", " << settingsButtonFull.rec.width << ", " << settingsButtonFull.rec.height << std::endl;
-        DrawRectangleLinesEx(exitButtonFull.rec, 5, BLUE);
-        std::cout << "Exit button rectangle: " << exitButtonFull.rec.x << ", " << exitButtonFull.rec.y << ", " << exitButtonFull.rec.width << ", " << exitButtonFull.rec.height << std::endl;
+        DrawRectangleLinesEx(settingsButtonFull.rec, 3, BLUE);
+        DrawRectangleLinesEx(exitButtonFull.rec, 3, BLUE);
     }
 
     updateBackgroundAnimation();
@@ -349,4 +313,14 @@ void Menu::drawPauseMenu(GameState &currentGameState)
         ConfigNotConst::isGameRunning = false;  // Optionally stop the game
     }
     DrawText(LanguageManager::getLocalizedGameText("Pause Menu", "Pause Menü"), 10, 10, 20, BLACK);
+}
+
+void Menu::unloadButtonsFull()
+{
+    UnloadTexture(startButtonFull.texture);
+    UnloadTexture(settingsButtonFull.texture);
+    UnloadTexture(exitButtonFull.texture);
+    UnloadTexture(startButtonHoverFull.texture);
+    UnloadTexture(settingsButtonHoverFull.texture);
+    UnloadTexture(exitButtonHoverFull.texture);
 }
