@@ -17,6 +17,7 @@ enum gameLoopState PixelGame::state = sequence;
 int PixelGame::dialogCounter = 0;
 bool PixelGame::controlBoxWasActive = true;
 Music PixelGame::music;
+Music PixelGame::overworldMusic;
 bool PixelGame::dialogDone = false;
 int PixelGame::sentence = 0;
 bool PixelGame::canMove = true;
@@ -69,8 +70,10 @@ void PixelGame::gameInit()
 {
     music = LoadMusicStream("assets/audio/tracks/dungeon1-1new.wav");
     dungeonMusic2 = LoadMusicStream("assets/audio/tracks/dungeon1-2.wav");
+    overworldMusic = LoadMusicStream("assets/audio/tracks/overworld.wav");
     SetMusicVolume(music, 0.5f);
     SetMusicVolume(dungeonMusic2, 0.5f);
+    SetMusicVolume(overworldMusic, 0.5f);
 
     slimeEnemyTexture = TextureManager::getTexture("SlimeRed");
     BossRed = TextureManager::getTexture("BossRed");
@@ -374,7 +377,10 @@ void PixelGame::gameLoop(tson::Map &Map)
             DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
         }
 
-        MainCharacter::attack();
+        if(!roomChanger.isTransitioning() && !playerCamera::getIsAnimating() && !DialogBox::dialogBoxes[0].isActive() && !DialogBox::dialogBoxes[1].isActive() && !InGameHud::journalActive)
+        {
+            MainCharacter::attack();
+        }
         MainCharacter::receiveDamage();
         MainCharacter::drawMainCharacter(texture, character);
 
@@ -753,25 +759,26 @@ void PixelGame::unloadMap()
 
 void PixelGame::updateAudio()
 {
-    if (!track1Played)
-    {
-        if (GetMusicTimePlayed(music) == 0)
-        {
-            PlayMusicStream(music);
-        }
-        UpdateMusicStream(music);
+    if(roomChanger.dungeon1) {
+        if (!track1Played) {
+            if (GetMusicTimePlayed(music) == 0) {
+                PlayMusicStream(music);
+            }
+            UpdateMusicStream(music);
 
-        if (GetMusicTimePlayed(music) >= 104.34)
-        {
-            StopMusicStream(music);
-            track1Played = true;
-            std::cout << "Music stopped, switching to track 2" << std::endl;
-            PlayMusicStream(dungeonMusic2);
+            if (GetMusicTimePlayed(music) >= 104.34) {
+                StopMusicStream(music);
+                track1Played = true;
+                std::cout << "Music stopped, switching to track 2" << std::endl;
+                PlayMusicStream(dungeonMusic2);
+            }
+        } else {
+            UpdateMusicStream(dungeonMusic2);
         }
     }
-    else
-    {
-        UpdateMusicStream(dungeonMusic2);
+    if(roomChanger.overworld){
+        PlayMusicStream(overworldMusic);
+        UpdateMusicStream(overworldMusic);
     }
 }
 

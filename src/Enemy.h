@@ -3,6 +3,7 @@
 #include "raylib.h"
 #include "cmath"
 #include "Projectile.h"
+#include "Configuration.h"
 #include <memory>
 #include "UniversalMethods.h"
 

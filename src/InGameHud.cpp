@@ -183,7 +183,7 @@ void InGameHud::drawControlBox()
     if(controlActive)
     {
         Texture2D controlBox = TextureManager::getTexture("controlBox");
-        DrawTexture(controlBox, 3, 180, WHITE);
+        DrawTexture(controlBox, 3, 175, WHITE);
 
     }
     if(IsKeyPressed(KEY_C))
@@ -263,13 +263,15 @@ void InGameHud::drawJournal()
             DrawTexture(journal, 100, 20, WHITE);
             if(CheckCollisionPointRec(VMouse::pos(), { 140, 50, 100, 15 }) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
-               firstText = true;
-               secondText = false;
+                firstText = true;
+                secondText = false;
+                PlaySound(ConfigNotConst::selectSound);
             }
             if(CheckCollisionPointRec(VMouse::pos(), { 140, 70, 100, 15 }) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
-               secondText = true;
-               firstText = false;
+                secondText = true;
+                firstText = false;
+                PlaySound(ConfigNotConst::selectSound);
             }
             if(firstText)
             {

@@ -54,7 +54,7 @@ private:
 class PressurePlate
 {
 public:
-    PressurePlate(float x, float y, float size, Texture2D& texture, bool color);
+    PressurePlate(float x, float y, float size, Texture2D& texture, int color);
 
     void draw() const;
     void setPressed(bool pressed);
@@ -71,7 +71,7 @@ private:
     float plateSize;
     Texture2D& plateTexture;
     bool pressed;
-    bool color;
+    int color;
     bool redButton;
 };
 
@@ -191,8 +191,8 @@ public:
     void update();
     static void init(Texture2D journalTexture);
     static std::vector<Journal> journals;
-    bool pickedUp;
     Rectangle journalRec;
+    bool pickedUp;
 
 private:
     float journalPositionX;

@@ -444,25 +444,29 @@ void Stone::initializeStones(Texture2D& stoneTexture, Rectangle& stoneSourceRect
     Stone::stoneObjects.emplace_back(multiple * 44, multiple * 12, multiple, stoneTexture, stoneSourceRect);
     Stone::stoneObjects.emplace_back(multiple * 44, multiple * 14, multiple, stoneTexture, stoneSourceRect);
 
-}
 
+
+}
 std::vector<PressurePlate> PressurePlate::pressurePlates;
 
-PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture, bool color)
+PressurePlate::PressurePlate(float x, float y, float size, Texture2D& texture, int color)
         : platePositionX(x), platePositionY(y), plateSize(size), plateTexture(texture), pressed(false), color(color)
 {
 }
 
 void PressurePlate::draw() const
 {
-    if(!color)
-    {
+    if(color == 0) {
         Texture2D plateTexture = pressed ? TextureManager::getTexture("PlatePressed") : TextureManager::getTexture(
                 "PlateNormal");
         DrawTexture(plateTexture, platePositionX, platePositionY, WHITE);
     }
-    else
-    {
+    if(color == 1){
+        Texture2D plateTexture = pressed ? TextureManager::getTexture("platePressedDark") : TextureManager::getTexture(
+                "plateNormalDark");
+        DrawTexture(plateTexture, platePositionX, platePositionY, WHITE);
+    }
+    if(color == 2){
         Texture2D plateTexture;
         if(platePositionX == 61*32)
         {
@@ -515,9 +519,14 @@ void PressurePlate::update()
     //std::cout << "Player Rectangle: " << playerRect.x << ", " << playerRect.y << ", " << playerRect.width << ", " << playerRect.height << std::endl;
     //std::cout << "Plate Rectangle: " << plateRect.x << ", " << plateRect.y << ", " << plateRect.width << ", " << plateRect.height << std::endl;
 
-    if(CheckCollisionRecs(playerRect, plateRect)) //füße und richtige plate größe werden gecheckt
+    if(CheckCollisionRecs(playerRect, plateRect) && !pressed) //füße und richtige plate größe werden gecheckt
     {
         pressed = true;
+        PlaySound(ConfigNotConst::pressurePlateSound);
+        if(!IsSoundPlaying(ConfigNotConst::pressurePlateSound))
+        {
+            StopSound(ConfigNotConst::pressurePlateSound);
+        }
     }
    /* if (CheckProximity(plateRect, playerRect, 8.0f))
     {
@@ -529,6 +538,7 @@ void PressurePlate::update()
     }*/
     //drawHitboxes();
 }
+
 
 // Hitboxes
 void PressurePlate::drawHitboxes() const
@@ -551,21 +561,23 @@ void MainCharacter::drawHitboxes() const
 
 void PressurePlate::initPlates(Texture2D &plateTexture)
 {
-    pressurePlates.emplace_back(800, 2400, 32, plateTexture,false);//1. raum
-    pressurePlates.emplace_back(22*32, 37*32, 32, plateTexture,false);//raum links
-    pressurePlates.emplace_back(59*32, 37*32, 32, plateTexture,false);//raum rechts
+    pressurePlates.emplace_back(800, 2400, 32, plateTexture,0);//1. raum
+    pressurePlates.emplace_back(22*32, 37*32, 32, plateTexture,0);//raum links
+    pressurePlates.emplace_back(59*32, 37*32, 32, plateTexture,0);//raum rechts
 
-    pressurePlates.emplace_back(27*32, 12*32, 32, plateTexture,false); //boss links
-    pressurePlates.emplace_back(43*32, 12*32, 32, plateTexture,false); // boss rechts
+    pressurePlates.emplace_back(27*32, 12*32, 32, plateTexture,1); //boss links
+    pressurePlates.emplace_back(43*32, 12*32, 32, plateTexture,1); // boss rechts
 
-    pressurePlates.emplace_back(35*32, 71*32, 32, plateTexture,true); //reset 1. raum
-    pressurePlates.emplace_back(35*32, 61*32, 32, plateTexture,true); //reset 2. raum
-    pressurePlates.emplace_back(13*32, 41*32, 32, plateTexture,true); //reset 3. raum
-    pressurePlates.emplace_back(32*32, 40*32, 32, plateTexture,true); //reset 4. raum
-    pressurePlates.emplace_back(53*32, 36*32, 32, plateTexture,true); //reset 5. raum
-    pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture,true); //reset 5. raum
+    pressurePlates.emplace_back(35*32, 71*32, 32, plateTexture,2); //reset 1. raum
+    pressurePlates.emplace_back(35*32, 61*32, 32, plateTexture,2); //reset 2. raum
+    pressurePlates.emplace_back(13*32, 41*32, 32, plateTexture,2); //reset 3. raum
+    pressurePlates.emplace_back(32*32, 40*32, 32, plateTexture,2); //reset 4. raum
+    pressurePlates.emplace_back(53*32, 36*32, 32, plateTexture,2); //reset 5. raum
+    pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture,2); //reset 5. raum
 
-    pressurePlates.emplace_back(34*32, 19*32, 32, plateTexture,true); //reset Bossraum
+    pressurePlates.emplace_back(34*32, 19*32, 32, plateTexture,2); //reset Bossraum
+
+
 }
 
 void PressurePlate::setPressed(bool pressed)
@@ -574,6 +586,7 @@ void PressurePlate::setPressed(bool pressed)
 
 }
 
+
 Door::Door(int doorOp, Texture2D texture, float positionX, float positionY, int doorNum, int step)
         : doorOpen(doorOp), doorTexture(texture), doorPositionX(positionX), doorPositionY(positionY), doorNumber(doorNum), currentStep(step)
 {
@@ -581,32 +594,27 @@ Door::Door(int doorOp, Texture2D texture, float positionX, float positionY, int 
 
 void Door::draw(float deltaTime)
 {
-   /* if (!animationFinished)
-    * {
+   /* if (!animationFinished) {
         frameCounter++;
         int framesPerStep;
         if(doorNumber == 1){
             framesPerStep = 8;
         }
-        else
-        {
+        else {
             framesPerStep = 20; // Anzahl Frames pro Animationsschritt
         }
 
-        if (frameCounter >= framesPerStep)
-        {
+        if (frameCounter >= framesPerStep) {
             currentStep++;
             frameCounter = 0;
 
-            if (currentStep > 2)
-            {
+            if (currentStep > 2) {
                 currentStep = 2;
                 animationFinished = true;
             }
         }
 
-        switch (currentStep)
-        {
+        switch (currentStep) {
             case 0:
                 DrawTextureRec(doorTexture, {32, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
                 break;
@@ -617,39 +625,31 @@ void Door::draw(float deltaTime)
                 DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
                 break;
         }
-    }
-    else
-    {
+    } else {
 
         DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE); //das bleibt dann
     }*/
-    if (!animationFinished)
-    {
-        if(doorNumber == 1)
-        {
+    if (!animationFinished) {
+        if(doorNumber == 1){
             frameSpeed = 3;
         }
-        else
-        {
+        else {
             frameSpeed = 2;
         }
 
         frameCounter += deltaTime * frameSpeed;
 
-        if (frameCounter >= 1.0f)
-        {
+        if (frameCounter >= 1.0f) {
             frameCounter -= 1;
             currentStep++;
 
-            if (currentStep > 2)
-            {
+            if (currentStep > 2) {
                 currentStep = 2;
                 animationFinished = true;
             }
         }
 
-        switch (currentStep)
-        {
+        switch (currentStep) {
             case 0:
                 DrawTextureRec(doorTexture, {32, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
                 break;
@@ -660,9 +660,7 @@ void Door::draw(float deltaTime)
                 DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE);
                 break;
         }
-    }
-    else
-    {
+    } else {
 
         DrawTextureRec(doorTexture, {96, 0, 32, 32}, {doorPositionX, doorPositionY}, WHITE); //das bleibt dann
     }
@@ -845,12 +843,14 @@ void Machine::update()
     if(CheckCollisionRecs(machineRec, MainCharacter::HitRec) && IsKeyPressed(KEY_E) && pickedUp)
     {
         filled = true;
+        PlaySound(ConfigNotConst::orbSound);
     }
 
     orbRec = {orbPositionX -4, orbPositionY-4, 40, 40};
     if (CheckCollisionRecs(orbRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E))
     {
         pickedUp = true;
+        PlaySound(ConfigNotConst::orbSound);
     }
 }
 
@@ -951,6 +951,7 @@ Signs::Signs(float posX, float posY, Texture2D textText, bool bigSign)
     yellowRoad = TextureManager::getTexture("yellowRoad");
     redTower = TextureManager::getTexture("redTower");
 
+
     if(bigSign)
     {
         signRec = {signPositionX-4, signPositionY - 40, 40, 80};
@@ -1018,7 +1019,6 @@ void Journal::draw()
     if (!pickedUp) {
         UniversalMethods::updateAnimation(GetFrameTime(), frameCounter, currentFrame, 0, 4, frameRec.x, object);
         DrawTextureRec(journalTexture, frameRec, {journalPositionX, journalPositionY}, WHITE);
-
     }
 }
 
@@ -1026,6 +1026,7 @@ void Journal::update()
 {
     if (CheckCollisionRecs(journalRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E)) {
         pickedUp = true;
+        PlaySound(ConfigNotConst::pickPageSound);
     }
     if(journals[0].pickedUp && !journals[1].pickedUp){
         InGameHud::journalPhase = second;

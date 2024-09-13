@@ -24,6 +24,17 @@ private:
     int currentLineIndex;
     bool active;
     static Font font;
+    static std::vector<std::string> dialog1;
+    static std::vector<std::string> dialog2;
+    static std::vector<std::string> dialog3;
+    static std::vector<std::string> dialog4;
+    static std::vector<std::string> dialog5;
+    static std::vector<std::string> dialog6;
+    static std::vector<std::string> dialog7;
+    static std::vector<std::string> dialog8;
+    static std::vector<std::string> dialog9;
+    static std::vector<std::string> dialog10;
+    static std::vector<std::string> dialog11;
 };
 
 

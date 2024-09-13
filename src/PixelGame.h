@@ -81,6 +81,7 @@ private:
     static bool hasAnimated[3];
 
     static Music music;
+    static Music overworldMusic;
     static Music dungeonMusic2;
 
     static bool track1Played;

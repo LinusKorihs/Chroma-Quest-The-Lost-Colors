@@ -70,4 +70,5 @@ public:
 
 
     static int gameOverCount;
+    static void drawTutJournal();
 };
