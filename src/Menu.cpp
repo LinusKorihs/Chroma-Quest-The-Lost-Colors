@@ -14,6 +14,8 @@
 
 std::vector<float> Menu::buttonPos;
 
+RenderTexture Menu::canvas = {0};
+
 HudImageButton startGameButton, settingsMenuButton, exitGameButton, resumeGameButton, quitGameButton, volumeSettingsButton, controlSettingsButton, languageSettingsButton, keyBoardSettingsButton, controllerSettingsButton, englishLanguageButton, germanLanguageButton;
 
 HudImageButton startButtonNormal, settingsButtonNormal, exitButtonNormal;
@@ -62,6 +64,23 @@ void Menu::reloadBackgroundGif()
 {
     unloadBackgroundGif();
     initBackgroundGif();
+}
+
+void Menu::updateButtonPositions(Vector2 windowSize)
+{
+    // Example button positions update logic
+    float buttonWidth = 100.0f;
+    float buttonHeight = 50.0f;
+    float spacing = 10.0f;
+
+    // Update button positions based on window size
+    float startX = (windowSize.x - buttonWidth) / 2.0f;
+    float startY = (windowSize.y - (buttonHeight + spacing) * 3) / 2.0f;
+
+    // Assuming you have buttons like playButton, settingsButton, etc.
+    startButtonNormal.rec = {startX, startY, buttonWidth, buttonHeight};
+    settingsButtonNormal.rec = {startX, startY + buttonHeight + spacing, buttonWidth, buttonHeight};
+    exitButtonNormal.rec = {startX, startY + 2 * (buttonHeight + spacing), buttonWidth, buttonHeight};
 }
 
 void Menu::updateBackgroundAnimation()

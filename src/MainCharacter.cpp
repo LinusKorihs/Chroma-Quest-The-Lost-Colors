@@ -360,7 +360,7 @@ void MainCharacter::moveMainCharacter(int moveDirection, float deltaTime)
 
         for (Stone &stone: Stone::stoneObjects)
         {
-            if (CheckCollisionRecs(playerStonePushRec, stone.getRectangle()))  //test
+            if (CheckCollisionRecs(enemyNewRec, stone.getRectangle()))  //test
             {
                 nearestStone = &stone;
                 break;
