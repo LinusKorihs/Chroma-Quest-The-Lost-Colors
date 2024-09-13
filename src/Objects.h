@@ -180,6 +180,7 @@ private:
     static Texture2D blueDist;
     static Texture2D redDist;
     static Texture2D yellowDist;
+    static Texture2D redTower;
 };
 
 class Journal {
@@ -190,13 +191,13 @@ public:
     void update();
     static void init(Texture2D journalTexture);
     static std::vector<Journal> journals;
+    bool pickedUp;
+    Rectangle journalRec;
 
 private:
     float journalPositionX;
     float journalPositionY;
     Texture2D journalTexture;
-    Rectangle journalRec;
-    bool pickedUp;
     Rectangle frameRec;
     int currentFrame;
     float frameCounter;

@@ -282,3 +282,8 @@ void InGameHud::drawJournal()
         }
     }
  }
+void InGameHud::drawTutJournal()
+{
+    Texture2D tutJournal = TextureManager::getTexture("tutJournal");
+    DrawTexture(tutJournal, 160, 10, WHITE);
+}

@@ -90,6 +90,7 @@ void TextureManager::init()
     m_textures["blueRoad"] = LoadTexture("assets/graphics/HUD/Districts/blue Road.png");
     m_textures["yellowRoad"] = LoadTexture("assets/graphics/HUD/Districts/yellow Road.png");
     m_textures["redRoad"] = LoadTexture("assets/graphics/HUD/Districts/Red Road.png");
+    m_textures["redTower"] = LoadTexture("assets/graphics/HUD/Districts/redTower.png");
     m_textures["central"] = LoadTexture("assets/graphics/HUD/Districts/central.png");
     m_textures["background"] = LoadTexture("assets/background.gif");
 
@@ -128,6 +129,7 @@ void TextureManager::init()
     m_textures["chests"] = LoadTexture("assets/graphics/HUD/Tutorial/chests.png");
     m_textures["placeOrb"] = LoadTexture("assets/graphics/HUD/Tutorial/placeOrb.png");
     m_textures["redButton"] = LoadTexture("assets/graphics/HUD/Tutorial/redButton.png");
+    m_textures["tutJournal"] = LoadTexture("assets/graphics/HUD/Tutorial/tutJournal.png");
 
     //journal
     m_textures["emptyJournal"] = LoadTexture("assets/graphics/Journal/empty.png");
