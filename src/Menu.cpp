@@ -63,12 +63,6 @@ void Menu::unloadBackgroundGif()
     UnloadImage(backgroundPic);
 }
 
-void Menu::reloadBackgroundGif()
-{
-    unloadBackgroundGif();
-    initBackgroundGif();
-}
-
 void Menu::updateButtonPositions(Vector2 windowSize)
 {
     // Example button positions update logic
@@ -98,14 +92,6 @@ void Menu::updateBackgroundAnimation()
         UpdateTexture(backgroundTex, ((unsigned char *)backgroundPic.data) + nextFrameDataOffset);
 
         frameCounter = 0;
-    }
-}
-
-void Menu::butRec()
-{
-    if (IsKeyPressed(KEY_H))
-    {
-        showButtonRectangles = !showButtonRectangles;
     }
 }
 
@@ -222,11 +208,19 @@ int Menu::drawMainMenu(GameState &currentGameState)
         ConfigNotConst::isGameRunning = false;
     }
 
+    if (IsKeyPressed(KEY_H))
+    {
+        showButtonRectangles = !showButtonRectangles;
+    }
+
     if (showButtonRectangles)
     {
         DrawRectangleLinesEx(startButtonFull.rec, 1, BLUE);
         DrawRectangleLinesEx(settingsButtonFull.rec, 1, BLUE);
         DrawRectangleLinesEx(exitButtonFull.rec, 1, BLUE);
+        std::cout << "Button rectangles are shown." << std::endl;
+        std::cout << "Button positions: " << startButtonFull.rec.x << ", " << startButtonFull.rec.y << std::endl;
+        std::cout << "Button size: " << startButtonFull.rec.width << ", " << startButtonFull.rec.height << std::endl;
     }
 
     updateBackgroundAnimation();

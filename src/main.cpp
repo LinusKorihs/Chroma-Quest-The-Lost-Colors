@@ -34,8 +34,8 @@ void loadAssetsBasedOnWindowSize()
         UnloadImage(logoBig);
         return;
     }
-    logoTexBig.width = logoBig.width / 4;
-    logoTexBig.height = logoBig.height / 4;
+    logoTexBig.width = logoBig.width / 3;
+    logoTexBig.height = logoBig.height / 3;
     UnloadImage(logoBig);
 }
 
