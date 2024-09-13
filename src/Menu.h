@@ -26,6 +26,7 @@ public:
     static float sliderSpacing;
 
     static void initBackgroundGif();
+    static void initBackgroundGifLarge();
     static void unloadBackgroundGif();
     static void updateBackgroundAnimation();
     static void reloadBackgroundGif();

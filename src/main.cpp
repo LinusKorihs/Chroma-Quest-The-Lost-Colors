@@ -19,7 +19,7 @@ void loadAssetsBasedOnWindowSize()
     if (GetScreenWidth() == 1920 && GetScreenHeight() == 1057)
     {
         // Load large versions of assets
-        Menu::initBackgroundGif();
+        Menu::initBackgroundGifLarge();
         Menu::initButtonsFull();
 
         Image logoBig = LoadImage("assets/graphics/Buttons/LogoBig.png");

@@ -40,14 +40,20 @@ int Menu::frameCounter = 0;
 
 void Menu::initBackgroundGif()
 {
-    if (GetScreenWidth() > 960 && GetScreenHeight() > 540)
-    {
-        backgroundPic = LoadImageAnim("assets/backgroundBig.gif", &animFrames);
-    }
-    else
-    {
-        backgroundPic = LoadImageAnim("assets/background.gif", &animFrames);
-    }
+    unloadBackgroundGif();
+
+    backgroundPic = LoadImageAnim("assets/background.gif", &animFrames);
+    backgroundTex = LoadTextureFromImage(backgroundPic);
+
+    // Update the background GIF
+    updateBackgroundAnimation();
+}
+
+void Menu::initBackgroundGifLarge()
+{
+    unloadBackgroundGif();
+
+    backgroundPic = LoadImageAnim("assets/backgroundBig.gif", &animFrames);
     backgroundTex = LoadTextureFromImage(backgroundPic);
 
     // Update the background GIF
