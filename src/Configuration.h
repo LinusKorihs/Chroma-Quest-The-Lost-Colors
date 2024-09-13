@@ -29,6 +29,14 @@ public:
     static Sound playerWalkingSound;
     static Sound doorOpenSound;
     static Sound chestOpenSound;
+    static Sound punchSound;
+    static Sound miniBossHit;
+    static Sound slimeDeath;
+    static Sound selectSound;
+    static Sound pickPageSound;
+    static Sound pressurePlateSound;
+    static Sound heartSound;
+    static Sound orbSound;
     static Music gameBackgroundMusic;
 };
 

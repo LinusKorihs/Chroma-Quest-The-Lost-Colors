@@ -344,6 +344,11 @@ void MiniBoss::bossGetsHit()
     {
         enemyHits++;
         barHits++;
+        PlaySound(ConfigNotConst::miniBossHit);
+        if(!IsSoundPlaying(ConfigNotConst::miniBossHit))
+        {
+            StopSound(ConfigNotConst::miniBossHit);
+        }
         std::cout << "Enemy hits: " << enemyHits << std::endl;
     }
 }

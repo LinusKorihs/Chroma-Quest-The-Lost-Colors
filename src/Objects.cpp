@@ -517,9 +517,14 @@ void PressurePlate::update()
     //std::cout << "Player Rectangle: " << playerRect.x << ", " << playerRect.y << ", " << playerRect.width << ", " << playerRect.height << std::endl;
     //std::cout << "Plate Rectangle: " << plateRect.x << ", " << plateRect.y << ", " << plateRect.width << ", " << plateRect.height << std::endl;
 
-    if(CheckCollisionRecs(playerRect, plateRect)) //füße und richtige plate größe werden gecheckt
+    if(CheckCollisionRecs(playerRect, plateRect) && !pressed) //füße und richtige plate größe werden gecheckt
     {
         pressed = true;
+        PlaySound(ConfigNotConst::pressurePlateSound);
+        if(!IsSoundPlaying(ConfigNotConst::pressurePlateSound))
+        {
+            StopSound(ConfigNotConst::pressurePlateSound);
+        }
     }
    /* if (CheckProximity(plateRect, playerRect, 8.0f))
     {
@@ -835,12 +840,14 @@ void Machine::update()
     if(CheckCollisionRecs(machineRec, MainCharacter::HitRec) && IsKeyPressed(KEY_E) && pickedUp)
     {
         filled = true;
+        PlaySound(ConfigNotConst::orbSound);
     }
 
     orbRec = {orbPositionX -4, orbPositionY-4, 40, 40};
     if (CheckCollisionRecs(orbRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E))
     {
         pickedUp = true;
+        PlaySound(ConfigNotConst::orbSound);
     }
 }
 
@@ -1016,6 +1023,7 @@ void Journal::update()
 {
     if (CheckCollisionRecs(journalRec, MainCharacter::playerRec) && IsKeyPressed(KEY_E)) {
         pickedUp = true;
+        PlaySound(ConfigNotConst::pickPageSound);
     }
     if(journals[0].pickedUp && !journals[1].pickedUp){
         InGameHud::journalPhase = second;

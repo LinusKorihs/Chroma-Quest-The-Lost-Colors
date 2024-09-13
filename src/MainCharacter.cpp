@@ -464,6 +464,7 @@ void MainCharacter::attack()
 
     if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && punch == none)
     {
+        PlaySound(ConfigNotConst::punchSound);
         if (lastDir == LASTRIGHT)
         {
             punch = right;
@@ -484,11 +485,16 @@ void MainCharacter::attack()
 
     for (const auto &enemy: enemyManager->enemies)  //es gibt noch einen bug dass man 2 mal spammen kann in dem moment wo das projektil den enemy trifft
     {
+        if(enemy->getEnemyDeath())
+        {
+            PlaySound(ConfigNotConst::slimeDeath);
+        }
         if (CheckCollisionRecs(MainCharacter::HitRec, enemy->getRec()) && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
         {
             if(canGiveDamage)
             {
                 enemy->enemyGetsHit();
+
             }
             canGiveDamage = false;
             lastDamageTime = currentTime;

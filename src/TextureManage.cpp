@@ -174,9 +174,27 @@ void TextureManage::loadAudio()
     ConfigNotConst::chestOpenSound = LoadSound("assets/audio/sfx/chest.wav");
     ConfigNotConst::doorOpenSound = LoadSound("assets/audio/sfx/doorSound.wav");
     ConfigNotConst::gameBackgroundMusic = LoadMusicStream("assets/audio/tracks/dungeon1.mp3");
+    ConfigNotConst::miniBossHit = LoadSound("assets/audio/sfx/CQ_hit_mini-boss_SFX.mp3");
+    ConfigNotConst::slimeDeath = LoadSound("assets/audio/sfx/CQ_slime_death_splat_SFX.mp3");
+    ConfigNotConst::heartSound = LoadSound("assets/audio/sfx/CQ_pick_up_heart.mp3");
+    ConfigNotConst::orbSound = LoadSound("assets/audio/sfx/CQ_pick_up_orb.mp3");
+    ConfigNotConst::pressurePlateSound = LoadSound("assets/audio/sfx/CQ_pressure_plate_SFX.mp3");
+    ConfigNotConst::punchSound = LoadSound("assets/audio/sfx/CQ_punch_SFX.mp3");
+    ConfigNotConst::selectSound = LoadSound("assets/audio/sfx/CQ_select_diary_page_SFX.mp3");
+    ConfigNotConst::pickPageSound = LoadSound("assets/audio/sfx/CQ_pick_up_diary_page_SFX.mp3");
 
     Audio::updateAudioVolumes();
-    SetSoundVolume(ConfigNotConst::chestOpenSound, 0.5f);
+    SetSoundVolume(ConfigNotConst::chestOpenSound, 0.3f);
+    SetSoundVolume(ConfigNotConst::doorOpenSound, 1.5f);
+    SetSoundVolume(ConfigNotConst::miniBossHit, 0.3f);
+    SetSoundVolume(ConfigNotConst::slimeDeath, 0.2f);
+    SetSoundVolume(ConfigNotConst::heartSound, 0.2f);
+    SetSoundVolume(ConfigNotConst::orbSound, 0.4f);
+    SetSoundVolume(ConfigNotConst::pressurePlateSound, 0.7f);
+    SetSoundVolume(ConfigNotConst::punchSound, 0.2f);
+    SetSoundVolume(ConfigNotConst::selectSound, 0.2f);
+    SetSoundVolume(ConfigNotConst::pickPageSound, 0.7f);
+
     PlayMusicStream(ConfigNotConst::gameBackgroundMusic);
 }
 

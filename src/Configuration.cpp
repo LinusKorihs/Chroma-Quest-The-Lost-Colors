@@ -21,6 +21,15 @@ Sound ConfigNotConst::playerWalkingSound;
 Music ConfigNotConst::gameBackgroundMusic;
 Sound ConfigNotConst::doorOpenSound;
 Sound ConfigNotConst::chestOpenSound;
+Sound ConfigNotConst::punchSound;
+Sound ConfigNotConst::miniBossHit;
+Sound ConfigNotConst::slimeDeath;
+Sound ConfigNotConst::selectSound;
+Sound ConfigNotConst::pickPageSound;
+Sound ConfigNotConst::pressurePlateSound;
+Sound ConfigNotConst::heartSound;
+Sound ConfigNotConst::orbSound;
+
 
 void ConfigFunction::toggleGamePause()
 {

@@ -374,7 +374,10 @@ void PixelGame::gameLoop(tson::Map &Map)
             DialogBox::dialogBoxes[i].update({MainCharacter::playerPosX, MainCharacter::playerPosY});
         }
 
-        MainCharacter::attack();
+        if(!roomChanger.isTransitioning() && !playerCamera::getIsAnimating() && !DialogBox::dialogBoxes[0].isActive() && !DialogBox::dialogBoxes[1].isActive() && !InGameHud::journalActive)
+        {
+            MainCharacter::attack();
+        }
         MainCharacter::receiveDamage();
         MainCharacter::drawMainCharacter(texture, character);
 
