@@ -903,7 +903,7 @@
          "id":322,
          "properties":[
                 {
-                 "name":"Wall",
+                 "name":"StoneWall",
                  "type":"bool",
                  "value":true
                 }]
@@ -995,7 +995,7 @@
                 {
                  "name":"Wall",
                  "type":"bool",
-                 "value":false
+                 "value":true
                 }]
         }, 
         {
@@ -1130,7 +1130,7 @@
                 {
                  "name":"Wall",
                  "type":"bool",
-                 "value":false
+                 "value":true
                 }]
         }, 
         {
