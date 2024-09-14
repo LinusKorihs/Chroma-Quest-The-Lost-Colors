@@ -12,12 +12,14 @@
 #include "WindowSizeScale.h"
 
 Texture2D logoTexBig;
+Texture2D playButton;
+Texture2D settingsButton;
+Texture2D exitButton;
 
 void loadAssetsBasedOnWindowSize()
 {
     // Load large versions of assets
     Menu::initBackgroundGifLarge();
-    Menu::initButtonsFull();
 
     Image logoBig = LoadImage("assets/graphics/Buttons/LogoBig.png");
     if (logoBig.data == nullptr)
@@ -36,6 +38,21 @@ void loadAssetsBasedOnWindowSize()
     logoTexBig.width = logoBig.width / 3;
     logoTexBig.height = logoBig.height / 3;
     UnloadImage(logoBig);
+
+    playButton = LoadTexture("assets/graphics/Buttons/bigButtons/play.png");
+    settingsButton = LoadTexture("assets/graphics/Buttons/bigButtons/settings.png");
+    exitButton = LoadTexture("assets/graphics/Buttons/bigButtons/exit.png");
+}
+
+void unloadAssetsBasedOnWindowSize()
+{
+    // Unload large versions of assets
+    Menu::unloadBackgroundGif();
+
+    UnloadTexture(logoTexBig);
+    UnloadTexture(playButton);
+    UnloadTexture(settingsButton);
+    UnloadTexture(exitButton);
 }
 
 int main()
@@ -82,29 +99,102 @@ int main()
         BeginDrawing();
         ClearBackground(BLACK);
 
-        // Draw the background GIF scaled to the small canvas size
-        DrawTexturePro(Menu::backgroundTex,
-                       {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
-                       {0, 0, 1920, 1057},
-                       {0, 0}, 0.0f, WHITE);
-        // Update and draw the logo
-        Texture2D logoTex = logoTexBig;
-        float logoWidth = logoTexBig.width;
-        float logoX = (1920 - logoWidth) / 2.0f;
-        float logoY = 1057 / 13.0f;
-        DrawTextureEx(logoTex, {logoX, logoY}, 0.0f, 1.0f, WHITE);
+        if (applicationState.currentGameMenu == MenuState::MainMenu)
+        {
+            // Draw the background GIF scaled to the small canvas size
+            DrawTexturePro(Menu::backgroundTex,
+                           {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
+                           {0, 0, 1920, 1057},
+                           {0, 0}, 0.0f, WHITE);
+            // Update and draw the logo
+            Texture2D logoTex = logoTexBig;
+            logoTex.width = logoTexBig.width;
+            logoTex.height = logoTexBig.height;
+            float logoWidth = logoTexBig.width;
+            float logoX = (1920 - logoWidth) / 2.0f;
+            float logoY = 1057 / 13.0f;
+            DrawTextureEx(logoTex, {logoX, logoY}, 0.0f, 1.0f, WHITE);
 
-        // Update button positions and hitboxes
-        Menu::updateButtonPositions({1920, 1057});
+            // Update button positions and hitboxes
+            //Menu::updateButtonPositions({1920, 1057});
 
-        std::cout << "Current window size: " << currentWindowSize.x << "x" << currentWindowSize.y << std::endl;
+            //std::cout << "Current window size: " << currentWindowSize.x << "x" << currentWindowSize.y << std::endl;
+
+            Texture2D playButton = LoadTexture("assets/graphics/Buttons/bigButtons/play.png");
+            playButton.width = playButton.width / 2;
+            playButton.height = playButton.height / 2;
+            DrawTexture(playButton, (1920 - playButton.width) / 2, (1080 - playButton.height) / 2 - 150, WHITE);
+
+            Texture2D settingsButton = LoadTexture("assets/graphics/Buttons/bigButtons/settings.png");
+            settingsButton.width = settingsButton.width / 2;
+            settingsButton.height = settingsButton.height / 2;
+            DrawTexture(settingsButton, (1920 - settingsButton.width) / 2, (1080 - settingsButton.height) / 2, WHITE);
+
+            Texture2D exitButton = LoadTexture("assets/graphics/Buttons/bigButtons/exit.png");
+            exitButton.width = exitButton.width / 2;
+            exitButton.height = exitButton.height / 2;
+            DrawTexture(exitButton, (1920 - exitButton.width) / 2, (1080 - exitButton.height) / 2 + 150, WHITE);
+
+            Rectangle playButtonRec = {static_cast<float>((1920 - playButton.width) / 2),
+                                       static_cast<float>((1080 - playButton.height) / 2 - 150),
+                                       static_cast<float>(playButton.width), static_cast<float>(playButton.height)};
+            Rectangle settingsButtonRec = {static_cast<float>((1920 - settingsButton.width) / 2),
+                                           static_cast<float>((1080 - settingsButton.height) / 2),
+                                           static_cast<float>(settingsButton.width),
+                                           static_cast<float>(settingsButton.height)};
+            Rectangle exitButtonRec = {static_cast<float>((1920 - exitButton.width) / 2),
+                                       static_cast<float>((1080 - exitButton.height) / 2 + 150),
+                                       static_cast<float>(exitButton.width), static_cast<float>(exitButton.height)};
+
+            //DrawRectangleLines(playButtonRec.x, playButtonRec.y, playButtonRec.width, playButtonRec.height, PURPLE);
+            //DrawRectangleLines(settingsButtonRec.x, settingsButtonRec.y, settingsButtonRec.width, settingsButtonRec.height, GREEN);
+            //DrawRectangleLines(exitButtonRec.x, exitButtonRec.y, exitButtonRec.width, exitButtonRec.height, BLUE);
+
+            if (CheckCollisionPointRec(GetMousePosition(), playButtonRec))
+            {
+                Texture2D playButtonHover = LoadTexture("assets/graphics/Buttons/bigButtons/playRGB.png");
+                playButtonHover.width = playButtonHover.width / 2;
+                playButtonHover.height = playButtonHover.height / 2;
+                DrawTexture(playButtonHover, (1920 - playButtonHover.width) / 2,
+                            (1080 - playButtonHover.height) / 2 - 150, WHITE);
+            }
+
+            if (CheckCollisionPointRec(GetMousePosition(), settingsButtonRec))
+            {
+                Texture2D settingsButtonHover = LoadTexture("assets/graphics/Buttons/bigButtons/settingsRGB.png");
+                settingsButtonHover.width = settingsButtonHover.width / 2;
+                settingsButtonHover.height = settingsButtonHover.height / 2;
+                DrawTexture(settingsButtonHover, (1920 - settingsButtonHover.width) / 2,
+                            (1080 - settingsButtonHover.height) / 2, WHITE);
+            }
+
+            if (CheckCollisionPointRec(GetMousePosition(), exitButtonRec))
+            {
+                Texture2D exitButtonHover = LoadTexture("assets/graphics/Buttons/bigButtons/exitRGB.png");
+                exitButtonHover.width = exitButtonHover.width / 2;
+                exitButtonHover.height = exitButtonHover.height / 2;
+                DrawTexture(exitButtonHover, (1920 - exitButtonHover.width) / 2,
+                            (1080 - exitButtonHover.height) / 2 + 150, WHITE);
+            }
+
+            if (CheckCollisionPointRec(GetMousePosition(), playButtonRec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+                applicationState.currentGameMenu = MenuState::GameRunning;
+                ConfigNotConst::isGameRunning = true;
+                Menu::unloadBackgroundGif();
+            }
+
+            if (CheckCollisionPointRec(GetMousePosition(), settingsButtonRec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+                applicationState.currentGameMenu = MenuState::MainMenu;
+            }
+
+            if (CheckCollisionPointRec(GetMousePosition(), exitButtonRec) && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+            {
+                applicationState.currentGameMenu = MenuState::None;
+            }
+        }
         BeginTextureMode(canvasSmall);
-
-        Texture2D playButton = LoadTexture("assets/graphics/Buttons/bigButtons/play.png");
-        playButton.width = 128;
-        playButton.height = 48;
-        DrawTexture(playButton, 200, 0, WHITE);
-
         switch (applicationState.currentGameMenu)
         {
             case MenuState::MainMenu:
@@ -152,8 +242,7 @@ int main()
         EndDrawing();
     }
 
-    UnloadTexture(logoTexBig);
-    Menu::unloadBackgroundGif();
+    unloadAssetsBasedOnWindowSize();
     CloseWindow();
     return EXIT_SUCCESS;
 }

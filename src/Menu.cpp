@@ -117,10 +117,8 @@ void Menu::updateButtonPositions(Vector2 windowSize)
 
 int Menu::drawMainMenu(GameState &currentGameState)
 {
-    initButtonsFull();
-
     Vector2 windowSize = {(float) GetScreenWidth(), (float) GetScreenHeight()};
-
+/*
     updateButtonPositions(windowSize);
 
     DrawTextureRec(startButtonFull.texture, {0, 0, (float)startButtonFull.texture.width, (float)startButtonFull.texture.height}, {startButtonFull.rec.x, startButtonFull.rec.y}, WHITE);
@@ -166,7 +164,7 @@ int Menu::drawMainMenu(GameState &currentGameState)
         DrawRectangleLinesEx(settingsButtonFull.rec, 3, BLUE);
         DrawRectangleLinesEx(exitButtonFull.rec, 3, BLUE);
     }
-
+*/
     updateBackgroundAnimation();
 
     return ConfigNotConst::isProgramRunning ? 1 : 0;
@@ -265,6 +263,8 @@ void Menu::drawLanguageMenu(GameState &currentGameState)
         {
             LanguageManager::toggleLanguage();
         }
+        std::cout << "Button width: " << Button::buttonWidthBig << " Button height: " << Button::buttonHeightBig << std::endl;
+        std::cout << "Button x: " << startButtonFull.rec.x << " Button y: " << startButtonFull.rec.y << std::endl;
     }
 
     if (Button::checkButtonClick(germanLanguageButton.rec, "German", "Deutsch"))
