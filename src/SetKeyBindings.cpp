@@ -160,7 +160,7 @@ void SetKeyBindings::drawKeyBindingsMenu(GameState &currentGameState)
         Button::countDrawText++;
     }
 
-    if (IsKeyPressed(KEY_ESCAPE))
+    /*if (IsKeyPressed(KEY_ESCAPE))
     {
         ConfigNotConst::selectedPlayerKey = Direction::NONE;
         ConfigNotConst::isWaitingForKeyInput = false;
@@ -169,7 +169,7 @@ void SetKeyBindings::drawKeyBindingsMenu(GameState &currentGameState)
 
         Button::setKeyBindText = 0;
         Button::countDrawText = 0;
-    }
+    }*/
 }
 
 void SetKeyBindings::resetPlayerKeyBindingState()

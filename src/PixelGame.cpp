@@ -539,22 +539,11 @@ void PixelGame::gameLoop(tson::Map &Map)
         return;
     }
 
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        ConfigNotConst::isGamePaused = true;
-    }
-
     if (ConfigNotConst::isGamePaused)
     {
         currentGameState.changeGameState(MenuState::PauseMenu);
         currentGameState.currentGameMenu = MenuState::PauseMenu;
         //Menu::drawPauseMenu(currentGameState);
-    }
-
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        currentGameState.changeGameState(MenuState::PauseMenu);
-        return;
     }
 
     bool isMoving = false; //movement sollte noch separiert werden

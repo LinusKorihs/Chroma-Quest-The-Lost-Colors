@@ -271,6 +271,10 @@ void InGameHud::drawJournal()
                 DrawText("Lyra is getting\nweaker, the only\nchance is the\ncolour energy,\nbut it´s\ndangerous...", 270, 80,1, BLACK);
             }
         }
+        if (IsKeyPressed(KEY_ESCAPE))
+        {
+            journalActive = false;
+        }
     }
 }
 void InGameHud::drawTutJournal()

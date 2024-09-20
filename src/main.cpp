@@ -15,6 +15,9 @@ Texture2D logoTexBig;
 Texture2D playButton;
 Texture2D settingsButton;
 Texture2D exitButton;
+Texture2D playButtonToHover;
+Texture2D settingsButtonHover;
+Texture2D exitButtonHover;
 
 void loadAssetsBasedOnWindowSize()
 {
@@ -58,7 +61,7 @@ void unloadAssetsBasedOnWindowSize()
 int main()
 {
     GameState applicationState;
-    InitWindow(1920, 1057, PixelGameConfig::PROJECT_NAME); // Start with small window size
+    InitWindow(1920, 1080, PixelGameConfig::PROJECT_NAME); // Start with small window size
     SetTargetFPS(ConfigConst::targetFPS);
     SetWindowState(FLAG_WINDOW_RESIZABLE);
     InitAudioDevice();
@@ -104,7 +107,7 @@ int main()
             // Draw the background GIF scaled to the small canvas size
             DrawTexturePro(Menu::backgroundTex,
                            {0, 0, (float)Menu::backgroundTex.width, (float)Menu::backgroundTex.height},
-                           {0, 0, 1920, 1057},
+                           {0, 0, 1920, 1080},
                            {0, 0}, 0.0f, WHITE);
             // Update and draw the logo
             Texture2D logoTex = logoTexBig;
@@ -112,20 +115,22 @@ int main()
             logoTex.height = logoTexBig.height;
             float logoWidth = logoTexBig.width;
             float logoX = (1920 - logoWidth) / 2.0f;
-            float logoY = 1057 / 13.0f;
+            float logoY = 1080 / 13.0f;
             DrawTextureEx(logoTex, {logoX, logoY}, 0.0f, 1.0f, WHITE);
 
             // Update button positions and hitboxes
-            //Menu::updateButtonPositions({1920, 1057});
+            //Menu::updateButtonPositions({1920, 1080});
 
             //std::cout << "Current window size: " << currentWindowSize.x << "x" << currentWindowSize.y << std::endl;
 
             Texture2D playButton = LoadTexture("assets/graphics/Buttons/bigButtons/play.png");
+            Texture2D playButtonToHover = LoadTexture("assets/graphics/Buttons/bigButtons/playRGB.png");
             playButton.width = playButton.width / 2;
             playButton.height = playButton.height / 2;
             DrawTexture(playButton, (1920 - playButton.width) / 2, (1080 - playButton.height) / 2 - 150, WHITE);
 
             Texture2D settingsButton = LoadTexture("assets/graphics/Buttons/bigButtons/settings.png");
+            Texture2D settingsButtonHover = LoadTexture("assets/graphics/Buttons/bigButtons/settingsRGB.png");
             settingsButton.width = settingsButton.width / 2;
             settingsButton.height = settingsButton.height / 2;
             DrawTexture(settingsButton, (1920 - settingsButton.width) / 2, (1080 - settingsButton.height) / 2, WHITE);
@@ -133,6 +138,7 @@ int main()
             Texture2D exitButton = LoadTexture("assets/graphics/Buttons/bigButtons/exit.png");
             exitButton.width = exitButton.width / 2;
             exitButton.height = exitButton.height / 2;
+            Texture2D exitButtonHover = LoadTexture("assets/graphics/Buttons/bigButtons/exitRGB.png");
             DrawTexture(exitButton, (1920 - exitButton.width) / 2, (1080 - exitButton.height) / 2 + 150, WHITE);
 
             Rectangle playButtonRec = {static_cast<float>((1920 - playButton.width) / 2),
@@ -152,16 +158,14 @@ int main()
 
             if (CheckCollisionPointRec(GetMousePosition(), playButtonRec))
             {
-                Texture2D playButtonHover = LoadTexture("assets/graphics/Buttons/bigButtons/playRGB.png");
-                playButtonHover.width = playButtonHover.width / 2;
-                playButtonHover.height = playButtonHover.height / 2;
-                DrawTexture(playButtonHover, (1920 - playButtonHover.width) / 2,
-                            (1080 - playButtonHover.height) / 2 - 150, WHITE);
+                playButtonToHover.width = playButtonToHover.width / 2;
+                playButtonToHover.height = playButtonToHover.height / 2;
+                DrawTexture(playButtonToHover, (1920 - playButtonToHover.width) / 2,
+                            (1080 - playButtonToHover.height) / 2 - 150, WHITE);
             }
 
             if (CheckCollisionPointRec(GetMousePosition(), settingsButtonRec))
             {
-                Texture2D settingsButtonHover = LoadTexture("assets/graphics/Buttons/bigButtons/settingsRGB.png");
                 settingsButtonHover.width = settingsButtonHover.width / 2;
                 settingsButtonHover.height = settingsButtonHover.height / 2;
                 DrawTexture(settingsButtonHover, (1920 - settingsButtonHover.width) / 2,
@@ -170,7 +174,6 @@ int main()
 
             if (CheckCollisionPointRec(GetMousePosition(), exitButtonRec))
             {
-                Texture2D exitButtonHover = LoadTexture("assets/graphics/Buttons/bigButtons/exitRGB.png");
                 exitButtonHover.width = exitButtonHover.width / 2;
                 exitButtonHover.height = exitButtonHover.height / 2;
                 DrawTexture(exitButtonHover, (1920 - exitButtonHover.width) / 2,
@@ -193,6 +196,15 @@ int main()
             {
                 applicationState.currentGameMenu = MenuState::None;
             }
+            /* // Unload button textures
+            EndDrawing();
+            UnloadTexture(playButton);
+            UnloadTexture(settingsButton);
+            UnloadTexture(exitButton);
+            UnloadTexture(playButtonToHover);
+            UnloadTexture(settingsButtonHover);
+            UnloadTexture(exitButtonHover);
+            BeginDrawing();*/
         }
         BeginTextureMode(canvasSmall);
         switch (applicationState.currentGameMenu)
@@ -205,10 +217,6 @@ int main()
                 if(PixelGame::state == gameLoopState)
                 {
                     PixelGame::gameLoop(PixelGame::getMap());
-                }
-                if (IsKeyPressed(KEY_ESCAPE))
-                {
-                    applicationState.currentGameMenu = MenuState::PauseMenu;
                 }
                 break;
             case MenuState::SettingsMenu:

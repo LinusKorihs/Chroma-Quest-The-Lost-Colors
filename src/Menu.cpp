@@ -173,7 +173,7 @@ int Menu::drawMainMenu(GameState &currentGameState)
 void Menu::drawSettingsMenu(GameState &currentGameState)
 {
     Vector2 windowSize = {(float) GetScreenWidth(), (float) GetScreenHeight()};
-    if (GetScreenWidth() == 1920 && GetScreenHeight() == 1057)
+    if (GetScreenWidth() == 1920 && GetScreenHeight() == 1080)
     {
         if(playButtonNormal.texture.id + playButtonHover.texture.id > 0)
         {
@@ -205,11 +205,6 @@ void Menu::drawSettingsMenu(GameState &currentGameState)
             unloadBackgroundGif();
         }
 
-        if (IsKeyPressed(KEY_ESCAPE))
-        {
-            currentGameState.currentGameMenu = MenuState::MainMenu;
-        }
-
         if (showButtonRectangles)
         {
             DrawRectangleLinesEx(playButtonFull.rec, 1, BLUE);
@@ -231,11 +226,6 @@ void Menu::drawVolumeSlidersMenu(GameState &currentGameState)
 
     Rectangle sliderPos3 = Audio::updateSliderPositions(Audio::index = 2);
     Audio::drawVolumeSlider(VolumeType::SFX, &ConfigNotConst::soundEffectsVolumeLevel, "Sound Effect Volume", "Soundeffektlautstärke", sliderPos3.y);
-
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        currentGameState.currentGameMenu = MenuState::SettingsMenu;
-    }
 }
 
 void Menu::drawLanguageMenu(GameState &currentGameState)
@@ -273,11 +263,6 @@ void Menu::drawLanguageMenu(GameState &currentGameState)
         {
             LanguageManager::toggleLanguage();
         }
-    }
-
-    if (IsKeyPressed(KEY_ESCAPE))
-    {
-        currentGameState.currentGameMenu = MenuState::SettingsMenu;
     }
 }
 
