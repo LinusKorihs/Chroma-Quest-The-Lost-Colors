@@ -389,21 +389,7 @@ int MiniBoss::getShieldHits()
 
 void MiniBoss::drawShieldBar()
 {
-    /*if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400))
-    {
-        if(shieldHits == 1)
-        {
-            DrawRectangle(150, 20, 100, 10, DARKGRAY);
-        }
-        if(shieldHits == 0)
-        {
-            DrawRectangle(260, 20, 100, 10, DARKGRAY);
-            DrawRectangle(150, 20, 100, 10, DARKGRAY);
-        }
 
-        DrawRectangle(173, 40, 165, 10, DARKGRAY);
-        DrawRectangle(173, 40, barHits * 11, 10, RED);
-    }*/
     if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400) && !MainCharacter::isPlayerDead)
     {
         if(shieldHits == 0){

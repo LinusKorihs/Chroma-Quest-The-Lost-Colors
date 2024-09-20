@@ -571,9 +571,9 @@ void PressurePlate::initPlates(Texture2D &plateTexture)
     pressurePlates.emplace_back(35*32, 71*32, 32, plateTexture,2); //reset 1. raum
     pressurePlates.emplace_back(35*32, 61*32, 32, plateTexture,2); //reset 2. raum
     pressurePlates.emplace_back(13*32, 41*32, 32, plateTexture,2); //reset 3. raum
-    pressurePlates.emplace_back(32*32, 40*32, 32, plateTexture,2); //reset 4. raum
-    pressurePlates.emplace_back(53*32, 36*32, 32, plateTexture,2); //reset 5. raum
-    pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture,2); //reset 5. raum
+    pressurePlates.emplace_back(32*32, 40*32, 32, plateTexture,2); //reset 3. raum
+    pressurePlates.emplace_back(54*32, 36*32, 32, plateTexture,2); //reset 4. raum
+    pressurePlates.emplace_back(61*32, 45*32, 32, plateTexture,2); //reset 4. raum
 
     pressurePlates.emplace_back(34*32, 19*32, 32, plateTexture,2); //reset Bossraum
 
