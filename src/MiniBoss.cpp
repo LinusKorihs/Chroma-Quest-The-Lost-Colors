@@ -404,7 +404,7 @@ void MiniBoss::drawShieldBar()
         DrawRectangle(173, 40, 165, 10, DARKGRAY);
         DrawRectangle(173, 40, barHits * 11, 10, RED);
     }*/
-    if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400))
+    if (isPlayerInRange({MainCharacter::playerPosX, MainCharacter::playerPosY}, 400) && !MainCharacter::isPlayerDead)
     {
         if(shieldHits == 0){
             DrawTexture(TextureManager::getTexture("BossFull"),115, 190, WHITE);

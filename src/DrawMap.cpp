@@ -154,9 +154,8 @@ void DrawMap::drawLayer(const std::vector<unsigned int> &layer, tson::Map &Map, 
                      if(dungeon1)
                     {
                         sizeOverworldWallVec = 0;
-                        if (!isOpenDoor(stoneWallRec.x, stoneWallRec.y) &&
-                        !rectangleExists(currentGameState.stoneWallRectangles, stoneWallRec) &&
-                        !isDoor(stoneWallRec.x, stoneWallRec.y))
+                        if (
+                        !rectangleExists(currentGameState.stoneWallRectangles, stoneWallRec))
                         {
                             currentGameState.stoneWallRectangles.push_back(stoneWallRec);
                             sizeStoneWallVec++;
